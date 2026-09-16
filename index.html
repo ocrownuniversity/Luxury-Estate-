@@ -390,7 +390,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
       <div class="hero-stats">
         <div><b id="statProps">—</b><span>Active Properties</span></div>
-        <div><b>2–5%</b><span>Monthly ROI · 2yr Min. Term</span></div>
+        <div><b>Flexible</b><span>Monthly ROI · Any Duration</span></div>
         <div><b id="statInvestors">—</b><span>Investors Onboard</span></div>
       </div>
     </div>
@@ -926,7 +926,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
           <div class="field"><label>Available Units</label><input required type="number" id="propUnits"></div>
         </div>
         <div class="field-row">
-          <div class="field"><label>Investment Duration (months) — minimum 24</label><input required type="number" id="propDuration" min="24"><p class="hint">Royal Luxury Mini Estate requires a minimum investment term of 24 months (2 years).</p></div>
+          <div class="field"><label>Investment Duration (months)</label><input required type="number" id="propDuration" min="1"></div>
           <div class="field"><label>Monthly ROI Percentage (%)</label><input required type="number" id="propROI" step="0.1"></div>
         </div>
         <div class="field-row">
@@ -1424,6 +1424,9 @@ async function loadPropertyReviews(propertyId){
   }
 }
 
+function switchGallery(url, el){
+  document.getElementById('pdMainImg').src = url;
+  document.querySelectorAll('.pd-thumbs img').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');
 }
 
@@ -1505,7 +1508,7 @@ async function submitInvestment(){
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...';
 
   const roi = Number(p.roi)||0;          // monthly ROI %
-  const duration = Number(p.duration)||0; // months (minimum 24)
+  const duration = Number(p.duration)||0; // months
   const profit = amount * (roi/100) * duration; // interest accrues every month across the full term
   const total = amount + profit;
   const maturity = new Date();
@@ -1796,12 +1799,6 @@ async function saveProperty(e){
   const msgEl = document.getElementById('propMsg');
   msgEl.innerHTML = '';
   const id = document.getElementById('propId').value;
-
-  if(Number(document.getElementById('propDuration').value) < 24){
-    msgEl.innerHTML = '<div class="err-msg">Investment duration must be at least 24 months (2 years).</div>';
-    return;
-  }
-
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving...';
 
   try{
