@@ -356,6 +356,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       <a class="nav-link" data-page="properties" onclick="go('properties')">Properties</a>
       <a class="nav-link" data-page="properties" onclick="go('properties')">Investment Opportunities</a>
       <a class="nav-link" data-page="contact" onclick="go('contact')">Contact Us</a>
+      <a class="nav-link" data-page="posts" onclick="go('posts')">Updates</a>
       <a class="nav-link hidden" id="navDashboard" data-page="dashboard" onclick="go('dashboard')">My Dashboard</a>
       <a class="nav-link hidden" id="navAdmin" data-page="admin" onclick="go('admin')">Admin Panel</a>
       <a class="nav-link" id="navAuth" data-page="auth" onclick="go('auth')">Login / Register</a>
@@ -540,6 +541,34 @@ tr:hover td{background:rgba(184,134,60,.05);}
 </div>
 
 <!-- ============================================================= -->
+<!-- UPDATES / POSTS -->
+<!-- ============================================================= -->
+<div class="page" id="page-posts">
+  <div class="hero" style="padding:64px 24px;">
+    <div class="hero-inner" style="grid-template-columns:1fr;">
+      <div>
+        <div class="hero-eyebrow">NEWS & UPDATES</div>
+        <h1 style="font-size:clamp(28px,4vw,44px);">What's happening at Royal Luxury Mini Estate.</h1>
+      </div>
+    </div>
+  </div>
+  <section>
+    <div class="wrap">
+      <div class="prop-grid" id="postsGrid"><div class="empty-state">Loading updates…</div></div>
+    </div>
+  </section>
+</div>
+
+<div class="page" id="page-post-detail">
+  <section style="padding-top:40px;">
+    <div class="wrap">
+      <a class="small-muted" onclick="go('posts')" style="cursor:pointer;">← Back to Updates</a>
+      <div id="postDetailContent" style="margin-top:24px; max-width:760px;"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================================================= -->
 <!-- AUTH -->
 <!-- ============================================================= -->
 <div class="page" id="page-auth">
@@ -587,7 +616,8 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <span id="dashEmail">—</span>
       </div>
       <div class="dash-nav">
-        <a class="active" data-panel="overview" onclick="switchDashPanel('overview')">Overview</a>
+        <a data-panel="overview" class="active" onclick="switchDashPanel('overview')">Overview</a>
+        <a data-panel="inbox" onclick="switchDashPanel('inbox')">Inbox <span id="inboxBadge" class="hidden" style="background:var(--gold); color:var(--ink); font-size:10.5px; padding:2px 7px; border-radius:20px; margin-left:6px;"></span></a>
         <a data-panel="active-inv" onclick="switchDashPanel('active-inv')">Active Investments</a>
         <a data-panel="completed-inv" onclick="switchDashPanel('completed-inv')">Completed Investments</a>
         <a data-panel="history" onclick="switchDashPanel('history')">Investment History</a>
@@ -608,6 +638,11 @@ tr:hover td{background:rgba(184,134,60,.05);}
           <thead><tr><th>ID</th><th>Property</th><th>Amount</th><th>ROI</th><th>Status</th><th>Maturity</th></tr></thead>
           <tbody id="uRecentTable"><tr><td colspan="6" class="small-muted" style="padding:20px;">No investments yet.</td></tr></tbody>
         </table></div>
+      </div>
+
+      <div class="dash-panel" id="dpanel-inbox">
+        <div class="dash-head"><h2>Inbox</h2></div>
+        <div id="inboxList" style="display:grid; gap:14px;"><p class="small-muted">No announcements yet.</p></div>
       </div>
 
       <div class="dash-panel" id="dpanel-active-inv">
@@ -666,6 +701,9 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <a data-panel="a-properties" onclick="switchAdminPanel('a-properties')">Properties</a>
         <a data-panel="a-investments" onclick="switchAdminPanel('a-investments')">Investments</a>
         <a data-panel="a-users" onclick="switchAdminPanel('a-users')">Users</a>
+        <a data-panel="a-posts" onclick="switchAdminPanel('a-posts')">Posts</a>
+        <a data-panel="a-announcements" onclick="switchAdminPanel('a-announcements')">Announcements</a>
+        <a data-panel="a-reviews" onclick="switchAdminPanel('a-reviews')">Reviews</a>
         <a data-panel="a-settings" onclick="switchAdminPanel('a-settings')">Settings</a>
       </div>
     </div>
@@ -717,6 +755,31 @@ tr:hover td{background:rgba(184,134,60,.05);}
         </table></div>
       </div>
 
+      <div class="dash-panel" id="apanel-a-posts">
+        <div class="dash-head"><h2>Website Posts</h2><button class="btn btn-sm" onclick="openPostModal()">+ New Post</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Title</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody id="aPostTable"><tr><td colspan="3" class="small-muted" style="padding:20px;">No posts yet.</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <div class="dash-panel" id="apanel-a-announcements">
+        <div class="dash-head"><h2>Announcements</h2><button class="btn btn-sm" onclick="openAnnouncementModal()">+ New Announcement</button></div>
+        <p class="small-muted" style="margin-bottom:16px;">Every announcement you post appears in every customer's Inbox on their dashboard.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Title</th><th>Message</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody id="aAnnTable"><tr><td colspan="4" class="small-muted" style="padding:20px;">No announcements yet.</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <div class="dash-panel" id="apanel-a-reviews">
+        <div class="dash-head"><h2>Customer Reviews</h2></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Property</th><th>Customer</th><th>Rating</th><th>Review</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody id="aReviewTable"><tr><td colspan="6" class="small-muted" style="padding:20px;">No reviews yet.</td></tr></tbody>
+        </table></div>
+      </div>
+
       <div class="dash-panel" id="apanel-a-settings">
         <div class="dash-head"><h2>Settings</h2></div>
         <div class="form-card" style="max-width:560px;">
@@ -731,6 +794,15 @@ tr:hover td{background:rgba(184,134,60,.05);}
             <div class="field"><label>WhatsApp Number (with country code, no + or spaces)</label><input id="setWhatsapp" placeholder="2349134882222"></div>
             <div class="field"><label>About Text</label><textarea id="setAbout"></textarea></div>
             <div class="field"><label>Investment Terms & Conditions (applies to all properties)</label><textarea id="setTerms" placeholder="Outline the standard terms and conditions investors agree to..."></textarea></div>
+            <div class="divider"></div>
+            <div class="section-title-sm" style="margin-top:0;">Payment / Bank Account Details</div>
+            <p class="small-muted" style="margin-bottom:16px;">Shown to investors at checkout so they know where to send payment before uploading their receipt.</p>
+            <div class="field"><label>Bank Name</label><input id="setBankName" placeholder="e.g. GTBank"></div>
+            <div class="field-row">
+              <div class="field"><label>Account Name</label><input id="setAccountName" placeholder="Royal Luxury Mini Estate Ltd"></div>
+              <div class="field"><label>Account Number</label><input id="setAccountNumber" placeholder="0123456789"></div>
+            </div>
+            <div class="field"><label>Payment Instructions (optional)</label><textarea id="setPaymentNote" placeholder="e.g. Use your full name as payment reference..."></textarea></div>
             <button class="btn" type="submit">Save Settings</button>
           </form>
         </div>
@@ -786,6 +858,23 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <div class="summary-row"><span>Expected Profit</span><b id="pvProfit">—</b></div>
         <div class="summary-row"><span>Maturity Date</span><b id="pvMaturity">—</b></div>
         <div class="summary-total"><span>Total Expected Return</span><b id="pvTotal">—</b></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm" style="margin-top:0;">Payment Details</div>
+      <div class="summary-box" id="investBankBox">
+        <div class="summary-row"><span>Bank Name</span><b id="ibBank">—</b></div>
+        <div class="summary-row"><span>Account Name</span><b id="ibName">—</b></div>
+        <div class="summary-row"><span>Account Number</span><b id="ibNumber">—</b></div>
+      </div>
+      <p class="hint" id="ibNote"></p>
+      <p class="small-muted" style="margin-top:10px;">Make payment to the account above, then upload your payment receipt below. Your investment will be verified and approved once the admin confirms the receipt.</p>
+
+      <div class="field" style="margin-top:16px;">
+        <label>Payment Receipt <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('receiptInput').click()">Click to upload your payment receipt (image)</div>
+        <input type="file" id="receiptInput" accept="image/*" class="hidden" onchange="handleReceiptUpload(event)">
+        <div class="img-upload-grid" id="receiptPreviewGrid"></div>
       </div>
     </div>
     <div class="modal-foot">
@@ -872,6 +961,49 @@ tr:hover td{background:rgba(184,134,60,.05);}
   </div>
 </div>
 
+<!-- Post Add/Edit Modal -->
+<div class="modal-bg" id="postModalBg">
+  <div class="modal wide">
+    <div class="modal-head"><h3 id="postModalTitle">New Post</h3><button class="modal-close" onclick="closeModal('postModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <div id="postMsg"></div>
+      <form id="postForm" onsubmit="savePost(event)">
+        <input type="hidden" id="postId">
+        <div class="field"><label>Title</label><input required id="postTitle"></div>
+        <div class="field"><label>Content</label><textarea required id="postContent" style="min-height:160px;" placeholder="Write your post..."></textarea></div>
+        <div class="field">
+          <label>Image (optional)</label>
+          <div class="upload-drop" onclick="document.getElementById('postImgInput').click()">Click to upload an image — auto-compressed</div>
+          <input type="file" id="postImgInput" accept="image/*" class="hidden" onchange="handlePostImageUpload(event)">
+          <div class="img-upload-grid" id="postImgGrid"></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('postModalBg')">Cancel</button>
+      <button class="btn" id="savePostBtn" onclick="document.getElementById('postForm').requestSubmit()">Publish Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- Announcement Modal -->
+<div class="modal-bg" id="announcementModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>New Announcement</h3><button class="modal-close" onclick="closeModal('announcementModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <div id="annMsg"></div>
+      <form id="announcementForm" onsubmit="saveAnnouncement(event)">
+        <div class="field"><label>Title</label><input required id="annTitle"></div>
+        <div class="field"><label>Message</label><textarea required id="annMessage" placeholder="This will appear in every customer's inbox..."></textarea></div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('announcementModalBg')">Cancel</button>
+      <button class="btn" onclick="document.getElementById('announcementForm').requestSubmit()">Send Announcement</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ================= FIREBASE INIT ================= */
 const firebaseConfig = {
@@ -893,7 +1025,7 @@ let isAdmin = false;
 let allProperties = [];
 let allInvestments = [];     // admin: all; user: own
 let allUsers = [];
-let siteSettings = { companyName:"Royal Luxury Mini Estate", email:"royalluxuryestate@gmail.com", phone:"+234 913 488 2222", whatsapp:"2349134882222", address:"Abeokuta, Ogun State, Nigeria", aboutText:"", terms:"1. All investments are subject to availability at the time of confirmation.\n2. Returns are paid at the stated maturity date, based on the ROI shown for each property.\n3. Investment amounts are non-refundable once an investment is approved, except where otherwise agreed in writing.\n4. Royal Luxury Mini Estate reserves the right to request additional verification before approving an investment.\n5. All communications regarding an investment should be directed to our official email or WhatsApp number." };
+let siteSettings = { companyName:"Royal Luxury Mini Estate", email:"royalluxuryestate@gmail.com", phone:"+234 913 488 2222", whatsapp:"2349134882222", address:"Abeokuta, Ogun State, Nigeria", aboutText:"", bankName:"", accountName:"", accountNumber:"", paymentNote:"", terms:"1. All investments are subject to availability at the time of confirmation.\n2. Returns are paid at the stated maturity date, based on the ROI shown for each property.\n3. Investment amounts are non-refundable once an investment is approved, except where otherwise agreed in writing.\n4. Royal Luxury Mini Estate reserves the right to request additional verification before approving an investment.\n5. All communications regarding an investment should be directed to our official email or WhatsApp number." };
 let currentDetailProperty = null;
 let pendingImageFiles = [];      // {file, url} for new uploads not yet saved
 let existingImageUrls = [];      // urls already on the property (edit mode)
@@ -914,6 +1046,10 @@ function go(pageId){
   if(pageId === 'dashboard'){
     if(!currentUser){ go('auth'); return; }
     loadUserInvestments();
+    loadInboxAnnouncements();
+  }
+  if(pageId === 'posts'){
+    loadPosts();
   }
   if(pageId === 'admin'){
     if(!currentUser || !isAdmin){ go('home'); return; }
@@ -973,7 +1109,11 @@ async function saveSettings(e){
     phone: document.getElementById('setPhone').value,
     whatsapp: document.getElementById('setWhatsapp').value.replace(/[^0-9]/g,''),
     aboutText: document.getElementById('setAbout').value,
-    terms: document.getElementById('setTerms').value
+    terms: document.getElementById('setTerms').value,
+    bankName: document.getElementById('setBankName').value.trim(),
+    accountName: document.getElementById('setAccountName').value.trim(),
+    accountNumber: document.getElementById('setAccountNumber').value.trim(),
+    paymentNote: document.getElementById('setPaymentNote').value.trim()
   };
   try{
     await db.collection('settings').doc('main').set(data, {merge:true});
@@ -994,6 +1134,10 @@ function fillSettingsForm(){
   document.getElementById('setWhatsapp').value = siteSettings.whatsapp||'';
   document.getElementById('setAbout').value = siteSettings.aboutText||'';
   document.getElementById('setTerms').value = siteSettings.terms||'';
+  document.getElementById('setBankName').value = siteSettings.bankName||'';
+  document.getElementById('setAccountName').value = siteSettings.accountName||'';
+  document.getElementById('setAccountNumber').value = siteSettings.accountNumber||'';
+  document.getElementById('setPaymentNote').value = siteSettings.paymentNote||'';
 }
 
 /* ================= AUTH ================= */
@@ -1186,6 +1330,18 @@ function viewProperty(id){
         <p style="color:var(--muted-dark); font-size:14.5px;">${p.description||''}</p>
         <div class="section-title-sm">Investment Terms & Conditions</div>
         <p style="color:var(--muted-dark); font-size:14.5px; white-space:pre-line;">${siteSettings.terms || 'Standard terms apply. Contact us for full documentation.'}</p>
+        <div class="section-title-sm">Customer Reviews</div>
+        <div id="reviewsList"><p class="small-muted">Loading reviews...</p></div>
+        <div class="divider"></div>
+        ${currentUser
+          ? `<div class="form-card" style="max-width:none; padding:22px;">
+               <div id="reviewMsg"></div>
+               <label style="display:block; font-size:12.5px; font-weight:600; color:var(--muted-dark); margin-bottom:8px;">Leave a review</label>
+               <div id="starPicker" style="font-size:24px; letter-spacing:4px; cursor:pointer; margin-bottom:12px; color:var(--line);">★★★★★</div>
+               <textarea id="reviewText" placeholder="Share your experience with this property..." style="width:100%; padding:12px; border:1px solid var(--line); border-radius:3px; min-height:80px; margin-bottom:12px;"></textarea>
+               <button class="btn btn-sm" onclick="submitReview('${p.id}')">Submit Review</button>
+             </div>`
+          : `<p class="small-muted"><a onclick="go('auth')" style="color:var(--gold); cursor:pointer;">Login</a> to leave a review.</p>`}
       </div>
       <div class="pd-side">
         <div class="tag-row"><span class="tag">${p.type||''}</span><span class="badge ${badgeClass(p.status)}">${p.status||'Available'}</span></div>
@@ -1203,11 +1359,71 @@ function viewProperty(id){
       </div>
     </div>
   `;
+  setupStarPicker();
+  loadPropertyReviews(p.id);
   go('detail');
 }
-function switchGallery(url, el){
-  document.getElementById('pdMainImg').src = url;
-  document.querySelectorAll('.pd-thumbs img').forEach(i=>i.classList.remove('active'));
+let selectedRating = 5;
+function setupStarPicker(){
+  selectedRating = 5;
+  const el = document.getElementById('starPicker');
+  if(!el) return;
+  renderStars();
+  el.onclick = (e)=>{
+    const rect = el.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    selectedRating = Math.max(1, Math.min(5, Math.ceil(percent * 5)));
+    renderStars();
+  };
+}
+function renderStars(){
+  const el = document.getElementById('starPicker');
+  if(!el) return;
+  el.innerHTML = '<span style="color:var(--gold);">' + '★'.repeat(selectedRating) + '</span><span style="color:var(--line);">' + '★'.repeat(5-selectedRating) + '</span>';
+}
+async function submitReview(propertyId){
+  const text = document.getElementById('reviewText').value.trim();
+  const msgEl = document.getElementById('reviewMsg');
+  if(!text){ msgEl.innerHTML = '<div class="err-msg">Please write a short review.</div>'; return; }
+  try{
+    await db.collection('reviews').add({
+      propertyId,
+      propertyName: currentDetailProperty ? currentDetailProperty.name : '',
+      userId: currentUser.uid,
+      userName: currentUserDoc.name || currentUser.displayName || 'Investor',
+      rating: selectedRating,
+      text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    document.getElementById('reviewText').value = '';
+    msgEl.innerHTML = '<div class="ok-msg">Thank you — your review has been posted.</div>';
+    loadPropertyReviews(propertyId);
+    toast('Review submitted');
+  }catch(err){
+    msgEl.innerHTML = '<div class="err-msg">'+err.message+'</div>';
+  }
+}
+async function loadPropertyReviews(propertyId){
+  const list = document.getElementById('reviewsList');
+  if(!list) return;
+  try{
+    const snap = await db.collection('reviews').where('propertyId','==',propertyId).get();
+    const reviews = snap.docs.map(d=>d.data()).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    if(!reviews.length){ list.innerHTML = '<p class="small-muted">No reviews yet — be the first to share your experience.</p>'; return; }
+    list.innerHTML = reviews.map(r=>`
+      <div style="border-top:1px solid var(--line); padding:14px 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <b style="font-size:14px;">${r.userName}</b>
+          <span style="color:var(--gold);">${'★'.repeat(r.rating||0)}${'☆'.repeat(5-(r.rating||0))}</span>
+        </div>
+        <p style="font-size:13.5px; color:var(--muted-dark); margin-top:6px;">${r.text}</p>
+      </div>
+    `).join('');
+  }catch(e){
+    list.innerHTML = '<p class="small-muted">Could not load reviews.</p>';
+  }
+}
+
   el.classList.add('active');
 }
 
@@ -1221,8 +1437,35 @@ function openInvestModal(propId){
   document.getElementById('investPropName').textContent = p.name + ' — ' + p.location;
   document.getElementById('investAmount').value = p.minInvestment || '';
   document.getElementById('investMinHint').textContent = 'Minimum investment: ' + fmtNaira(p.minInvestment);
+  document.getElementById('ibBank').textContent = siteSettings.bankName || 'Not set — contact admin';
+  document.getElementById('ibName').textContent = siteSettings.accountName || 'Not set — contact admin';
+  document.getElementById('ibNumber').textContent = siteSettings.accountNumber || 'Not set — contact admin';
+  document.getElementById('ibNote').textContent = siteSettings.paymentNote || '';
+  receiptDataUrl = null;
+  document.getElementById('receiptPreviewGrid').innerHTML = '';
   updateInvestPreview();
   openModalEl('investModalBg');
+}
+
+let receiptDataUrl = null;
+
+async function handleReceiptUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const grid = document.getElementById('receiptPreviewGrid');
+  grid.innerHTML = '<span class="small-muted">Compressing receipt...</span>';
+  try{
+    receiptDataUrl = await compressImage(file, 1000, 0.7);
+    grid.innerHTML = `<div class="img-thumb"><img src="${receiptDataUrl}"><button type="button" onclick="removeReceiptImg()">&times;</button></div>`;
+  }catch(err){
+    grid.innerHTML = '';
+    toast('Could not process that receipt image.');
+  }
+}
+function removeReceiptImg(){
+  receiptDataUrl = null;
+  document.getElementById('receiptPreviewGrid').innerHTML = '';
 }
 
 function updateInvestPreview(){
@@ -1254,6 +1497,10 @@ async function submitInvestment(){
     msgEl.innerHTML = '<div class="err-msg">Amount must be at least '+fmtNaira(p.minInvestment)+'.</div>';
     return;
   }
+  if(!receiptDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please upload your payment receipt before confirming.</div>';
+    return;
+  }
   const btn = document.getElementById('submitInvestBtn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...';
 
@@ -1281,6 +1528,7 @@ async function submitInvestment(){
     totalReturn: total,
     maturityDate: firebase.firestore.Timestamp.fromDate(maturity),
     status: 'pending',
+    receiptUrl: receiptDataUrl,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
@@ -1384,7 +1632,7 @@ async function submitContact(e){
 
 /* ================= ADMIN: LOAD ALL ================= */
 async function loadAdminData(){
-  await Promise.all([loadAdminProperties(), loadAdminInvestments(), loadAdminUsers()]);
+  await Promise.all([loadAdminProperties(), loadAdminInvestments(), loadAdminUsers(), loadAdminPosts(), loadAdminAnnouncements(), loadAdminReviews()]);
   renderAdminDashboardStats();
   fillSettingsForm();
 }
@@ -1643,6 +1891,11 @@ function viewInvestmentDetail(id){
       <div class="summary-row"><span>Maturity Date</span><b>${fmtDate(i.maturityDate)}</b></div>
       <div class="summary-row"><span>Status</span><b>${i.status}</b></div>
     </div>
+    <div class="section-title-sm">Payment Receipt</div>
+    ${i.receiptUrl
+      ? `<a href="${i.receiptUrl}" target="_blank"><img src="${i.receiptUrl}" style="width:100%; max-height:360px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a>
+         <p class="small-muted" style="margin-top:6px;">Tap the image to view it full size before approving.</p>`
+      : `<p class="err-msg">No receipt was uploaded for this investment.</p>`}
   `;
   let actions = '';
   if(i.status==='pending'){
@@ -1687,6 +1940,203 @@ async function setUserStatus(id, status){
     toast('User '+status);
     await loadAdminUsers();
   }catch(err){ toast('Error: '+err.message); }
+}
+
+/* ================= POSTS (public updates / blog) ================= */
+let allPosts = [];
+let pendingPostImage = null;
+
+async function loadPosts(){
+  const grid = document.getElementById('postsGrid');
+  try{
+    const snap = await db.collection('posts').orderBy('createdAt','desc').get();
+    allPosts = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  }catch(e){ console.warn(e); allPosts=[]; }
+  if(!allPosts.length){ grid.innerHTML = '<div class="empty-state">No updates posted yet. Check back soon.</div>'; return; }
+  grid.innerHTML = allPosts.map(post=>`
+    <div class="prop-card" onclick="viewPost('${post.id}')">
+      <div class="prop-img">${post.image?`<img src="${post.image}">`:''}</div>
+      <div class="prop-body">
+        <div class="ploc">${post.createdAt?fmtDate(post.createdAt):''}</div>
+        <h3>${post.title}</h3>
+        <p>${(post.content||'').slice(0,120)}${(post.content||'').length>120?'…':''}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+function viewPost(id){
+  const post = allPosts.find(x=>x.id===id);
+  if(!post) return;
+  document.getElementById('postDetailContent').innerHTML = `
+    ${post.image?`<div class="pd-gallery-main" style="height:300px;"><img src="${post.image}"></div>`:''}
+    <p class="small-muted" style="margin-top:16px;">${post.createdAt?fmtDate(post.createdAt):''}</p>
+    <h1 class="serif" style="font-size:28px; font-weight:500; margin:8px 0 18px;">${post.title}</h1>
+    <p style="white-space:pre-line; color:var(--muted-dark); font-size:15px; line-height:1.7;">${post.content}</p>
+  `;
+  go('post-detail');
+}
+
+async function loadAdminPosts(){
+  try{
+    const snap = await db.collection('posts').orderBy('createdAt','desc').get();
+    allPosts = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  }catch(e){ console.warn(e); allPosts=[]; }
+  document.getElementById('aPostTable').innerHTML = allPosts.map(post=>`
+    <tr><td>${post.title}</td><td>${post.createdAt?fmtDate(post.createdAt):''}</td>
+    <td class="row-actions">
+      <button class="icon-btn" onclick="openPostModal('${post.id}')" title="Edit">✎</button>
+      <button class="icon-btn" onclick="deletePost('${post.id}')" title="Delete">🗑</button>
+    </td></tr>
+  `).join('') || '<tr><td colspan="3" class="small-muted" style="padding:20px;">No posts yet.</td></tr>';
+}
+
+function openPostModal(id){
+  document.getElementById('postMsg').innerHTML = '';
+  pendingPostImage = null;
+  if(id){
+    const post = allPosts.find(x=>x.id===id);
+    document.getElementById('postModalTitle').textContent = 'Edit Post';
+    document.getElementById('postId').value = id;
+    document.getElementById('postTitle').value = post.title||'';
+    document.getElementById('postContent').value = post.content||'';
+    pendingPostImage = post.image || null;
+  } else {
+    document.getElementById('postModalTitle').textContent = 'New Post';
+    document.getElementById('postForm').reset();
+    document.getElementById('postId').value = '';
+  }
+  renderPostImgGrid();
+  openModalEl('postModalBg');
+}
+function renderPostImgGrid(){
+  document.getElementById('postImgGrid').innerHTML = pendingPostImage
+    ? `<div class="img-thumb"><img src="${pendingPostImage}"><button type="button" onclick="pendingPostImage=null; renderPostImgGrid();">&times;</button></div>` : '';
+}
+async function handlePostImageUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  try{
+    pendingPostImage = await compressImage(file, 1000, 0.7);
+    renderPostImgGrid();
+  }catch(err){ toast('Could not process that image.'); }
+}
+async function savePost(e){
+  e.preventDefault();
+  const id = document.getElementById('postId').value;
+  const btn = document.getElementById('savePostBtn');
+  const msgEl = document.getElementById('postMsg');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving...';
+  try{
+    const data = {
+      title: document.getElementById('postTitle').value.trim(),
+      content: document.getElementById('postContent').value.trim(),
+      image: pendingPostImage || null
+    };
+    if(id){
+      await db.collection('posts').doc(id).update(data);
+      toast('Post updated');
+    } else {
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('posts').add(data);
+      toast('Post published');
+    }
+    closeModal('postModalBg');
+    await loadAdminPosts();
+  }catch(err){
+    msgEl.innerHTML = '<div class="err-msg">'+err.message+'</div>';
+  }finally{
+    btn.disabled=false; btn.textContent='Publish Post';
+  }
+}
+async function deletePost(id){
+  if(!confirm('Delete this post?')) return;
+  try{ await db.collection('posts').doc(id).delete(); toast('Post deleted'); await loadAdminPosts(); }
+  catch(err){ toast('Error: '+err.message); }
+}
+
+/* ================= ANNOUNCEMENTS / INBOX ================= */
+async function loadAdminAnnouncements(){
+  let list = [];
+  try{
+    const snap = await db.collection('announcements').orderBy('createdAt','desc').get();
+    list = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  }catch(e){ console.warn(e); }
+  document.getElementById('aAnnTable').innerHTML = list.map(a=>`
+    <tr><td>${a.title}</td><td>${(a.message||'').slice(0,60)}${(a.message||'').length>60?'…':''}</td>
+    <td>${a.createdAt?fmtDate(a.createdAt):''}</td>
+    <td class="row-actions"><button class="icon-btn" onclick="deleteAnnouncement('${a.id}')" title="Delete">🗑</button></td></tr>
+  `).join('') || '<tr><td colspan="4" class="small-muted" style="padding:20px;">No announcements yet.</td></tr>';
+}
+function openAnnouncementModal(){
+  document.getElementById('annMsg').innerHTML = '';
+  document.getElementById('announcementForm').reset();
+  openModalEl('announcementModalBg');
+}
+async function saveAnnouncement(e){
+  e.preventDefault();
+  const msgEl = document.getElementById('annMsg');
+  try{
+    await db.collection('announcements').add({
+      title: document.getElementById('annTitle').value.trim(),
+      message: document.getElementById('annMessage').value.trim(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    closeModal('announcementModalBg');
+    toast('Announcement sent to all customers');
+    await loadAdminAnnouncements();
+  }catch(err){
+    msgEl.innerHTML = '<div class="err-msg">'+err.message+'</div>';
+  }
+}
+async function deleteAnnouncement(id){
+  if(!confirm('Delete this announcement?')) return;
+  try{ await db.collection('announcements').doc(id).delete(); toast('Announcement deleted'); await loadAdminAnnouncements(); }
+  catch(err){ toast('Error: '+err.message); }
+}
+
+async function loadInboxAnnouncements(){
+  if(!currentUser) return;
+  const list = document.getElementById('inboxList');
+  try{
+    const snap = await db.collection('announcements').orderBy('createdAt','desc').limit(50).get();
+    const items = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    if(!items.length){ list.innerHTML = '<p class="small-muted">No announcements yet.</p>'; document.getElementById('inboxBadge').classList.add('hidden'); return; }
+    list.innerHTML = items.map(a=>`
+      <div class="form-card" style="max-width:none; padding:18px 22px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <b class="serif" style="font-size:16px;">${a.title}</b>
+          <span class="small-muted">${a.createdAt?fmtDate(a.createdAt):''}</span>
+        </div>
+        <p style="font-size:13.5px; color:var(--muted-dark);">${a.message}</p>
+      </div>
+    `).join('');
+    const badge = document.getElementById('inboxBadge');
+    badge.textContent = items.length;
+    badge.classList.remove('hidden');
+  }catch(e){
+    list.innerHTML = '<p class="small-muted">Could not load announcements.</p>';
+  }
+}
+
+/* ================= ADMIN: REVIEW MODERATION ================= */
+async function loadAdminReviews(){
+  let list = [];
+  try{
+    const snap = await db.collection('reviews').orderBy('createdAt','desc').get();
+    list = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  }catch(e){ console.warn(e); }
+  document.getElementById('aReviewTable').innerHTML = list.map(r=>`
+    <tr><td>${r.propertyName||''}</td><td>${r.userName||''}</td><td>${'★'.repeat(r.rating||0)}</td>
+    <td>${(r.text||'').slice(0,80)}${(r.text||'').length>80?'…':''}</td><td>${r.createdAt?fmtDate(r.createdAt):''}</td>
+    <td class="row-actions"><button class="icon-btn" onclick="deleteReview('${r.id}')" title="Delete">🗑</button></td></tr>
+  `).join('') || '<tr><td colspan="6" class="small-muted" style="padding:20px;">No reviews yet.</td></tr>';
+}
+async function deleteReview(id){
+  if(!confirm('Delete this review?')) return;
+  try{ await db.collection('reviews').doc(id).delete(); toast('Review deleted'); await loadAdminReviews(); }
+  catch(err){ toast('Error: '+err.message); }
 }
 
 /* ================= INIT ================= */
