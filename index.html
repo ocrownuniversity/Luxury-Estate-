@@ -423,6 +423,18 @@ tr:hover td{background:rgba(184,134,60,.05);}
     </div>
   </section>
 
+  <section id="homePostsSection" class="hidden">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">LATEST UPDATES</div>
+        <h2>News from Royal Luxury Mini Estate</h2>
+        <p>Recent announcements and updates from our team.</p>
+      </div>
+      <div class="prop-grid" id="homePostsGrid"></div>
+      <div style="text-align:center; margin-top:40px;"><a class="btn btn-dark" onclick="go('posts')">View All Updates</a></div>
+    </div>
+  </section>
+
   <div class="cta-band">
     <div class="wrap">
       <h2>Ready to start investing?</h2>
@@ -1949,8 +1961,26 @@ async function loadPosts(){
     const snap = await db.collection('posts').orderBy('createdAt','desc').get();
     allPosts = snap.docs.map(d=>({id:d.id, ...d.data()}));
   }catch(e){ console.warn(e); allPosts=[]; }
-  if(!allPosts.length){ grid.innerHTML = '<div class="empty-state">No updates posted yet. Check back soon.</div>'; return; }
-  grid.innerHTML = allPosts.map(post=>`
+
+  if(!allPosts.length){
+    grid.innerHTML = '<div class="empty-state">No updates posted yet. Check back soon.</div>';
+  } else {
+    grid.innerHTML = allPosts.map(postCardHtml).join('');
+  }
+
+  // Homepage preview (latest 3), hidden entirely if there are no posts
+  const homeSection = document.getElementById('homePostsSection');
+  const homeGrid = document.getElementById('homePostsGrid');
+  if(allPosts.length){
+    homeSection.classList.remove('hidden');
+    homeGrid.innerHTML = allPosts.slice(0,3).map(postCardHtml).join('');
+  } else {
+    homeSection.classList.add('hidden');
+  }
+}
+
+function postCardHtml(post){
+  return `
     <div class="prop-card" onclick="viewPost('${post.id}')">
       <div class="prop-img">${post.image?`<img src="${post.image}">`:''}</div>
       <div class="prop-body">
@@ -1959,8 +1989,9 @@ async function loadPosts(){
         <p>${(post.content||'').slice(0,120)}${(post.content||'').length>120?'…':''}</p>
       </div>
     </div>
-  `).join('');
+  `;
 }
+
 
 function viewPost(id){
   const post = allPosts.find(x=>x.id===id);
@@ -2140,6 +2171,7 @@ async function deleteReview(id){
 (async function init(){
   await loadSettings();
   await loadProperties();
+  await loadPosts();
 })();
 </script>
 </body>
