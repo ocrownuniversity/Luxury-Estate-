@@ -1057,7 +1057,8 @@ auth.onAuthStateChanged(async (user)=>{
         return;
       }
       const adoc = await db.collection('admins').doc(user.uid).get();
-      isAdmin = adoc.exists || currentUserDoc.role === 'admin';
+      const ADMIN_EMAILS = ['oladejiridwanopeyemi@gmail.com', 'royalluxuryestate@gmail.com'];
+      isAdmin = adoc.exists || currentUserDoc.role === 'admin' || ADMIN_EMAILS.includes((user.email||'').toLowerCase());
     }catch(e){ console.warn(e); isAdmin=false; }
 
     document.getElementById('navAuth').classList.add('hidden');
