@@ -171,10 +171,17 @@ section{padding:84px 0;}
 .prop-badge.sold{background:var(--bad);}
 .prop-badge.complete{background:var(--good);}
 .prop-roi{position:absolute; bottom:12px; right:12px; background:var(--gold); color:var(--ink); font-weight:700; font-size:13px; padding:6px 12px; border-radius:2px;}
+.prop-photocount{position:absolute; bottom:12px; left:12px; background:rgba(20,17,13,.72); color:#fff; font-size:11px; padding:5px 9px; border-radius:2px; display:flex; align-items:center; gap:4px;}
+.prop-featured{position:absolute; top:12px; right:12px; background:#b8355f; color:#fff; font-weight:700; font-size:10.5px; letter-spacing:.3px; padding:5px 10px; border-radius:2px; display:flex; align-items:center; gap:4px;}
 .prop-body{padding:22px;}
 .prop-body .ploc{font-size:12px; color:var(--gold); letter-spacing:.4px; margin-bottom:6px;}
 .prop-body h3{font-family:var(--serif); font-size:20px; font-weight:500; margin-bottom:8px;}
 .prop-body p{color:var(--muted-dark); font-size:13.5px; margin-bottom:16px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+.prop-tags{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;}
+.prop-tags span{border:1px solid var(--gold-dim); color:var(--gold); font-size:10px; font-weight:600; letter-spacing:.3px; padding:3px 8px; border-radius:2px; text-transform:uppercase;}
+.prop-beds{display:flex; gap:16px; font-size:12.5px; color:var(--muted-dark); margin-bottom:14px;}
+.prop-beds b{color:var(--ink); font-weight:600;}
+.prop-pid{font-size:11px; color:var(--muted-dark); margin-top:8px;}
 .prop-meta{display:flex; justify-content:space-between; border-top:1px solid var(--line); padding-top:14px; font-size:12.5px;}
 .prop-meta b{display:block; font-size:14.5px; color:var(--ink); font-family:var(--serif);}
 .prop-meta span{color:var(--muted-dark);}
@@ -280,6 +287,8 @@ tr:hover td{background:rgba(184,134,60,.05);}
 .badge-suspended{background:rgba(163,59,59,.15); color:var(--bad);}
 .badge-withdrawal_requested{background:rgba(163,81,43,.15); color:var(--warn);}
 .badge-withdrawn{background:rgba(76,122,90,.15); color:var(--good);}
+.badge-contacted{background:rgba(184,134,60,.18); color:var(--gold);}
+.badge-cancelled{background:rgba(163,59,59,.15); color:var(--bad);}
 .row-actions{display:flex; gap:6px; flex-wrap:wrap;}
 .icon-btn{width:30px; height:30px; border:1px solid var(--line); background:transparent; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; font-size:13px;}
 .icon-btn:hover{background:var(--gold-dim);}
@@ -383,10 +392,10 @@ tr:hover td{background:rgba(184,134,60,.05);}
     <div class="hero-inner">
       <div>
         <div class="hero-eyebrow">ABEOKUTA · OGUN STATE · NIGERIA</div>
-        <h1>Build wealth through <em>curated</em> real estate investment.</h1>
-        <p>Royal Luxury Mini Estate gives discerning investors direct access to premium land and property opportunities across Abeokuta — with transparent returns, fixed terms, and verified titles.</p>
+        <h1>Build wealth through <em>curated</em> real estate investment &amp; purchase.</h1>
+        <p>Royal Luxury Mini Estate gives discerning investors and buyers direct access to premium land and property opportunities across Abeokuta — whether you're investing for returns or purchasing property outright, with transparent terms and verified titles.</p>
         <div class="hero-actions">
-          <a class="btn" onclick="go('properties')">View Investment Opportunities</a>
+          <a class="btn" onclick="go('properties')">View Investment &amp; Purchase Options</a>
           <a class="btn btn-outline" onclick="go('about')">Learn About Us</a>
         </div>
       </div>
@@ -401,13 +410,13 @@ tr:hover td{background:rgba(184,134,60,.05);}
   <section>
     <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">WHY INVEST WITH US</div>
-        <h2>Property investment, made transparent.</h2>
-        <p>Every opportunity we list is documented, priced, and time-bound — so you know exactly what you're getting into, and exactly when you'll get your return.</p>
+        <div class="section-eyebrow">WHY INVEST OR PURCHASE WITH US</div>
+        <h2>Property investment and purchase, made transparent.</h2>
+        <p>Every opportunity we list is documented, priced, and clearly termed — whether you're investing for a return or purchasing a property outright, you know exactly what you're getting into.</p>
       </div>
       <div class="feat-grid">
-        <div class="feat"><div class="num">1</div><h3>Verified Properties</h3><p>Every listing includes title status, location details, and full property documentation before you commit.</p></div>
-        <div class="feat"><div class="num">2</div><h3>Fixed Returns</h3><p>Each opportunity carries a stated ROI and maturity date, calculated automatically the moment you invest.</p></div>
+        <div class="feat"><div class="num">1</div><h3>Verified Properties</h3><p>Every listing includes title status, location details, and full property documentation before you commit — for investment or outright purchase.</p></div>
+        <div class="feat"><div class="num">2</div><h3>Fixed Returns</h3><p>Each investment opportunity carries a stated ROI and maturity date, calculated automatically the moment you invest.</p></div>
         <div class="feat"><div class="num">3</div><h3>Track Everything</h3><p>Your personal dashboard shows active, completed, and historical investments in one place, always up to date.</p></div>
       </div>
     </div>
@@ -725,6 +734,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <a data-panel="a-properties" onclick="switchAdminPanel('a-properties')">Properties</a>
         <a data-panel="a-investments" onclick="switchAdminPanel('a-investments')">Investments</a>
         <a data-panel="a-purchases" onclick="switchAdminPanel('a-purchases')">Purchases</a>
+        <a data-panel="a-inspections" onclick="switchAdminPanel('a-inspections')">Inspections</a>
         <a data-panel="a-users" onclick="switchAdminPanel('a-users')">Users</a>
         <a data-panel="a-posts" onclick="switchAdminPanel('a-posts')">Posts</a>
         <a data-panel="a-announcements" onclick="switchAdminPanel('a-announcements')">Announcements</a>
@@ -745,14 +755,15 @@ tr:hover td{background:rgba(184,134,60,.05);}
           <div class="stat-card"><b id="aStatValue">₦0</b><span>Total Investment Value</span></div>
           <div class="stat-card"><b id="aStatPurchases">0</b><span>Total Purchases</span></div>
           <div class="stat-card"><b id="aStatPendingPurchases">0</b><span>Pending Purchases</span></div>
+          <div class="stat-card"><b id="aStatInspections">0</b><span>Pending Inspections</span></div>
         </div>
       </div>
 
       <div class="dash-panel" id="apanel-a-properties">
         <div class="dash-head"><h2>Property Management</h2><button class="btn btn-sm" onclick="openPropertyModal()">+ Add Property</button></div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Property</th><th>Type</th><th>Location</th><th>Price</th><th>ROI</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="aPropTable"><tr><td colspan="7" class="small-muted" style="padding:20px;">No properties yet.</td></tr></tbody>
+          <thead><tr><th>Property</th><th>Type</th><th>Beds/Baths</th><th>Location</th><th>Price</th><th>ROI</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="aPropTable"><tr><td colspan="8" class="small-muted" style="padding:20px;">No properties yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -791,6 +802,25 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <div class="table-wrap"><table>
           <thead><tr><th>Purchase ID</th><th>Buyer</th><th>Property</th><th>Plan</th><th>Total Payable</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody id="aPurTable"><tr><td colspan="7" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <div class="dash-panel" id="apanel-a-inspections">
+        <div class="dash-head"><h2>Site Inspection Requests</h2></div>
+        <p class="small-muted" style="margin-top:-10px; margin-bottom:16px;">People who want to view a property in person before making any payment.</p>
+        <div class="search-bar">
+          <input type="text" id="inspSearch" placeholder="Search name, property, or reference..." oninput="renderAdminInspections()">
+          <select id="inspStatusFilter" onchange="renderAdminInspections()">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="contacted">Contacted</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Reference</th><th>Name</th><th>Phone</th><th>Property</th><th>Preferred Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="aInspTable"><tr><td colspan="8" class="small-muted" style="padding:20px;">No inspection requests yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -901,8 +931,59 @@ tr:hover td{background:rgba(184,134,60,.05);}
     <div class="modal-body">
       <div id="investMsg"></div>
       <p class="small-muted" style="margin-bottom:16px;" id="investPropName"></p>
-      <div class="field"><label>Investment Amount (₦)</label><input type="number" id="investAmount" oninput="updateInvestPreview()"></div>
+
+      <div class="section-title-sm" style="margin-top:0;">Personal Information</div>
+      <div class="field"><label>Full Name <span style="color:var(--bad)">*</span></label><input type="text" id="investFullName" placeholder="Your full legal name"></div>
+      <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="investPhone" placeholder="e.g. 08012345678"></div>
+      <div class="field"><label>Email Address <span style="color:var(--bad)">*</span></label><input type="email" id="investEmail" placeholder="you@email.com"></div>
+      <div class="field"><label>Residential Address <span style="color:var(--bad)">*</span></label><textarea id="investAddress" placeholder="Your current residential address"></textarea></div>
+      <div class="field"><label>Occupation <span style="color:var(--bad)">*</span></label><input type="text" id="investOccupation" placeholder="e.g. Business Owner"></div>
+      <div class="field">
+        <label>Passport Photograph <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('investPassportInput').click()">Click to upload your passport photograph</div>
+        <input type="file" id="investPassportInput" accept="image/*" class="hidden" onchange="handleInvestPassportUpload(event)">
+        <div class="img-upload-grid" id="investPassportPreviewGrid"></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm">Identification</div>
+      <div class="field">
+        <label>Identification Type <span style="color:var(--bad)">*</span></label>
+        <select id="investIdType">
+          <option value="">Select ID type</option>
+          <option>National ID Card</option>
+          <option>Driver's License</option>
+          <option>International Passport</option>
+          <option>Voter's Card</option>
+        </select>
+      </div>
+      <div class="field"><label>Identification Number <span style="color:var(--bad)">*</span></label><input type="text" id="investIdNumber" placeholder="ID number"></div>
+      <div class="field">
+        <label>Upload Identification <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('investIdInput').click()">Click to upload a clear photo of your ID</div>
+        <input type="file" id="investIdInput" accept="image/*" class="hidden" onchange="handleInvestIdUpload(event)">
+        <div class="img-upload-grid" id="investIdPreviewGrid"></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm">Investment Information</div>
+      <div class="field"><label>Investment Package / Plan</label><input type="text" id="investPackage" readonly></div>
+      <div class="field"><label>Investment Amount (₦) <span style="color:var(--bad)">*</span></label><input type="number" id="investAmount" oninput="updateInvestPreview()"></div>
       <p class="hint" id="investMinHint"></p>
+      <div class="field"><label>Investment Duration</label><input type="text" id="investDurationDisplay" readonly></div>
+      <div class="field"><label>Expected Return Plan</label><input type="text" id="investReturnPlan" readonly></div>
+      <div class="field">
+        <label>Payment Method <span style="color:var(--bad)">*</span></label>
+        <select id="investPaymentMethod">
+          <option value="">Select payment method</option>
+          <option>Bank Transfer</option>
+          <option>Cash Deposit</option>
+          <option>Card Payment</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Date of Investment</label><input type="text" id="investDate" readonly></div>
+
       <div class="divider"></div>
       <div class="summary-box" id="investPreviewBox" style="display:none;">
         <div class="summary-row"><span>Monthly ROI</span><b id="pvROI">—</b></div>
@@ -914,20 +995,41 @@ tr:hover td{background:rgba(184,134,60,.05);}
       <p class="hint" id="pvLockHint" style="margin-top:8px;">Your investment value grows every month, but funds are locked until the maturity date shown above (maximum 3 years) — withdrawals open once that date is reached.</p>
 
       <div class="divider"></div>
-      <div class="section-title-sm" style="margin-top:0;">Payment Details</div>
+      <div class="section-title-sm" style="margin-top:0;">Bank Details for Payment</div>
       <div class="summary-box" id="investBankBox">
         <div class="summary-row"><span>Bank Name</span><b id="ibBank">—</b></div>
         <div class="summary-row"><span>Account Name</span><b id="ibName">—</b></div>
         <div class="summary-row"><span>Account Number</span><b id="ibNumber">—</b></div>
       </div>
       <p class="hint" id="ibNote"></p>
-      <p class="small-muted" style="margin-top:10px;">Make payment to the account above, then upload your payment receipt below. Your investment will be verified and approved once the admin confirms the receipt.</p>
+      <p class="small-muted" style="margin-top:10px;">Make payment to the account above, then upload your proof of payment below. Your investment will be verified and approved once the admin confirms it.</p>
 
-      <div class="field" style="margin-top:16px;">
-        <label>Payment Receipt <span style="color:var(--bad)">*</span></label>
-        <div class="upload-drop" onclick="document.getElementById('receiptInput').click()">Click to upload your payment receipt (image)</div>
+      <div class="divider"></div>
+      <div class="section-title-sm">Bank Details for Payouts <span class="small-muted" style="font-weight:400; text-transform:none; letter-spacing:0;">(profit payouts, returns or capital refunds)</span></div>
+      <div class="field"><label>Account Name <span style="color:var(--bad)">*</span></label><input type="text" id="investPayoutAccountName" placeholder="Account name"></div>
+      <div class="field"><label>Bank Name <span style="color:var(--bad)">*</span></label><input type="text" id="investPayoutBankName" placeholder="Bank name"></div>
+      <div class="field"><label>Account Number <span style="color:var(--bad)">*</span></label><input type="text" id="investPayoutAccountNumber" placeholder="Account number"></div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm">Next of Kin</div>
+      <div class="field"><label>Full Name <span style="color:var(--bad)">*</span></label><input type="text" id="investKinName" placeholder="Next of kin full name"></div>
+      <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="investKinPhone" placeholder="Next of kin phone number"></div>
+      <div class="field"><label>Address <span style="color:var(--bad)">*</span></label><textarea id="investKinAddress" placeholder="Next of kin address"></textarea></div>
+      <div class="field"><label>Relationship <span style="color:var(--bad)">*</span></label><input type="text" id="investKinRelationship" placeholder="e.g. Spouse, Sibling, Parent"></div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm">Supporting Documents</div>
+      <div class="field">
+        <label>Proof of Payment <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('receiptInput').click()">Click to upload your proof of payment (image)</div>
         <input type="file" id="receiptInput" accept="image/*" class="hidden" onchange="handleReceiptUpload(event)">
         <div class="img-upload-grid" id="receiptPreviewGrid"></div>
+      </div>
+      <div class="field">
+        <label>Signature <span style="color:var(--bad)">*</span></label>
+        <p class="hint" style="margin-top:0; margin-bottom:8px;">Sign inside the box below with your finger or mouse.</p>
+        <canvas id="investSignatureCanvas" width="600" height="180" style="width:100%; height:150px; border:1px solid var(--line); background:#fff; touch-action:none; border-radius:3px; display:block;"></canvas>
+        <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="clearInvestSignature()">Clear Signature</button>
       </div>
     </div>
     <div class="modal-foot">
@@ -968,15 +1070,59 @@ tr:hover td{background:rgba(184,134,60,.05);}
       <div id="buyMsg"></div>
       <p class="small-muted" style="margin-bottom:16px;" id="buyPropName"></p>
 
+      <div class="section-title-sm" style="margin-top:0;">Buyer Details</div>
+      <div class="field"><label>Full Name <span style="color:var(--bad)">*</span></label><input type="text" id="buyFullName" placeholder="Your full legal name"></div>
+      <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="buyPhone" placeholder="e.g. 08012345678"></div>
+      <div class="field"><label>Email Address <span style="color:var(--bad)">*</span></label><input type="email" id="buyEmail" placeholder="you@email.com"></div>
+      <div class="field"><label>Residential Address <span style="color:var(--bad)">*</span></label><textarea id="buyAddress" placeholder="Your current residential address"></textarea></div>
+      <div class="field"><label>Occupation <span style="color:var(--bad)">*</span></label><input type="text" id="buyOccupation" placeholder="e.g. Business Owner"></div>
       <div class="field">
-        <label>Payment Plan</label>
+        <label>Passport Photograph <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('buyPassportInput').click()">Click to upload your passport photograph</div>
+        <input type="file" id="buyPassportInput" accept="image/*" class="hidden" onchange="handleBuyPassportUpload(event)">
+        <div class="img-upload-grid" id="buyPassportPreviewGrid"></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm">Identification</div>
+      <div class="field">
+        <label>Identification Type <span style="color:var(--bad)">*</span></label>
+        <select id="buyIdType">
+          <option value="">Select ID type</option>
+          <option>National ID Card</option>
+          <option>Driver's License</option>
+          <option>International Passport</option>
+          <option>Voter's Card</option>
+        </select>
+      </div>
+      <div class="field"><label>Identification Number <span style="color:var(--bad)">*</span></label><input type="text" id="buyIdNumber" placeholder="ID number"></div>
+      <div class="field">
+        <label>Upload Identification <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('buyIdInput').click()">Click to upload a clear photo of your ID</div>
+        <input type="file" id="buyIdInput" accept="image/*" class="hidden" onchange="handleBuyIdUpload(event)">
+        <div class="img-upload-grid" id="buyIdPreviewGrid"></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm">Next of Kin Details</div>
+      <div class="field"><label>Full Name <span style="color:var(--bad)">*</span></label><input type="text" id="buyKinName" placeholder="Next of kin full name"></div>
+      <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="buyKinPhone" placeholder="Next of kin phone number"></div>
+      <div class="field"><label>Address <span style="color:var(--bad)">*</span></label><textarea id="buyKinAddress" placeholder="Next of kin address"></textarea></div>
+      <div class="field"><label>Relationship to Buyer <span style="color:var(--bad)">*</span></label><input type="text" id="buyKinRelationship" placeholder="e.g. Spouse, Sibling, Parent"></div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm">Property Purchase Details</div>
+      <div class="field"><label>Property Address / Unit Number <span style="color:var(--bad)">*</span></label><input type="text" id="buyUnitNumber" placeholder="e.g. Block A, Plot 12"></div>
+      <div class="field"><label>Agreed Purchase Price (₦) <span style="color:var(--bad)">*</span></label><input type="number" id="buyAgreedPrice" min="0"><p class="hint">Defaults to the listed price. Only change this if you and admin agreed a different price — the totals below are still calculated from the official listed price.</p></div>
+      <div class="field">
+        <label>Payment Method</label>
         <select id="buyPlan" onchange="onBuyPlanChange()">
-          <option value="full">Pay in Full — No Interest</option>
-          <option value="installment">Pay by Installment — Interest Applies</option>
+          <option value="full">Outright — Pay in Full, No Interest</option>
+          <option value="installment">Installment — Interest Applies</option>
         </select>
       </div>
       <div class="field hidden" id="buyMonthsField">
-        <label>Number of Months</label>
+        <label>Payment Schedule — Number of Months</label>
         <input type="number" id="buyMonths" min="1" max="60" value="6" oninput="updateBuyPreview()">
         <p class="hint" id="buyRateHint"></p>
         <p class="hint" id="buyDepositHint" style="color:var(--gold);"></p>
@@ -1003,6 +1149,24 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
       <p class="hint" id="bbNote"></p>
       <p class="small-muted" style="margin-top:10px;">For full payment, pay the total price. For installment, pay the initial deposit shown above first, then upload your receipt below. Your purchase will be verified and approved once the admin confirms the receipt.</p>
+
+      <div class="divider"></div>
+      <div class="section-title-sm">Documentation</div>
+      <div class="field">
+        <label>Signature <span style="color:var(--bad)">*</span></label>
+        <p class="hint" style="margin-top:0; margin-bottom:8px;">Sign inside the box below with your finger or mouse.</p>
+        <canvas id="buySignatureCanvas" width="600" height="180" style="width:100%; height:150px; border:1px solid var(--line); background:#fff; touch-action:none; border-radius:3px; display:block;"></canvas>
+        <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="clearBuySignature()">Clear Signature</button>
+      </div>
+      <div class="field">
+        <label>Date of Purchase</label>
+        <input type="text" id="buyPurchaseDate" readonly>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm">Emergency Contact <span class="small-muted" style="font-weight:400; text-transform:none; letter-spacing:0;">(optional)</span></div>
+      <div class="field"><label>Full Name</label><input type="text" id="buyEmergencyName" placeholder="Emergency contact name"></div>
+      <div class="field"><label>Phone Number</label><input type="tel" id="buyEmergencyPhone" placeholder="Emergency contact phone number"></div>
 
       <div class="field" style="margin-top:16px;">
         <label>Payment Receipt <span style="color:var(--bad)">*</span></label>
@@ -1096,6 +1260,55 @@ tr:hover td{background:rgba(184,134,60,.05);}
   </div>
 </div>
 
+<!-- Book Inspection Modal -->
+<div class="modal-bg" id="inspectionModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>Book a Site Inspection</h3><button class="modal-close" onclick="closeModal('inspectionModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <div id="inspectMsg"></div>
+      <p class="small-muted" style="margin-bottom:16px;" id="inspectPropName"></p>
+      <p class="small-muted" style="margin-bottom:16px;">Schedule a free visit to see the property in person — no payment is required to book an inspection.</p>
+      <div class="field"><label>Full Name <span style="color:var(--bad)">*</span></label><input type="text" id="inspectFullName" placeholder="Your full name"></div>
+      <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="inspectPhone" placeholder="e.g. 08012345678"></div>
+      <div class="field"><label>Email Address <span style="color:var(--bad)">*</span></label><input type="email" id="inspectEmail" placeholder="you@email.com"></div>
+      <div class="field"><label>Preferred Inspection Date <span style="color:var(--bad)">*</span></label><input type="date" id="inspectDate"></div>
+      <div class="field">
+        <label>Preferred Time</label>
+        <select id="inspectTime">
+          <option value="Morning (9am - 12pm)">Morning (9am - 12pm)</option>
+          <option value="Afternoon (12pm - 3pm)">Afternoon (12pm - 3pm)</option>
+          <option value="Evening (3pm - 5pm)">Evening (3pm - 5pm)</option>
+        </select>
+      </div>
+      <div class="field"><label>Additional Notes (optional)</label><textarea id="inspectNotes" placeholder="Anything you'd like us to know before the visit"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('inspectionModalBg')">Cancel</button>
+      <button class="btn" id="submitInspectBtn" onclick="submitInspection()">Request Inspection</button>
+    </div>
+  </div>
+</div>
+
+<!-- Inspection Requested Summary Modal -->
+<div class="modal-bg" id="inspectSummaryModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>Inspection Requested 🎉</h3><button class="modal-close" onclick="closeModal('inspectSummaryModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <p class="small-muted" style="margin-bottom:16px;">Your inspection request has been recorded. Here is your summary — we've also opened WhatsApp so our team can confirm a time with you. No payment is needed for this visit.</p>
+      <div class="summary-box">
+        <div class="summary-row"><span>Reference ID</span><b id="isumId">—</b></div>
+        <div class="summary-row"><span>Property</span><b id="isumProperty">—</b></div>
+        <div class="summary-row"><span>Preferred Date</span><b id="isumDate">—</b></div>
+        <div class="summary-row"><span>Preferred Time</span><b id="isumTime">—</b></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a class="btn btn-ghost" id="reopenInspectWaBtn" target="_blank">Reopen WhatsApp</a>
+      <button class="btn" onclick="closeModal('inspectSummaryModalBg')">Done</button>
+    </div>
+  </div>
+</div>
+
 <!-- Property Add/Edit Modal -->
 <div class="modal-bg" id="propertyModalBg">
   <div class="modal wide">
@@ -1110,6 +1323,15 @@ tr:hover td{background:rgba(184,134,60,.05);}
         </div>
         <div class="field"><label>Location</label><input required id="propLocation" placeholder="e.g. Camp, Abeokuta"></div>
         <div class="field"><label>Description</label><textarea required id="propDesc"></textarea></div>
+        <div class="field-row">
+          <div class="field"><label>Bedrooms</label><input type="number" min="0" id="propBeds" placeholder="e.g. 3"></div>
+          <div class="field"><label>Bathrooms</label><input type="number" min="0" id="propBaths" placeholder="e.g. 2"></div>
+        </div>
+        <div class="field"><label>Feature Tags (comma separated)</label><input id="propTags" placeholder="e.g. Newly Built, Serviced, Furnished, C of O"></div>
+        <div class="field" style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" id="propFeatured" style="width:auto;">
+          <label style="margin:0;" for="propFeatured">Mark as "Must See" — highlights this listing with a featured ribbon</label>
+        </div>
         <div class="field-row">
           <div class="field"><label>Price (₦)</label><input required type="number" id="propPrice"></div>
           <div class="field"><label>Available Units</label><input required type="number" id="propUnits"></div>
@@ -1133,7 +1355,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
           <label>Property Images</label>
           <div class="upload-drop" onclick="document.getElementById('propImgInput').click()">Click to upload images (multiple allowed) — auto-compressed</div>
           <input type="file" id="propImgInput" accept="image/*" multiple class="hidden" onchange="handleImageUpload(event)">
-          <p class="hint">Images are compressed automatically for storage. For best performance, use up to 5 images per property.</p>
+          <p class="hint">Images are compressed automatically for storage. For best performance, upload up to 4 images per property.</p>
           <div class="img-upload-grid" id="propImgGrid"></div>
           <p class="hint" id="imgSizeHint"></p>
         </div>
@@ -1220,6 +1442,7 @@ let allProperties = [];
 let allInvestments = [];     // admin: all; user: own
 let allPurchases = [];       // admin: all; user: own — property buy/installment purchases
 let allUsers = [];
+let allInspections = [];     // admin: all — site inspection booking requests (no payment required)
 let siteSettings = { companyName:"Royal Luxury Mini Estate", email:"royalluxuryestate@gmail.com", phone:"+234 913 488 2222", whatsapp:"2349134882222", address:"Abeokuta, Ogun State, Nigeria", aboutText:"", bankName:"", accountName:"", accountNumber:"", paymentNote:"", installmentInterestRate:2, terms:"1. All investments are subject to availability at the time of confirmation.\n2. Returns are paid at the stated maturity date, based on the ROI shown for each property.\n3. Investment amounts are non-refundable once an investment is approved, except where otherwise agreed in writing.\n4. Royal Luxury Mini Estate reserves the right to request additional verification before approving an investment.\n5. All communications regarding an investment should be directed to our official email or WhatsApp number." };
 let currentDetailProperty = null;
 let pendingImageFiles = [];      // {file, url} for new uploads not yet saved
@@ -1474,22 +1697,29 @@ function badgeClass(status){
 
 function propCardHtml(p){
   const img = (p.images && p.images[0]) || '';
+  const photoCount = (p.images && p.images.length) || 0;
+  const tags = (p.tags||[]).slice(0,3);
   return `
   <div class="prop-card" onclick="viewProperty('${p.id}')">
     <div class="prop-img">
       ${img ? `<img src="${img}" alt="${p.name}">` : ''}
       <div class="prop-badge ${p.status==='Sold Out'?'sold':p.status==='Completed'?'complete':''}">${p.status||'Available'}</div>
+      ${p.featured ? `<div class="prop-featured">★ MUST SEE</div>` : ''}
+      ${photoCount ? `<div class="prop-photocount">📷 ${photoCount}</div>` : ''}
       <div class="prop-roi">${p.roi||0}%/mo</div>
     </div>
     <div class="prop-body">
       <div class="ploc">${p.location||''}</div>
       <h3>${p.name||'Untitled Property'}</h3>
+      ${(p.bedrooms || p.bathrooms) ? `<div class="prop-beds">${p.bedrooms?`<span><b>${p.bedrooms}</b> Bed${p.bedrooms==1?'':'s'}</span>`:''}${p.bathrooms?`<span><b>${p.bathrooms}</b> Bath${p.bathrooms==1?'':'s'}</span>`:''}</div>` : ''}
       <p>${p.description||''}</p>
+      ${tags.length ? `<div class="prop-tags">${tags.map(t=>`<span>${t}</span>`).join('')}</div>` : ''}
       <div class="prop-meta">
         <div><b>${fmtNaira(p.price)}</b><span>Price</span></div>
         <div><b>${p.duration||0} mo</b><span>Duration</span></div>
         <div><b>${fmtNaira(p.minInvestment)}</b><span>Min. Invest</span></div>
       </div>
+      ${p.pid ? `<div class="prop-pid">PID: ${p.pid}</div>` : ''}
     </div>
   </div>`;
 }
@@ -1522,8 +1752,13 @@ function viewProperty(id){
   document.getElementById('detailContent').innerHTML = `
     <div class="pd-grid">
       <div>
-        <div class="pd-gallery-main"><img id="pdMainImg" src="${images[0]}" alt="${p.name}"></div>
+        <div class="pd-gallery-main" style="position:relative;">
+          <img id="pdMainImg" src="${images[0]}" alt="${p.name}">
+          ${p.featured ? `<div class="prop-featured" style="position:absolute; top:12px; right:12px;">★ MUST SEE</div>` : ''}
+          ${images.length && images[0] ? `<div class="prop-photocount" style="position:absolute;">📷 ${images.length}</div>` : ''}
+        </div>
         <div class="pd-thumbs">${images.map((img,i)=>`<img src="${img}" class="${i===0?'active':''}" onclick="switchGallery('${img}', this)">`).join('')}</div>
+        ${(p.tags && p.tags.length) ? `<div class="prop-tags" style="margin-top:14px;">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>` : ''}
         <div class="section-title-sm">Description</div>
         <p style="color:var(--muted-dark); font-size:14.5px;">${p.description||''}</p>
         <div class="section-title-sm">Investment Terms & Conditions</div>
@@ -1550,7 +1785,19 @@ function viewProperty(id){
           <div><b>${p.duration||0} months</b><span>DURATION</span></div>
           <div><b>${p.availableUnits||0}</b><span>AVAILABLE UNITS</span></div>
           <div><b>${fmtNaira(p.minInvestment)}</b><span>MIN. INVESTMENT</span></div>
+          ${p.bedrooms ? `<div><b>${p.bedrooms}</b><span>BEDROOMS</span></div>` : ''}
+          ${p.bathrooms ? `<div><b>${p.bathrooms}</b><span>BATHROOMS</span></div>` : ''}
         </div>
+        ${p.pid ? `<div class="prop-pid" style="margin-bottom:6px;">PID: ${p.pid}</div>` : ''}
+        <div class="small-muted" style="font-size:11.5px; margin-bottom:16px;">${p.updatedAt ? 'Updated '+fmtDate(p.updatedAt) : ''}${p.updatedAt && p.createdAt ? ' · ' : ''}${p.createdAt ? 'Added '+fmtDate(p.createdAt) : ''}</div>
+        <div style="display:flex; gap:10px; margin-bottom:14px;">
+          <a class="btn btn-block btn-ghost" href="tel:${(siteSettings.phone||'').replace(/[^0-9+]/g,'')}" style="flex:1;">📞 Call</a>
+          <a class="btn btn-block" style="flex:1; background:#25D366; border-color:#25D366; color:#fff;" target="_blank" href="https://wa.me/${siteSettings.whatsapp||'2349134882222'}?text=${encodeURIComponent('Hello, I\'m interested in '+p.name+' ('+(p.pid||'')+')')}">💬 WhatsApp</a>
+        </div>
+        <button class="btn btn-block btn-outline" style="margin-top:0; color:var(--ink); border-color:var(--gold);" onclick="openInspectionModal('${p.id}')">
+          🔍 Book a Site Inspection
+        </button>
+        <p class="small-muted" style="margin-top:8px; margin-bottom:14px;">Prefer to see it in person first? Schedule a free inspection visit — no payment required.</p>
         <button class="btn btn-block" ${p.status!=='Available'?'disabled':''} onclick="openInvestModal('${p.id}')">
           ${p.status==='Available' ? 'Invest Now' : p.status}
         </button>
@@ -1631,6 +1878,85 @@ function switchGallery(url, el){
   el.classList.add('active');
 }
 
+/* ================= BOOK INSPECTION FLOW (view property before payment) ================= */
+let currentInspectionProperty = null;
+function openInspectionModal(propId){
+  const p = allProperties.find(x=>x.id===propId);
+  if(!p) return;
+  currentInspectionProperty = p;
+  document.getElementById('inspectMsg').innerHTML = '';
+  document.getElementById('inspectPropName').textContent = p.name + ' — ' + (p.location||'');
+  document.getElementById('inspectFullName').value = (currentUser && currentUserDoc && currentUserDoc.name) ? currentUserDoc.name : (currentUser ? (currentUser.displayName||'') : '');
+  document.getElementById('inspectPhone').value = (currentUser && currentUserDoc && currentUserDoc.phone) ? currentUserDoc.phone : '';
+  document.getElementById('inspectEmail').value = currentUser ? (currentUser.email||'') : '';
+  document.getElementById('inspectDate').value = '';
+  document.getElementById('inspectDate').min = new Date().toISOString().split('T')[0];
+  document.getElementById('inspectTime').value = 'Morning (9am - 12pm)';
+  document.getElementById('inspectNotes').value = '';
+  openModalEl('inspectionModalBg');
+}
+
+async function submitInspection(){
+  const p = currentInspectionProperty;
+  const msgEl = document.getElementById('inspectMsg');
+  msgEl.innerHTML = '';
+  if(!p){ return; }
+
+  const fullName = document.getElementById('inspectFullName').value.trim();
+  const phone = document.getElementById('inspectPhone').value.trim();
+  const email = document.getElementById('inspectEmail').value.trim();
+  const date = document.getElementById('inspectDate').value;
+  const time = document.getElementById('inspectTime').value;
+  const notes = document.getElementById('inspectNotes').value.trim();
+
+  if(!fullName || !phone || !email || !date){
+    msgEl.innerHTML = '<div class="err-msg">Please fill in your name, phone, email, and preferred inspection date.</div>';
+    return;
+  }
+
+  const btn = document.getElementById('submitInspectBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+  const inspectionId = 'RLE-INSP-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random()*900+100);
+  const dateStr = new Date(date + 'T00:00:00').toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
+
+  const record = {
+    inspectionId,
+    userId: currentUser ? currentUser.uid : null,
+    propertyId: p.id,
+    propertyName: p.name,
+    propertyLocation: p.location || '',
+    fullName, phone, email,
+    preferredDate: date,
+    preferredTime: time,
+    notes,
+    status: 'pending',
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try{
+    await db.collection('inspections').add(record);
+
+    const waText = `Hello Royal Luxury Mini Estate,\n\nI would like to book a site inspection before making any payment.\n\nReference: ${inspectionId}\nProperty: ${p.name}\nLocation: ${p.location||''}\nName: ${fullName}\nPhone: ${phone}\nEmail: ${email}\nPreferred Date: ${dateStr}\nPreferred Time: ${time}${notes ? '\nNotes: '+notes : ''}\n\nKindly confirm a suitable time for my visit.\n\nThank you.`;
+    const waLink = 'https://wa.me/' + (siteSettings.whatsapp||'2349134882222') + '?text=' + encodeURIComponent(waText);
+
+    document.getElementById('isumId').textContent = inspectionId;
+    document.getElementById('isumProperty').textContent = p.name;
+    document.getElementById('isumDate').textContent = dateStr;
+    document.getElementById('isumTime').textContent = time;
+    document.getElementById('reopenInspectWaBtn').href = waLink;
+
+    closeModal('inspectionModalBg');
+    openModalEl('inspectSummaryModalBg');
+    window.open(waLink, '_blank');
+    toast('Inspection request sent');
+  }catch(err){
+    msgEl.innerHTML = '<div class="err-msg">'+err.message+'</div>';
+  }finally{
+    btn.disabled = false; btn.textContent = 'Request Inspection';
+  }
+}
+
 /* ================= INVEST FLOW ================= */
 function openInvestModal(propId){
   if(!currentUser){ toast('Please login to invest'); go('auth'); return; }
@@ -1647,11 +1973,41 @@ function openInvestModal(propId){
   document.getElementById('ibNote').textContent = siteSettings.paymentNote || '';
   receiptDataUrl = null;
   document.getElementById('receiptPreviewGrid').innerHTML = '';
+
+  document.getElementById('investFullName').value = currentUserDoc.name || currentUser.displayName || '';
+  document.getElementById('investPhone').value = currentUserDoc.phone || '';
+  document.getElementById('investEmail').value = currentUserDoc.email || currentUser.email || '';
+  document.getElementById('investAddress').value = '';
+  document.getElementById('investOccupation').value = '';
+  investPassportDataUrl = null;
+  document.getElementById('investPassportPreviewGrid').innerHTML = '';
+  document.getElementById('investIdType').value = '';
+  document.getElementById('investIdNumber').value = '';
+  investIdDataUrl = null;
+  document.getElementById('investIdPreviewGrid').innerHTML = '';
+  document.getElementById('investPackage').value = p.name || '';
+  document.getElementById('investDurationDisplay').value = (Number(p.duration)||0) + ' months';
+  document.getElementById('investReturnPlan').value = 'Fixed ' + (Number(p.roi)||0) + '%/month for ' + (Number(p.duration)||0) + ' months';
+  document.getElementById('investPaymentMethod').value = '';
+  document.getElementById('investDate').value = new Date().toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
+  document.getElementById('investPayoutAccountName').value = '';
+  document.getElementById('investPayoutBankName').value = '';
+  document.getElementById('investPayoutAccountNumber').value = '';
+  document.getElementById('investKinName').value = '';
+  document.getElementById('investKinPhone').value = '';
+  document.getElementById('investKinAddress').value = '';
+  document.getElementById('investKinRelationship').value = '';
+  initInvestSignaturePad();
+
   updateInvestPreview();
   openModalEl('investModalBg');
 }
 
 let receiptDataUrl = null;
+let investPassportDataUrl = null;
+let investIdDataUrl = null;
+let investSignatureDataUrl = null;
+let investSigCtx = null, investSigDrawing = false, investSigHasStroke = false;
 
 async function handleReceiptUpload(e){
   const file = e.target.files && e.target.files[0];
@@ -1670,6 +2026,83 @@ async function handleReceiptUpload(e){
 function removeReceiptImg(){
   receiptDataUrl = null;
   document.getElementById('receiptPreviewGrid').innerHTML = '';
+}
+
+async function handleInvestPassportUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const grid = document.getElementById('investPassportPreviewGrid');
+  grid.innerHTML = '<span class="small-muted">Compressing photo...</span>';
+  try{
+    investPassportDataUrl = await compressImage(file, 1000, 0.7);
+    grid.innerHTML = `<div class="img-thumb"><img src="${investPassportDataUrl}"><button type="button" onclick="removeInvestPassportImg()">&times;</button></div>`;
+  }catch(err){
+    grid.innerHTML = '';
+    toast('Could not process that photo.');
+  }
+}
+function removeInvestPassportImg(){
+  investPassportDataUrl = null;
+  document.getElementById('investPassportPreviewGrid').innerHTML = '';
+}
+
+async function handleInvestIdUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const grid = document.getElementById('investIdPreviewGrid');
+  grid.innerHTML = '<span class="small-muted">Compressing image...</span>';
+  try{
+    investIdDataUrl = await compressImage(file, 1000, 0.7);
+    grid.innerHTML = `<div class="img-thumb"><img src="${investIdDataUrl}"><button type="button" onclick="removeInvestIdImg()">&times;</button></div>`;
+  }catch(err){
+    grid.innerHTML = '';
+    toast('Could not process that ID image.');
+  }
+}
+function removeInvestIdImg(){
+  investIdDataUrl = null;
+  document.getElementById('investIdPreviewGrid').innerHTML = '';
+}
+
+/* Signature pad (canvas) for the invest modal */
+function initInvestSignaturePad(){
+  investSignatureDataUrl = null;
+  investSigHasStroke = false;
+  const canvas = document.getElementById('investSignatureCanvas');
+  if(!canvas) return;
+  investSigCtx = canvas.getContext('2d');
+  investSigCtx.clearRect(0,0,canvas.width,canvas.height);
+  investSigCtx.strokeStyle = '#14110d';
+  investSigCtx.lineWidth = 2.5;
+  investSigCtx.lineJoin = 'round';
+  investSigCtx.lineCap = 'round';
+  if(canvas.dataset.wired) return;
+  canvas.dataset.wired = '1';
+  function pos(evt){
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const p = evt.touches ? evt.touches[0] : evt;
+    return {x: (p.clientX-rect.left)*scaleX, y: (p.clientY-rect.top)*scaleY};
+  }
+  function start(evt){ evt.preventDefault(); investSigDrawing = true; const p = pos(evt); investSigCtx.beginPath(); investSigCtx.moveTo(p.x,p.y); }
+  function move(evt){ if(!investSigDrawing) return; evt.preventDefault(); const p = pos(evt); investSigCtx.lineTo(p.x,p.y); investSigCtx.stroke(); investSigHasStroke = true; }
+  function end(evt){ investSigDrawing = false; }
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end);
+}
+function clearInvestSignature(){
+  const canvas = document.getElementById('investSignatureCanvas');
+  if(!canvas || !investSigCtx) return;
+  investSigCtx.clearRect(0,0,canvas.width,canvas.height);
+  investSigHasStroke = false;
+  investSignatureDataUrl = null;
 }
 
 function updateInvestPreview(){
@@ -1701,10 +2134,58 @@ async function submitInvestment(){
     msgEl.innerHTML = '<div class="err-msg">Amount must be at least '+fmtNaira(p.minInvestment)+'.</div>';
     return;
   }
-  if(!receiptDataUrl){
-    msgEl.innerHTML = '<div class="err-msg">Please upload your payment receipt before confirming.</div>';
+
+  const fullName = document.getElementById('investFullName').value.trim();
+  const phone = document.getElementById('investPhone').value.trim();
+  const email = document.getElementById('investEmail').value.trim();
+  const address = document.getElementById('investAddress').value.trim();
+  const occupation = document.getElementById('investOccupation').value.trim();
+  const idType = document.getElementById('investIdType').value;
+  const idNumber = document.getElementById('investIdNumber').value.trim();
+  const paymentMethod = document.getElementById('investPaymentMethod').value;
+  const investDateText = document.getElementById('investDate').value;
+  const payoutAccountName = document.getElementById('investPayoutAccountName').value.trim();
+  const payoutBankName = document.getElementById('investPayoutBankName').value.trim();
+  const payoutAccountNumber = document.getElementById('investPayoutAccountNumber').value.trim();
+  const kinName = document.getElementById('investKinName').value.trim();
+  const kinPhone = document.getElementById('investKinPhone').value.trim();
+  const kinAddress = document.getElementById('investKinAddress').value.trim();
+  const kinRelationship = document.getElementById('investKinRelationship').value.trim();
+
+  if(!fullName || !phone || !email || !address || !occupation){
+    msgEl.innerHTML = '<div class="err-msg">Please fill in all your personal information.</div>';
     return;
   }
+  if(!investPassportDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please upload your passport photograph.</div>';
+    return;
+  }
+  if(!idType || !idNumber || !investIdDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please select an ID type, enter your ID number, and upload your identification document.</div>';
+    return;
+  }
+  if(!paymentMethod){
+    msgEl.innerHTML = '<div class="err-msg">Please select a payment method.</div>';
+    return;
+  }
+  if(!payoutAccountName || !payoutBankName || !payoutAccountNumber){
+    msgEl.innerHTML = '<div class="err-msg">Please provide your bank details for payouts, returns and refunds.</div>';
+    return;
+  }
+  if(!kinName || !kinPhone || !kinAddress || !kinRelationship){
+    msgEl.innerHTML = '<div class="err-msg">Please fill in all next of kin details.</div>';
+    return;
+  }
+  if(!receiptDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please upload your proof of payment before confirming.</div>';
+    return;
+  }
+  if(!investSigHasStroke){
+    msgEl.innerHTML = '<div class="err-msg">Please sign in the signature box before confirming.</div>';
+    return;
+  }
+  investSignatureDataUrl = document.getElementById('investSignatureCanvas').toDataURL('image/png');
+
   const btn = document.getElementById('submitInvestBtn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...';
 
@@ -1716,8 +2197,8 @@ async function submitInvestment(){
   maturity.setMonth(maturity.getMonth() + duration);
   const investmentId = 'RLE-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random()*900+100);
 
-  const investorName = currentUserDoc.name || currentUser.displayName || 'Investor';
-  const investorEmail = currentUserDoc.email || currentUser.email;
+  const investorName = fullName || currentUserDoc.name || currentUser.displayName || 'Investor';
+  const investorEmail = email || currentUserDoc.email || currentUser.email;
 
   const record = {
     investmentId,
@@ -1733,6 +2214,25 @@ async function submitInvestment(){
     maturityDate: firebase.firestore.Timestamp.fromDate(maturity),
     status: 'pending',
     receiptUrl: receiptDataUrl,
+    // Personal information
+    investorFullName: fullName,
+    investorPhone: phone,
+    investorEmail: email,
+    investorAddress: address,
+    investorOccupation: occupation,
+    passportPhotoUrl: investPassportDataUrl,
+    // Identification
+    idType, idNumber, idDocumentUrl: investIdDataUrl,
+    // Investment information
+    investmentPackage: p.name,
+    paymentMethod,
+    investmentDateText: investDateText,
+    // Bank details for payouts / returns / refunds
+    payoutAccountName, payoutBankName, payoutAccountNumber,
+    // Next of kin
+    kinName, kinPhone, kinAddress, kinRelationship,
+    // Supporting documents
+    signatureUrl: investSignatureDataUrl,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
@@ -1775,6 +2275,10 @@ async function submitInvestment(){
 /* ================= BUY PROPERTY FLOW (full payment or installment) ================= */
 let currentBuyProperty = null;
 let buyReceiptDataUrl = null;
+let buyPassportDataUrl = null;
+let buyIdDataUrl = null;
+let buySignatureDataUrl = null;
+let buySigCtx = null, buySigDrawing = false, buySigHasStroke = false;
 
 function openBuyModal(propId){
   if(!currentUser){ toast('Please login to buy a property'); go('auth'); return; }
@@ -1798,6 +2302,29 @@ function openBuyModal(propId){
   document.getElementById('bbNote').textContent = siteSettings.paymentNote || '';
   buyReceiptDataUrl = null;
   document.getElementById('buyReceiptPreviewGrid').innerHTML = '';
+
+  document.getElementById('buyFullName').value = currentUserDoc.name || currentUser.displayName || '';
+  document.getElementById('buyPhone').value = currentUserDoc.phone || '';
+  document.getElementById('buyEmail').value = currentUserDoc.email || currentUser.email || '';
+  document.getElementById('buyAddress').value = '';
+  document.getElementById('buyOccupation').value = '';
+  buyPassportDataUrl = null;
+  document.getElementById('buyPassportPreviewGrid').innerHTML = '';
+  document.getElementById('buyIdType').value = '';
+  document.getElementById('buyIdNumber').value = '';
+  buyIdDataUrl = null;
+  document.getElementById('buyIdPreviewGrid').innerHTML = '';
+  document.getElementById('buyKinName').value = '';
+  document.getElementById('buyKinPhone').value = '';
+  document.getElementById('buyKinAddress').value = '';
+  document.getElementById('buyKinRelationship').value = '';
+  document.getElementById('buyUnitNumber').value = '';
+  document.getElementById('buyAgreedPrice').value = Number(p.price)||0;
+  document.getElementById('buyPurchaseDate').value = new Date().toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
+  document.getElementById('buyEmergencyName').value = '';
+  document.getElementById('buyEmergencyPhone').value = '';
+  initBuySignaturePad();
+
   updateBuyPreview();
   openModalEl('buyModalBg');
 }
@@ -1866,6 +2393,83 @@ function removeBuyReceiptImg(){
   document.getElementById('buyReceiptPreviewGrid').innerHTML = '';
 }
 
+async function handleBuyPassportUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const grid = document.getElementById('buyPassportPreviewGrid');
+  grid.innerHTML = '<span class="small-muted">Compressing photo...</span>';
+  try{
+    buyPassportDataUrl = await compressImage(file, 1000, 0.7);
+    grid.innerHTML = `<div class="img-thumb"><img src="${buyPassportDataUrl}"><button type="button" onclick="removeBuyPassportImg()">&times;</button></div>`;
+  }catch(err){
+    grid.innerHTML = '';
+    toast('Could not process that photo.');
+  }
+}
+function removeBuyPassportImg(){
+  buyPassportDataUrl = null;
+  document.getElementById('buyPassportPreviewGrid').innerHTML = '';
+}
+
+async function handleBuyIdUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const grid = document.getElementById('buyIdPreviewGrid');
+  grid.innerHTML = '<span class="small-muted">Compressing image...</span>';
+  try{
+    buyIdDataUrl = await compressImage(file, 1000, 0.7);
+    grid.innerHTML = `<div class="img-thumb"><img src="${buyIdDataUrl}"><button type="button" onclick="removeBuyIdImg()">&times;</button></div>`;
+  }catch(err){
+    grid.innerHTML = '';
+    toast('Could not process that ID image.');
+  }
+}
+function removeBuyIdImg(){
+  buyIdDataUrl = null;
+  document.getElementById('buyIdPreviewGrid').innerHTML = '';
+}
+
+/* Signature pad (canvas) for the buy modal */
+function initBuySignaturePad(){
+  buySignatureDataUrl = null;
+  buySigHasStroke = false;
+  const canvas = document.getElementById('buySignatureCanvas');
+  if(!canvas) return;
+  buySigCtx = canvas.getContext('2d');
+  buySigCtx.clearRect(0,0,canvas.width,canvas.height);
+  buySigCtx.strokeStyle = '#14110d';
+  buySigCtx.lineWidth = 2.5;
+  buySigCtx.lineJoin = 'round';
+  buySigCtx.lineCap = 'round';
+  if(canvas.dataset.wired) return;
+  canvas.dataset.wired = '1';
+  function pos(evt){
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const p = evt.touches ? evt.touches[0] : evt;
+    return {x: (p.clientX-rect.left)*scaleX, y: (p.clientY-rect.top)*scaleY};
+  }
+  function start(evt){ evt.preventDefault(); buySigDrawing = true; const p = pos(evt); buySigCtx.beginPath(); buySigCtx.moveTo(p.x,p.y); }
+  function move(evt){ if(!buySigDrawing) return; evt.preventDefault(); const p = pos(evt); buySigCtx.lineTo(p.x,p.y); buySigCtx.stroke(); buySigHasStroke = true; }
+  function end(evt){ buySigDrawing = false; }
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end);
+}
+function clearBuySignature(){
+  const canvas = document.getElementById('buySignatureCanvas');
+  if(!canvas || !buySigCtx) return;
+  buySigCtx.clearRect(0,0,canvas.width,canvas.height);
+  buySigHasStroke = false;
+  buySignatureDataUrl = null;
+}
+
 async function submitPurchase(){
   const p = currentBuyProperty;
   const msgEl = document.getElementById('buyMsg');
@@ -1880,16 +2484,59 @@ async function submitPurchase(){
     msgEl.innerHTML = '<div class="err-msg">Please enter a valid number of months.</div>';
     return;
   }
+  const fullName = document.getElementById('buyFullName').value.trim();
+  const phone = document.getElementById('buyPhone').value.trim();
+  const email = document.getElementById('buyEmail').value.trim();
+  const address = document.getElementById('buyAddress').value.trim();
+  const occupation = document.getElementById('buyOccupation').value.trim();
+  const idType = document.getElementById('buyIdType').value;
+  const idNumber = document.getElementById('buyIdNumber').value.trim();
+  const kinName = document.getElementById('buyKinName').value.trim();
+  const kinPhone = document.getElementById('buyKinPhone').value.trim();
+  const kinAddress = document.getElementById('buyKinAddress').value.trim();
+  const kinRelationship = document.getElementById('buyKinRelationship').value.trim();
+  const unitNumber = document.getElementById('buyUnitNumber').value.trim();
+  const agreedPrice = Number(document.getElementById('buyAgreedPrice').value) || 0;
+  const purchaseDateText = document.getElementById('buyPurchaseDate').value;
+  const emergencyName = document.getElementById('buyEmergencyName').value.trim();
+  const emergencyPhone = document.getElementById('buyEmergencyPhone').value.trim();
+
+  if(!fullName || !phone || !email || !address || !occupation){
+    msgEl.innerHTML = '<div class="err-msg">Please fill in all your buyer details.</div>';
+    return;
+  }
+  if(!buyPassportDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please upload your passport photograph.</div>';
+    return;
+  }
+  if(!idType || !idNumber || !buyIdDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please select an ID type, enter your ID number, and upload your identification document.</div>';
+    return;
+  }
+  if(!kinName || !kinPhone || !kinAddress || !kinRelationship){
+    msgEl.innerHTML = '<div class="err-msg">Please fill in all next of kin details.</div>';
+    return;
+  }
+  if(!unitNumber || agreedPrice<=0){
+    msgEl.innerHTML = '<div class="err-msg">Please provide the property address/unit number and agreed purchase price.</div>';
+    return;
+  }
+  if(!buySigHasStroke){
+    msgEl.innerHTML = '<div class="err-msg">Please sign in the signature box before confirming.</div>';
+    return;
+  }
   if(!buyReceiptDataUrl){
     msgEl.innerHTML = '<div class="err-msg">Please upload your payment receipt before confirming.</div>';
     return;
   }
+  buySignatureDataUrl = document.getElementById('buySignatureCanvas').toDataURL('image/png');
+
   const btn = document.getElementById('submitBuyBtn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...';
 
   const purchaseId = 'RLE-P-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random()*900+100);
-  const buyerName = currentUserDoc.name || currentUser.displayName || 'Buyer';
-  const buyerEmail = currentUserDoc.email || currentUser.email;
+  const buyerName = fullName || currentUserDoc.name || currentUser.displayName || 'Buyer';
+  const buyerEmail = email || currentUserDoc.email || currentUser.email;
 
   const record = {
     purchaseId,
@@ -1910,6 +2557,26 @@ async function submitPurchase(){
     monthsPaid: 0,                // number of monthly installments approved so far (grows as buyer pays)
     status: 'pending',
     receiptUrl: buyReceiptDataUrl,
+    // Buyer details
+    buyerFullName: fullName,
+    buyerPhone: phone,
+    buyerEmail: email,
+    buyerAddress: address,
+    buyerOccupation: occupation,
+    passportPhotoUrl: buyPassportDataUrl,
+    // Identification
+    idType, idNumber, idDocumentUrl: buyIdDataUrl,
+    // Next of kin
+    kinName, kinPhone, kinAddress, kinRelationship,
+    // Property purchase details
+    unitNumber,
+    agreedPurchasePrice: agreedPrice,
+    // Documentation
+    signatureUrl: buySignatureDataUrl,
+    purchaseDateText,
+    // Emergency contact (optional)
+    emergencyContactName: emergencyName,
+    emergencyContactPhone: emergencyPhone,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
@@ -2214,9 +2881,17 @@ async function submitContact(e){
 
 /* ================= ADMIN: LOAD ALL ================= */
 async function loadAdminData(){
-  await Promise.all([loadAdminProperties(), loadAdminInvestments(), loadAdminPurchases(), loadAdminUsers(), loadAdminPosts(), loadAdminAnnouncements(), loadAdminReviews()]);
+  await Promise.all([loadAdminProperties(), loadAdminInvestments(), loadAdminPurchases(), loadAdminInspections(), loadAdminUsers(), loadAdminPosts(), loadAdminAnnouncements(), loadAdminReviews()]);
   renderAdminDashboardStats();
   fillSettingsForm();
+}
+
+async function loadAdminInspections(){
+  try{
+    const snap = await db.collection('inspections').orderBy('createdAt','desc').get();
+    allInspections = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  }catch(e){ console.warn(e); allInspections=[]; }
+  renderAdminInspections();
 }
 
 async function loadAdminProperties(){
@@ -2261,6 +2936,44 @@ function renderAdminDashboardStats(){
   document.getElementById('aStatValue').textContent = fmtNaira(totalValue);
   document.getElementById('aStatPurchases').textContent = allPurchases.length;
   document.getElementById('aStatPendingPurchases').textContent = allPurchases.filter(pu=>pu.status==='pending').length;
+  document.getElementById('aStatInspections').textContent = allInspections.filter(i=>i.status==='pending').length;
+}
+
+/* ---------- Admin: Inspections ---------- */
+function renderAdminInspections(){
+  const q = (document.getElementById('inspSearch').value||'').toLowerCase();
+  const status = document.getElementById('inspStatusFilter').value;
+  let list = allInspections.filter(i=>{
+    const matchQ = !q || (i.fullName||'').toLowerCase().includes(q) || (i.propertyName||'').toLowerCase().includes(q) || (i.inspectionId||'').toLowerCase().includes(q);
+    const matchS = !status || i.status===status;
+    return matchQ && matchS;
+  });
+  document.getElementById('aInspTable').innerHTML = list.map(i=>`
+    <tr>
+      <td>${i.inspectionId||''}</td><td>${i.fullName||''}<div class="small-muted">${i.email||''}</div></td><td>${i.phone||''}</td>
+      <td>${i.propertyName||''}</td><td>${i.preferredDate||''}</td><td>${i.preferredTime||''}</td>
+      <td><span class="badge badge-${i.status}">${i.status}</span></td>
+      <td class="row-actions">
+        ${i.status==='pending' ? `<button class="icon-btn" onclick="updateInspectionStatus('${i.id}','contacted')" title="Mark Contacted">💬</button>` : ''}
+        ${i.status!=='completed' ? `<button class="icon-btn" onclick="updateInspectionStatus('${i.id}','completed')" title="Mark Completed">✔</button>` : ''}
+        ${i.status!=='cancelled' ? `<button class="icon-btn" onclick="updateInspectionStatus('${i.id}','cancelled')" title="Cancel">✕</button>` : ''}
+        <button class="icon-btn" onclick="deleteInspection('${i.id}')" title="Delete">🗑</button>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="8" class="small-muted" style="padding:20px;">No inspection requests yet.</td></tr>';
+}
+async function updateInspectionStatus(id, status){
+  try{
+    await db.collection('inspections').doc(id).update({status});
+    toast('Inspection marked ' + status);
+    await loadAdminInspections();
+    renderAdminDashboardStats();
+  }catch(err){ toast('Error: '+err.message); }
+}
+async function deleteInspection(id){
+  if(!confirm('Delete this inspection request?')) return;
+  try{ await db.collection('inspections').doc(id).delete(); toast('Inspection request deleted'); await loadAdminInspections(); renderAdminDashboardStats(); }
+  catch(err){ toast('Error: '+err.message); }
 }
 
 function switchAdminPanel(panel){
@@ -2272,14 +2985,15 @@ function switchAdminPanel(panel){
 function renderAdminProperties(){
   document.getElementById('aPropTable').innerHTML = allProperties.map(p=>`
     <tr>
-      <td>${p.name}</td><td>${p.type||''}</td><td>${p.location||''}</td><td>${fmtNaira(p.price)}</td><td>${p.roi||0}%</td>
-      <td><span class="badge ${badgeClass(p.status)}">${p.status}</span></td>
+      <td>${p.name}${p.pid?`<div class="small-muted">PID: ${p.pid}</div>`:''}</td><td>${p.type||''}</td>
+      <td>${p.bedrooms||0} bed / ${p.bathrooms||0} bath</td><td>${p.location||''}</td><td>${fmtNaira(p.price)}</td><td>${p.roi||0}%</td>
+      <td><span class="badge ${badgeClass(p.status)}">${p.status}</span>${p.featured?' <span class="badge badge-completed">Must See</span>':''}</td>
       <td class="row-actions">
         <button class="icon-btn" onclick="openPropertyModal('${p.id}')" title="Edit">✎</button>
         <button class="icon-btn" onclick="deleteProperty('${p.id}')" title="Delete">🗑</button>
       </td>
     </tr>
-  `).join('') || '<tr><td colspan="7" class="small-muted" style="padding:20px;">No properties yet.</td></tr>';
+  `).join('') || '<tr><td colspan="8" class="small-muted" style="padding:20px;">No properties yet.</td></tr>';
 }
 
 function openPropertyModal(id){
@@ -2293,6 +3007,10 @@ function openPropertyModal(id){
     document.getElementById('propType').value = p.type||'';
     document.getElementById('propLocation').value = p.location||'';
     document.getElementById('propDesc').value = p.description||'';
+    document.getElementById('propBeds').value = (p.bedrooms!==undefined && p.bedrooms!==null) ? p.bedrooms : '';
+    document.getElementById('propBaths').value = (p.bathrooms!==undefined && p.bathrooms!==null) ? p.bathrooms : '';
+    document.getElementById('propTags').value = (p.tags||[]).join(', ');
+    document.getElementById('propFeatured').checked = !!p.featured;
     document.getElementById('propPrice').value = p.price||'';
     document.getElementById('propUnits').value = p.availableUnits||'';
     document.getElementById('propDuration').value = p.duration||'';
@@ -2305,6 +3023,7 @@ function openPropertyModal(id){
     document.getElementById('propModalTitle').textContent = 'Add Property';
     document.getElementById('propertyForm').reset();
     document.getElementById('propId').value = '';
+    document.getElementById('propFeatured').checked = false;
     document.getElementById('propStatus').value = 'Available';
   }
   renderImgGrid();
@@ -2368,9 +3087,19 @@ async function handleImageUpload(e){
   const grid = document.getElementById('propImgGrid');
   const dropLabel = document.querySelector('.upload-drop');
   const originalLabel = dropLabel.textContent;
+  const maxImages = 4;
+  const currentCount = existingImageUrls.length + pendingImageFiles.length;
+  if(currentCount >= maxImages){
+    toast('You can upload up to ' + maxImages + ' images per property.');
+    return;
+  }
+  const allowed = files.slice(0, maxImages - currentCount);
+  if(allowed.length < files.length){
+    toast('Only the first ' + allowed.length + ' image(s) were added — max ' + maxImages + ' images per property.');
+  }
   dropLabel.textContent = 'Compressing images...';
   try{
-    for(const file of files){
+    for(const file of allowed){
       const dataUrl = await compressImage(file);
       pendingImageFiles.push({url: dataUrl});
       renderImgGrid();
@@ -2420,6 +3149,10 @@ async function saveProperty(e){
       type: document.getElementById('propType').value.trim(),
       location: document.getElementById('propLocation').value.trim(),
       description: document.getElementById('propDesc').value.trim(),
+      bedrooms: Number(document.getElementById('propBeds').value)||0,
+      bathrooms: Number(document.getElementById('propBaths').value)||0,
+      tags: document.getElementById('propTags').value.split(',').map(t=>t.trim()).filter(Boolean),
+      featured: document.getElementById('propFeatured').checked,
       price: Number(document.getElementById('propPrice').value)||0,
       availableUnits: Number(document.getElementById('propUnits').value)||0,
       duration: Number(document.getElementById('propDuration').value)||0,
@@ -2427,13 +3160,15 @@ async function saveProperty(e){
       minInvestment: Number(document.getElementById('propMinInvest').value)||0,
       installmentDeposit: depositVal,
       status: document.getElementById('propStatus').value,
-      images
+      images,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
     if(id){
       await db.collection('properties').doc(id).update(data);
       toast('Property updated');
     } else {
+      data.pid = 'RLE-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random()*900+100);
       data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
       await db.collection('properties').add(data);
       toast('Property added');
@@ -2482,11 +3217,12 @@ function renderAdminInvestments(){
 function viewInvestmentDetail(id){
   const i = allInvestments.find(x=>x.id===id);
   if(!i) return;
+  const imgRow = (url, label) => url
+    ? `<div style="margin-bottom:14px;"><p class="small-muted" style="margin-bottom:6px;">${label}</p><a href="${url}" target="_blank"><img src="${url}" style="width:100%; max-height:300px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a></div>`
+    : `<p class="err-msg" style="margin-bottom:14px;">${label}: not provided.</p>`;
   document.getElementById('invDetailBody').innerHTML = `
     <div class="summary-box">
       <div class="summary-row"><span>Investment ID</span><b>${i.investmentId}</b></div>
-      <div class="summary-row"><span>Investor</span><b>${i.userName}</b></div>
-      <div class="summary-row"><span>Email</span><b>${i.userEmail}</b></div>
       <div class="summary-row"><span>Property</span><b>${i.propertyName}</b></div>
       <div class="summary-row"><span>Amount Invested</span><b>${fmtNaira(i.amount)}</b></div>
       <div class="summary-row"><span>Monthly ROI</span><b>${i.roi}%/month</b></div>
@@ -2495,11 +3231,53 @@ function viewInvestmentDetail(id){
       <div class="summary-row"><span>Lock Status</span><b>${isInvestmentMatured(i) ? 'Unlocked (matured)' : 'Locked until maturity'}</b></div>
       <div class="summary-row"><span>Status</span><b>${(i.status||'').replace('_',' ')}</b></div>
     </div>
-    <div class="section-title-sm">Payment Receipt</div>
-    ${i.receiptUrl
-      ? `<a href="${i.receiptUrl}" target="_blank"><img src="${i.receiptUrl}" style="width:100%; max-height:360px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a>
-         <p class="small-muted" style="margin-top:6px;">Tap the image to view it full size before approving.</p>`
-      : `<p class="err-msg">No receipt was uploaded for this investment.</p>`}
+
+    <div class="section-title-sm">Personal Information</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Full Name</span><b>${i.investorFullName || i.userName || '—'}</b></div>
+      <div class="summary-row"><span>Phone Number</span><b>${i.investorPhone || '—'}</b></div>
+      <div class="summary-row"><span>Email Address</span><b>${i.investorEmail || i.userEmail || '—'}</b></div>
+      <div class="summary-row"><span>Residential Address</span><b>${i.investorAddress || '—'}</b></div>
+      <div class="summary-row"><span>Occupation</span><b>${i.investorOccupation || '—'}</b></div>
+    </div>
+    ${imgRow(i.passportPhotoUrl, 'Passport Photograph')}
+
+    <div class="section-title-sm">Identification</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>ID Type</span><b>${i.idType || '—'}</b></div>
+      <div class="summary-row"><span>ID Number</span><b>${i.idNumber || '—'}</b></div>
+    </div>
+    ${imgRow(i.idDocumentUrl, 'Identification Document')}
+
+    <div class="section-title-sm">Investment Information</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Investment Package / Plan</span><b>${i.investmentPackage || i.propertyName || '—'}</b></div>
+      <div class="summary-row"><span>Investment Amount</span><b>${fmtNaira(i.amount)}</b></div>
+      <div class="summary-row"><span>Investment Duration</span><b>${i.duration} months</b></div>
+      <div class="summary-row"><span>Expected Return Plan</span><b>Fixed ${i.roi}%/month for ${i.duration} months</b></div>
+      <div class="summary-row"><span>Payment Method</span><b>${i.paymentMethod || '—'}</b></div>
+      <div class="summary-row"><span>Date of Investment</span><b>${i.investmentDateText || fmtDate(i.createdAt)}</b></div>
+    </div>
+
+    <div class="section-title-sm">Bank Details for Payouts <span class="small-muted" style="font-weight:400; text-transform:none; letter-spacing:0;">(profit payouts, returns or capital refunds)</span></div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Account Name</span><b>${i.payoutAccountName || '—'}</b></div>
+      <div class="summary-row"><span>Bank Name</span><b>${i.payoutBankName || '—'}</b></div>
+      <div class="summary-row"><span>Account Number</span><b>${i.payoutAccountNumber || '—'}</b></div>
+    </div>
+
+    <div class="section-title-sm">Next of Kin</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Full Name</span><b>${i.kinName || '—'}</b></div>
+      <div class="summary-row"><span>Phone Number</span><b>${i.kinPhone || '—'}</b></div>
+      <div class="summary-row"><span>Address</span><b>${i.kinAddress || '—'}</b></div>
+      <div class="summary-row"><span>Relationship</span><b>${i.kinRelationship || '—'}</b></div>
+    </div>
+
+    <div class="section-title-sm">Supporting Documents</div>
+    ${imgRow(i.receiptUrl, 'Proof of Payment')}
+    ${imgRow(i.signatureUrl, 'Signature')}
+    <p class="small-muted" style="margin-top:-6px; margin-bottom:14px;">Tap any image to view it full size before approving.</p>
   `;
   let actions = '';
   if(i.status==='pending'){
@@ -2548,11 +3326,12 @@ function viewPurchaseDetail(id){
   const pu = allPurchases.find(x=>x.id===id);
   if(!pu) return;
   const planText = pu.paymentPlan==='full' ? 'Full Payment — No Interest' : `Installment — ${pu.months} months at ${pu.interestRate}%/month`;
+  const imgRow = (url, label) => url
+    ? `<div style="margin-bottom:14px;"><p class="small-muted" style="margin-bottom:6px;">${label}</p><a href="${url}" target="_blank"><img src="${url}" style="width:100%; max-height:300px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a></div>`
+    : `<p class="err-msg" style="margin-bottom:14px;">${label}: not provided.</p>`;
   document.getElementById('purchaseDetailBody').innerHTML = `
     <div class="summary-box">
       <div class="summary-row"><span>Purchase ID</span><b>${pu.purchaseId}</b></div>
-      <div class="summary-row"><span>Buyer</span><b>${pu.userName}</b></div>
-      <div class="summary-row"><span>Email</span><b>${pu.userEmail}</b></div>
       <div class="summary-row"><span>Property</span><b>${pu.propertyName}</b></div>
       <div class="summary-row"><span>Property Price</span><b>${fmtNaira(pu.price)}</b></div>
       <div class="summary-row"><span>Payment Plan</span><b>${planText}</b></div>
@@ -2564,6 +3343,52 @@ function viewPurchaseDetail(id){
       <div class="summary-total"><span>Total Payable</span><b>${fmtNaira(pu.totalPayable)}</b></div>
       <div class="summary-row"><span>Status</span><b>${pu.status}</b></div>
     </div>
+
+    <div class="section-title-sm">Buyer Details</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Full Name</span><b>${pu.buyerFullName || pu.userName || '—'}</b></div>
+      <div class="summary-row"><span>Phone Number</span><b>${pu.buyerPhone || '—'}</b></div>
+      <div class="summary-row"><span>Email Address</span><b>${pu.buyerEmail || pu.userEmail || '—'}</b></div>
+      <div class="summary-row"><span>Residential Address</span><b>${pu.buyerAddress || '—'}</b></div>
+      <div class="summary-row"><span>Occupation</span><b>${pu.buyerOccupation || '—'}</b></div>
+    </div>
+    ${imgRow(pu.passportPhotoUrl, 'Passport Photograph')}
+
+    <div class="section-title-sm">Identification</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>ID Type</span><b>${pu.idType || '—'}</b></div>
+      <div class="summary-row"><span>ID Number</span><b>${pu.idNumber || '—'}</b></div>
+    </div>
+    ${imgRow(pu.idDocumentUrl, 'Identification Document')}
+
+    <div class="section-title-sm">Next of Kin Details</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Full Name</span><b>${pu.kinName || '—'}</b></div>
+      <div class="summary-row"><span>Phone Number</span><b>${pu.kinPhone || '—'}</b></div>
+      <div class="summary-row"><span>Address</span><b>${pu.kinAddress || '—'}</b></div>
+      <div class="summary-row"><span>Relationship to Buyer</span><b>${pu.kinRelationship || '—'}</b></div>
+    </div>
+
+    <div class="section-title-sm">Property Purchase Details</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Property Address / Unit Number</span><b>${pu.unitNumber || '—'}</b></div>
+      <div class="summary-row"><span>Agreed Purchase Price</span><b>${pu.agreedPurchasePrice ? fmtNaira(pu.agreedPurchasePrice) : '—'}</b></div>
+      <div class="summary-row"><span>Payment Method</span><b>${pu.paymentPlan==='full' ? 'Outright' : 'Installment'}</b></div>
+      ${pu.paymentPlan==='installment' ? `<div class="summary-row"><span>Payment Schedule</span><b>${pu.months} months at ${fmtNaira(pu.monthlyInstallment)}/month</b></div>` : ''}
+    </div>
+
+    <div class="section-title-sm">Documentation</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Date of Purchase</span><b>${pu.purchaseDateText || fmtDate(pu.createdAt)}</b></div>
+    </div>
+    ${imgRow(pu.signatureUrl, 'Buyer Signature')}
+
+    ${(pu.emergencyContactName || pu.emergencyContactPhone) ? `<div class="section-title-sm">Emergency Contact</div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Full Name</span><b>${pu.emergencyContactName || '—'}</b></div>
+      <div class="summary-row"><span>Phone Number</span><b>${pu.emergencyContactPhone || '—'}</b></div>
+    </div>` : ''}
+
     <div class="section-title-sm">Payment Receipt (deposit / full payment)</div>
     ${pu.receiptUrl
       ? `<a href="${pu.receiptUrl}" target="_blank"><img src="${pu.receiptUrl}" style="width:100%; max-height:360px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a>
