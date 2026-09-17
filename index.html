@@ -1073,6 +1073,20 @@ tr:hover td{background:rgba(184,134,60,.05);}
   </div>
 </div>
 
+<!-- Installment Payment History Modal (Buyer) -->
+<div class="modal-bg" id="installmentHistoryModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>Installment Payment History</h3><button class="modal-close" onclick="closeModal('installmentHistoryModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <p class="small-muted" style="margin-bottom:16px;" id="ihPurchaseInfo"></p>
+      <div id="ihList"><p class="small-muted">Loading payments...</p></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('installmentHistoryModalBg')">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- Purchase Details Modal (Admin) -->
 <div class="modal-bg" id="purchaseDetailModalBg">
   <div class="modal">
@@ -2019,6 +2033,28 @@ async function submitInstallmentPayment(){
   }
 }
 
+async function openInstallmentHistoryModal(purchaseId){
+  const pu = allPurchases.find(x=>x.id===purchaseId);
+  if(!pu) return;
+  document.getElementById('ihPurchaseInfo').textContent = pu.propertyName + ' — Purchase ID ' + pu.purchaseId + ' — ' + (Number(pu.monthsPaid)||0) + ' of ' + pu.months + ' months paid';
+  const list = document.getElementById('ihList');
+  list.innerHTML = '<p class="small-muted">Loading payments...</p>';
+  openModalEl('installmentHistoryModalBg');
+  try{
+    const snap = await db.collection('purchases').doc(purchaseId).collection('payments').orderBy('monthNumber','asc').get();
+    const payments = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    list.innerHTML = payments.length ? payments.map(pay=>`
+      <div class="summary-box" style="margin-bottom:10px;">
+        <div class="summary-row"><span>Month ${pay.monthNumber}</span><b>${fmtNaira(pay.amount)}</b></div>
+        <div class="summary-row"><span>Date Submitted</span><b>${fmtDate(pay.createdAt)}</b></div>
+        <div class="summary-row"><span>Status</span><b><span class="badge badge-${pay.status}">${pay.status}</span></b></div>
+      </div>
+    `).join('') : '<p class="small-muted">No installment payments submitted yet. Once you pay and submit a receipt, it will show up here month by month.</p>';
+  }catch(err){
+    list.innerHTML = '<p class="err-msg">Could not load payment history: '+err.message+'</p>';
+  }
+}
+
 async function loadUserPurchases(){
   if(!currentUser) return;
   try{
@@ -2035,7 +2071,9 @@ function renderUserPurchases(){
     const isInstallment = pu.paymentPlan==='installment';
     const months = Number(pu.months)||0;
     const monthsPaid = Number(pu.monthsPaid)||0;
-    const progress = isInstallment ? (monthsPaid + ' / ' + months + ' months paid') : '—';
+    const progress = isInstallment
+      ? `<a href="#" onclick="openInstallmentHistoryModal('${pu.id}'); return false;">${monthsPaid} / ${months} months paid</a>`
+      : '—';
     let actionHtml = '<span class="small-muted">—</span>';
     if(isInstallment){
       if(pu.status==='approved' && monthsPaid < months){
@@ -2555,6 +2593,8 @@ async function loadInstallmentPaymentsForAdmin(purchaseId){
     box.innerHTML = payments.length ? payments.map(pay=>`
       <div class="summary-box" style="margin-bottom:10px;">
         <div class="summary-row"><span>Month ${pay.monthNumber}</span><b>${fmtNaira(pay.amount)}</b></div>
+        <div class="summary-row"><span>Date Submitted</span><b>${fmtDate(pay.createdAt)}</b></div>
+        ${pay.reviewedAt ? `<div class="summary-row"><span>Date Reviewed</span><b>${fmtDate(pay.reviewedAt)}</b></div>` : ''}
         <div class="summary-row"><span>Status</span><b><span class="badge badge-${pay.status}">${pay.status}</span></b></div>
         ${pay.receiptUrl ? `<a href="${pay.receiptUrl}" target="_blank"><img src="${pay.receiptUrl}" style="width:100%; max-height:220px; object-fit:contain; border:1px solid var(--line); background:var(--cream); margin-top:8px;"></a>` : '<p class="err-msg">No receipt uploaded.</p>'}
         ${pay.status==='pending' ? `<div style="margin-top:8px; display:flex; gap:8px;">
@@ -2570,7 +2610,7 @@ async function loadInstallmentPaymentsForAdmin(purchaseId){
 
 async function approveInstallmentPayment(purchaseId, paymentId){
   try{
-    await db.collection('purchases').doc(purchaseId).collection('payments').doc(paymentId).update({status:'approved'});
+    await db.collection('purchases').doc(purchaseId).collection('payments').doc(paymentId).update({status:'approved', reviewedAt: firebase.firestore.FieldValue.serverTimestamp()});
     await db.collection('purchases').doc(purchaseId).update({monthsPaid: firebase.firestore.FieldValue.increment(1)});
     toast('Installment payment approved.');
     await loadAdminPurchases();
@@ -2580,7 +2620,7 @@ async function approveInstallmentPayment(purchaseId, paymentId){
 
 async function rejectInstallmentPayment(purchaseId, paymentId){
   try{
-    await db.collection('purchases').doc(purchaseId).collection('payments').doc(paymentId).update({status:'rejected'});
+    await db.collection('purchases').doc(purchaseId).collection('payments').doc(paymentId).update({status:'rejected', reviewedAt: firebase.firestore.FieldValue.serverTimestamp()});
     toast('Installment payment rejected.');
     loadInstallmentPaymentsForAdmin(purchaseId);
   }catch(err){ toast('Error: '+err.message); }
