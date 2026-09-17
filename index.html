@@ -278,6 +278,8 @@ tr:hover td{background:rgba(184,134,60,.05);}
 .badge-rejected{background:rgba(163,59,59,.15); color:var(--bad);}
 .badge-active{background:rgba(76,122,90,.15); color:var(--good);}
 .badge-suspended{background:rgba(163,59,59,.15); color:var(--bad);}
+.badge-withdrawal_requested{background:rgba(163,81,43,.15); color:var(--warn);}
+.badge-withdrawn{background:rgba(76,122,90,.15); color:var(--good);}
 .row-actions{display:flex; gap:6px; flex-wrap:wrap;}
 .icon-btn{width:30px; height:30px; border:1px solid var(--line); background:transparent; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; font-size:13px;}
 .icon-btn:hover{background:var(--gold-dim);}
@@ -633,6 +635,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <a data-panel="active-inv" onclick="switchDashPanel('active-inv')">Active Investments</a>
         <a data-panel="completed-inv" onclick="switchDashPanel('completed-inv')">Completed Investments</a>
         <a data-panel="history" onclick="switchDashPanel('history')">Investment History</a>
+        <a data-panel="purchases" onclick="switchDashPanel('purchases')">My Purchases</a>
         <a data-panel="profile" onclick="switchDashPanel('profile')">My Profile</a>
       </div>
     </div>
@@ -659,9 +662,10 @@ tr:hover td{background:rgba(184,134,60,.05);}
 
       <div class="dash-panel" id="dpanel-active-inv">
         <div class="dash-head"><h2>Active Investments</h2></div>
+        <p class="small-muted" style="margin-top:-10px; margin-bottom:16px;">Your investment value grows every month. Funds stay locked until the maturity date — the Withdraw button unlocks automatically once that date is reached.</p>
         <div class="table-wrap"><table>
-          <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>ROI</th><th>Expected Profit</th><th>Maturity Date</th><th>Status</th></tr></thead>
-          <tbody id="uActiveTable"><tr><td colspan="7" class="small-muted" style="padding:20px;">No active investments.</td></tr></tbody>
+          <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>ROI</th><th>Current Value</th><th>Maturity Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="uActiveTable"><tr><td colspan="8" class="small-muted" style="padding:20px;">No active investments.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -678,6 +682,14 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <div class="table-wrap"><table>
           <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
           <tbody id="uHistoryTable"><tr><td colspan="5" class="small-muted" style="padding:20px;">No history yet.</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <div class="dash-panel" id="dpanel-purchases">
+        <div class="dash-head"><h2>My Purchases</h2></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Purchase ID</th><th>Property</th><th>Plan</th><th>Total Payable</th><th>Monthly</th><th>Status</th></tr></thead>
+          <tbody id="uPurchaseTable"><tr><td colspan="6" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -712,6 +724,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <a class="active" data-panel="a-dashboard" onclick="switchAdminPanel('a-dashboard')">Dashboard</a>
         <a data-panel="a-properties" onclick="switchAdminPanel('a-properties')">Properties</a>
         <a data-panel="a-investments" onclick="switchAdminPanel('a-investments')">Investments</a>
+        <a data-panel="a-purchases" onclick="switchAdminPanel('a-purchases')">Purchases</a>
         <a data-panel="a-users" onclick="switchAdminPanel('a-users')">Users</a>
         <a data-panel="a-posts" onclick="switchAdminPanel('a-posts')">Posts</a>
         <a data-panel="a-announcements" onclick="switchAdminPanel('a-announcements')">Announcements</a>
@@ -730,6 +743,8 @@ tr:hover td{background:rgba(184,134,60,.05);}
           <div class="stat-card"><b id="aStatActive">0</b><span>Active Investments</span></div>
           <div class="stat-card"><b id="aStatCompleted">0</b><span>Completed Investments</span></div>
           <div class="stat-card"><b id="aStatValue">₦0</b><span>Total Investment Value</span></div>
+          <div class="stat-card"><b id="aStatPurchases">0</b><span>Total Purchases</span></div>
+          <div class="stat-card"><b id="aStatPendingPurchases">0</b><span>Pending Purchases</span></div>
         </div>
       </div>
 
@@ -749,6 +764,8 @@ tr:hover td{background:rgba(184,134,60,.05);}
             <option value="">All Status</option>
             <option value="pending">Pending</option>
             <option value="approved">Approved</option>
+            <option value="withdrawal_requested">Withdrawal Requested</option>
+            <option value="withdrawn">Withdrawn</option>
             <option value="completed">Completed</option>
             <option value="rejected">Rejected</option>
           </select>
@@ -756,6 +773,24 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <div class="table-wrap"><table>
           <thead><tr><th>Inv. ID</th><th>Investor</th><th>Property</th><th>Amount</th><th>ROI</th><th>Status</th><th>Maturity</th><th>Actions</th></tr></thead>
           <tbody id="aInvTable"><tr><td colspan="8" class="small-muted" style="padding:20px;">No investments yet.</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <div class="dash-panel" id="apanel-a-purchases">
+        <div class="dash-head"><h2>Purchase Management</h2></div>
+        <div class="search-bar">
+          <input type="text" id="purSearch" placeholder="Search buyer, property, or ID..." oninput="renderAdminPurchases()">
+          <select id="purStatusFilter" onchange="renderAdminPurchases()">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="completed">Completed</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Purchase ID</th><th>Buyer</th><th>Property</th><th>Plan</th><th>Total Payable</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="aPurTable"><tr><td colspan="7" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -815,6 +850,11 @@ tr:hover td{background:rgba(184,134,60,.05);}
               <div class="field"><label>Account Number</label><input id="setAccountNumber" placeholder="0123456789"></div>
             </div>
             <div class="field"><label>Payment Instructions (optional)</label><textarea id="setPaymentNote" placeholder="e.g. Use your full name as payment reference..."></textarea></div>
+            <div class="divider"></div>
+            <div class="section-title-sm" style="margin-top:0;">Buy Property — Installment Settings</div>
+            <p class="small-muted" style="margin-bottom:16px;">Buyers can pay for a property in full (no interest) or in monthly installments. This interest rate applies to all installment purchases, based on the number of months the buyer chooses.</p>
+            <div class="field"><label>Installment Interest Rate (% per month)</label><input type="number" step="0.1" min="0" id="setInstallmentRate" placeholder="e.g. 2"></div>
+            <p class="hint">Full payment never carries interest. Installment interest = Property Price × Rate × Number of Months chosen by the buyer.</p>
             <button class="btn" type="submit">Save Settings</button>
           </form>
         </div>
@@ -871,6 +911,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <div class="summary-row"><span>Maturity Date</span><b id="pvMaturity">—</b></div>
         <div class="summary-total"><span>Total Expected Return</span><b id="pvTotal">—</b></div>
       </div>
+      <p class="hint" id="pvLockHint" style="margin-top:8px;">Your investment value grows every month, but funds are locked until the maturity date shown above (maximum 3 years) — withdrawals open once that date is reached.</p>
 
       <div class="divider"></div>
       <div class="section-title-sm" style="margin-top:0;">Payment Details</div>
@@ -919,6 +960,92 @@ tr:hover td{background:rgba(184,134,60,.05);}
   </div>
 </div>
 
+<!-- Buy Property Modal -->
+<div class="modal-bg" id="buyModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>Buy This Property</h3><button class="modal-close" onclick="closeModal('buyModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <div id="buyMsg"></div>
+      <p class="small-muted" style="margin-bottom:16px;" id="buyPropName"></p>
+
+      <div class="field">
+        <label>Payment Plan</label>
+        <select id="buyPlan" onchange="onBuyPlanChange()">
+          <option value="full">Pay in Full — No Interest</option>
+          <option value="installment">Pay by Installment — Interest Applies</option>
+        </select>
+      </div>
+      <div class="field hidden" id="buyMonthsField">
+        <label>Number of Months</label>
+        <input type="number" id="buyMonths" min="1" max="60" value="6" oninput="updateBuyPreview()">
+        <p class="hint" id="buyRateHint"></p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="summary-box" id="buyPreviewBox" style="display:none;">
+        <div class="summary-row"><span>Property Price</span><b id="bvPrice">—</b></div>
+        <div class="summary-row" id="bvPlanRow"><span>Payment Plan</span><b id="bvPlan">—</b></div>
+        <div class="summary-row hidden" id="bvRateRow"><span>Interest Rate</span><b id="bvRate">—</b></div>
+        <div class="summary-row hidden" id="bvMonthsRow"><span>Number of Months</span><b id="bvMonths">—</b></div>
+        <div class="summary-row hidden" id="bvInterestRow"><span>Total Interest</span><b id="bvInterest">—</b></div>
+        <div class="summary-row hidden" id="bvMonthlyRow"><span>Monthly Installment</span><b id="bvMonthly">—</b></div>
+        <div class="summary-total"><span>Total Payable</span><b id="bvTotal">—</b></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title-sm" style="margin-top:0;">Payment Details</div>
+      <div class="summary-box" id="buyBankBox">
+        <div class="summary-row"><span>Bank Name</span><b id="bbBank">—</b></div>
+        <div class="summary-row"><span>Account Name</span><b id="bbName">—</b></div>
+        <div class="summary-row"><span>Account Number</span><b id="bbNumber">—</b></div>
+      </div>
+      <p class="hint" id="bbNote"></p>
+      <p class="small-muted" style="margin-top:10px;">For full payment, pay the total price. For installment, pay at least your first monthly installment, then upload your receipt below. Your purchase will be verified and approved once the admin confirms the receipt.</p>
+
+      <div class="field" style="margin-top:16px;">
+        <label>Payment Receipt <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('buyReceiptInput').click()">Click to upload your payment receipt (image)</div>
+        <input type="file" id="buyReceiptInput" accept="image/*" class="hidden" onchange="handleBuyReceiptUpload(event)">
+        <div class="img-upload-grid" id="buyReceiptPreviewGrid"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('buyModalBg')">Cancel</button>
+      <button class="btn" id="submitBuyBtn" onclick="submitPurchase()">Confirm Purchase</button>
+    </div>
+  </div>
+</div>
+
+<!-- Buy Purchase Summary Modal -->
+<div class="modal-bg" id="buySummaryModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>Purchase Submitted 🎉</h3><button class="modal-close" onclick="closeModal('buySummaryModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <p class="small-muted" style="margin-bottom:16px;">Your property purchase has been recorded. Here is your summary — we've also opened WhatsApp so our team can confirm it.</p>
+      <div class="summary-box">
+        <div class="summary-row"><span>Purchase ID</span><b id="bsumId">—</b></div>
+        <div class="summary-row"><span>Property</span><b id="bsumProperty">—</b></div>
+        <div class="summary-row"><span>Payment Plan</span><b id="bsumPlan">—</b></div>
+        <div class="summary-row hidden" id="bsumMonthlyRow"><span>Monthly Installment</span><b id="bsumMonthly">—</b></div>
+        <div class="summary-total"><span>Total Payable</span><b id="bsumTotal">—</b></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a class="btn btn-ghost" id="reopenBuyWaBtn" target="_blank">Reopen WhatsApp</a>
+      <button class="btn" onclick="closeModal('buySummaryModalBg'); switchDashPanel('purchases'); go('dashboard');">Go to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- Purchase Details Modal (Admin) -->
+<div class="modal-bg" id="purchaseDetailModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>Purchase Details</h3><button class="modal-close" onclick="closeModal('purchaseDetailModalBg')">&times;</button></div>
+    <div class="modal-body" id="purchaseDetailBody"></div>
+    <div class="modal-foot" id="purchaseDetailFoot"></div>
+  </div>
+</div>
+
 <!-- Property Add/Edit Modal -->
 <div class="modal-bg" id="propertyModalBg">
   <div class="modal wide">
@@ -938,9 +1065,10 @@ tr:hover td{background:rgba(184,134,60,.05);}
           <div class="field"><label>Available Units</label><input required type="number" id="propUnits"></div>
         </div>
         <div class="field-row">
-          <div class="field"><label>Investment Duration (months)</label><input required type="number" id="propDuration" min="1"></div>
+          <div class="field"><label>Investment Duration (months, max 36 = 3 years)</label><input required type="number" id="propDuration" min="1" max="36"></div>
           <div class="field"><label>Monthly ROI Percentage (%)</label><input required type="number" id="propROI" step="0.1"></div>
         </div>
+        <p class="hint" style="margin-top:-10px; margin-bottom:18px;">Investments are locked for the full duration. Investors cannot withdraw before the maturity date — the maximum lock-in allowed is 3 years (36 months).</p>
         <div class="field-row">
           <div class="field"><label>Minimum Investment (₦)</label><input required type="number" id="propMinInvest"></div>
           <div class="field"><label>Investment Status</label>
@@ -1036,8 +1164,9 @@ let currentUserDoc = null;   // users/{uid} doc data
 let isAdmin = false;
 let allProperties = [];
 let allInvestments = [];     // admin: all; user: own
+let allPurchases = [];       // admin: all; user: own — property buy/installment purchases
 let allUsers = [];
-let siteSettings = { companyName:"Royal Luxury Mini Estate", email:"royalluxuryestate@gmail.com", phone:"+234 913 488 2222", whatsapp:"2349134882222", address:"Abeokuta, Ogun State, Nigeria", aboutText:"", bankName:"", accountName:"", accountNumber:"", paymentNote:"", terms:"1. All investments are subject to availability at the time of confirmation.\n2. Returns are paid at the stated maturity date, based on the ROI shown for each property.\n3. Investment amounts are non-refundable once an investment is approved, except where otherwise agreed in writing.\n4. Royal Luxury Mini Estate reserves the right to request additional verification before approving an investment.\n5. All communications regarding an investment should be directed to our official email or WhatsApp number." };
+let siteSettings = { companyName:"Royal Luxury Mini Estate", email:"royalluxuryestate@gmail.com", phone:"+234 913 488 2222", whatsapp:"2349134882222", address:"Abeokuta, Ogun State, Nigeria", aboutText:"", bankName:"", accountName:"", accountNumber:"", paymentNote:"", installmentInterestRate:2, terms:"1. All investments are subject to availability at the time of confirmation.\n2. Returns are paid at the stated maturity date, based on the ROI shown for each property.\n3. Investment amounts are non-refundable once an investment is approved, except where otherwise agreed in writing.\n4. Royal Luxury Mini Estate reserves the right to request additional verification before approving an investment.\n5. All communications regarding an investment should be directed to our official email or WhatsApp number." };
 let currentDetailProperty = null;
 let pendingImageFiles = [];      // {file, url} for new uploads not yet saved
 let existingImageUrls = [];      // urls already on the property (edit mode)
@@ -1058,6 +1187,7 @@ function go(pageId){
   if(pageId === 'dashboard'){
     if(!currentUser){ go('auth'); return; }
     loadUserInvestments();
+    loadUserPurchases();
     loadInboxAnnouncements();
   }
   if(pageId === 'posts'){
@@ -1125,7 +1255,8 @@ async function saveSettings(e){
     bankName: document.getElementById('setBankName').value.trim(),
     accountName: document.getElementById('setAccountName').value.trim(),
     accountNumber: document.getElementById('setAccountNumber').value.trim(),
-    paymentNote: document.getElementById('setPaymentNote').value.trim()
+    paymentNote: document.getElementById('setPaymentNote').value.trim(),
+    installmentInterestRate: Number(document.getElementById('setInstallmentRate').value)||0
   };
   try{
     await db.collection('settings').doc('main').set(data, {merge:true});
@@ -1150,6 +1281,7 @@ function fillSettingsForm(){
   document.getElementById('setAccountName').value = siteSettings.accountName||'';
   document.getElementById('setAccountNumber').value = siteSettings.accountNumber||'';
   document.getElementById('setPaymentNote').value = siteSettings.paymentNote||'';
+  document.getElementById('setInstallmentRate').value = (siteSettings.installmentInterestRate!==undefined && siteSettings.installmentInterestRate!==null) ? siteSettings.installmentInterestRate : '';
 }
 
 /* ================= AUTH ================= */
@@ -1368,6 +1500,9 @@ function viewProperty(id){
         <button class="btn btn-block" ${p.status!=='Available'?'disabled':''} onclick="openInvestModal('${p.id}')">
           ${p.status==='Available' ? 'Invest Now' : p.status}
         </button>
+        <button class="btn btn-block btn-dark" style="margin-top:10px;" ${p.status!=='Available'?'disabled':''} onclick="openBuyModal('${p.id}')">
+          ${p.status==='Available' ? 'Buy This Property' : p.status}
+        </button>
       </div>
     </div>
   `;
@@ -1583,6 +1718,186 @@ async function submitInvestment(){
   }
 }
 
+/* ================= BUY PROPERTY FLOW (full payment or installment) ================= */
+let currentBuyProperty = null;
+let buyReceiptDataUrl = null;
+
+function openBuyModal(propId){
+  if(!currentUser){ toast('Please login to buy a property'); go('auth'); return; }
+  const p = allProperties.find(x=>x.id===propId);
+  if(!p) return;
+  currentBuyProperty = p;
+  document.getElementById('buyMsg').innerHTML = '';
+  document.getElementById('buyPropName').textContent = p.name + ' — ' + p.location;
+  document.getElementById('buyPlan').value = 'full';
+  document.getElementById('buyMonths').value = 6;
+  document.getElementById('buyMonthsField').classList.add('hidden');
+  const rate = Number(siteSettings.installmentInterestRate)||0;
+  document.getElementById('buyRateHint').textContent = 'Current installment interest rate: ' + rate + '% per month, applied for the number of months chosen.';
+  document.getElementById('bbBank').textContent = siteSettings.bankName || 'Not set — contact admin';
+  document.getElementById('bbName').textContent = siteSettings.accountName || 'Not set — contact admin';
+  document.getElementById('bbNumber').textContent = siteSettings.accountNumber || 'Not set — contact admin';
+  document.getElementById('bbNote').textContent = siteSettings.paymentNote || '';
+  buyReceiptDataUrl = null;
+  document.getElementById('buyReceiptPreviewGrid').innerHTML = '';
+  updateBuyPreview();
+  openModalEl('buyModalBg');
+}
+
+function onBuyPlanChange(){
+  const plan = document.getElementById('buyPlan').value;
+  document.getElementById('buyMonthsField').classList.toggle('hidden', plan!=='installment');
+  updateBuyPreview();
+}
+
+function computeBuyFigures(){
+  const p = currentBuyProperty;
+  if(!p) return null;
+  const price = Number(p.price)||0;
+  const plan = document.getElementById('buyPlan').value;
+  const rate = Number(siteSettings.installmentInterestRate)||0; // % per month, set by admin
+  const months = plan==='installment' ? Math.max(1, Number(document.getElementById('buyMonths').value)||0) : 0;
+  const interest = plan==='installment' ? price * (rate/100) * months : 0; // no interest on full payment
+  const total = price + interest;
+  const monthly = plan==='installment' && months>0 ? total / months : 0;
+  return {price, plan, rate, months, interest, total, monthly};
+}
+
+function updateBuyPreview(){
+  const f = computeBuyFigures();
+  const box = document.getElementById('buyPreviewBox');
+  if(!f){ box.style.display='none'; return; }
+  document.getElementById('bvPrice').textContent = fmtNaira(f.price);
+  document.getElementById('bvPlan').textContent = f.plan==='full' ? 'Full Payment — No Interest' : 'Installment Payment';
+  document.getElementById('bvRateRow').classList.toggle('hidden', f.plan!=='installment');
+  document.getElementById('bvMonthsRow').classList.toggle('hidden', f.plan!=='installment');
+  document.getElementById('bvInterestRow').classList.toggle('hidden', f.plan!=='installment');
+  document.getElementById('bvMonthlyRow').classList.toggle('hidden', f.plan!=='installment');
+  if(f.plan==='installment'){
+    document.getElementById('bvRate').textContent = f.rate + '%/month';
+    document.getElementById('bvMonths').textContent = f.months + ' months';
+    document.getElementById('bvInterest').textContent = fmtNaira(f.interest);
+    document.getElementById('bvMonthly').textContent = fmtNaira(f.monthly);
+  }
+  document.getElementById('bvTotal').textContent = fmtNaira(f.total);
+  box.style.display='block';
+}
+
+async function handleBuyReceiptUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const grid = document.getElementById('buyReceiptPreviewGrid');
+  grid.innerHTML = '<span class="small-muted">Compressing receipt...</span>';
+  try{
+    buyReceiptDataUrl = await compressImage(file, 1000, 0.7);
+    grid.innerHTML = `<div class="img-thumb"><img src="${buyReceiptDataUrl}"><button type="button" onclick="removeBuyReceiptImg()">&times;</button></div>`;
+  }catch(err){
+    grid.innerHTML = '';
+    toast('Could not process that receipt image.');
+  }
+}
+function removeBuyReceiptImg(){
+  buyReceiptDataUrl = null;
+  document.getElementById('buyReceiptPreviewGrid').innerHTML = '';
+}
+
+async function submitPurchase(){
+  const p = currentBuyProperty;
+  const msgEl = document.getElementById('buyMsg');
+  msgEl.innerHTML = '';
+  if(!p){ return; }
+  const f = computeBuyFigures();
+  if(!f || f.price<=0){
+    msgEl.innerHTML = '<div class="err-msg">This property does not have a valid price set. Please contact admin.</div>';
+    return;
+  }
+  if(f.plan==='installment' && f.months<1){
+    msgEl.innerHTML = '<div class="err-msg">Please enter a valid number of months.</div>';
+    return;
+  }
+  if(!buyReceiptDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please upload your payment receipt before confirming.</div>';
+    return;
+  }
+  const btn = document.getElementById('submitBuyBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+  const purchaseId = 'RLE-P-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random()*900+100);
+  const buyerName = currentUserDoc.name || currentUser.displayName || 'Buyer';
+  const buyerEmail = currentUserDoc.email || currentUser.email;
+
+  const record = {
+    purchaseId,
+    userId: currentUser.uid,
+    userName: buyerName,
+    userEmail: buyerEmail,
+    propertyId: p.id,
+    propertyName: p.name,
+    price: f.price,
+    paymentPlan: f.plan,          // 'full' or 'installment'
+    months: f.months,             // 0 for full payment
+    interestRate: f.rate,         // % per month, snapshot of admin setting (0 for full payment)
+    interestAmount: f.interest,   // 0 for full payment
+    totalPayable: f.total,
+    monthlyInstallment: f.monthly,// 0 for full payment
+    status: 'pending',
+    receiptUrl: buyReceiptDataUrl,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try{
+    const ref = await db.collection('purchases').add(record);
+    await db.collection('transactions').add({
+      type:'purchase', purchaseRef: ref.id, purchaseId, userId: currentUser.uid,
+      amount: f.total, propertyName: p.name, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    const planText = f.plan==='full' ? 'Full Payment (no interest)' : `Installment — ${f.months} months at ${f.rate}%/month`;
+    const dateStr = new Date().toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
+    const waText = `Hello Royal Luxury Mini Estate,\n\nA new property purchase has been submitted.\n\nBuyer Name: ${buyerName}\nBuyer Email: ${buyerEmail}\nPurchase ID: ${purchaseId}\nProperty: ${p.name}\nProperty Price: ${fmtNaira(f.price)}\nPayment Plan: ${planText}\nTotal Payable: ${fmtNaira(f.total)}${f.plan==='installment' ? '\nMonthly Installment: '+fmtNaira(f.monthly) : ''}\nDate: ${dateStr}\n\nKindly review and confirm this purchase.\n\nThank you.`;
+    const waLink = 'https://wa.me/' + (siteSettings.whatsapp||'2349134882222') + '?text=' + encodeURIComponent(waText);
+
+    document.getElementById('bsumId').textContent = purchaseId;
+    document.getElementById('bsumProperty').textContent = p.name;
+    document.getElementById('bsumPlan').textContent = planText;
+    document.getElementById('bsumMonthlyRow').classList.toggle('hidden', f.plan!=='installment');
+    if(f.plan==='installment') document.getElementById('bsumMonthly').textContent = fmtNaira(f.monthly);
+    document.getElementById('bsumTotal').textContent = fmtNaira(f.total);
+    document.getElementById('reopenBuyWaBtn').href = waLink;
+
+    closeModal('buyModalBg');
+    openModalEl('buySummaryModalBg');
+    window.open(waLink, '_blank');
+
+    loadUserPurchases();
+  }catch(err){
+    msgEl.innerHTML = '<div class="err-msg">'+err.message+'</div>';
+  }finally{
+    btn.disabled=false; btn.textContent='Confirm Purchase';
+  }
+}
+
+async function loadUserPurchases(){
+  if(!currentUser) return;
+  try{
+    const snap = await db.collection('purchases').where('userId','==',currentUser.uid).get();
+    allPurchases = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  }catch(e){ console.warn(e); allPurchases=[]; }
+  renderUserPurchases();
+}
+
+function renderUserPurchases(){
+  const tbody = document.getElementById('uPurchaseTable');
+  if(!tbody) return;
+  tbody.innerHTML = allPurchases.map(pu=>`
+    <tr><td>${pu.purchaseId}</td><td>${pu.propertyName}</td>
+    <td>${pu.paymentPlan==='full' ? 'Full Payment' : 'Installment ('+pu.months+' mo)'}</td>
+    <td>${fmtNaira(pu.totalPayable)}</td><td>${pu.paymentPlan==='installment' ? fmtNaira(pu.monthlyInstallment)+'/mo' : '—'}</td>
+    <td><span class="badge badge-${pu.status}">${pu.status}</span></td></tr>
+  `).join('') || '<tr><td colspan="6" class="small-muted" style="padding:20px;">No purchases yet.</td></tr>';
+}
+
 /* ================= USER DASHBOARD ================= */
 function switchDashPanel(panel){
   document.querySelectorAll('#page-dashboard .dash-nav a').forEach(a=>a.classList.toggle('active', a.dataset.panel===panel));
@@ -1601,9 +1916,48 @@ async function loadUserInvestments(){
   renderUserDashboard();
 }
 
+function toJsDate(d){
+  if(!d) return null;
+  return d.seconds!==undefined ? new Date(d.seconds*1000) : new Date(d);
+}
+
+// Value grows every month up to the maturity date (max 3-year/36-month lock-in enforced at property level)
+function investmentCurrentValue(i){
+  const amount = Number(i.amount)||0;
+  const roi = Number(i.roi)||0;
+  const duration = Number(i.duration)||0;
+  const start = toJsDate(i.createdAt) || new Date();
+  const now = new Date();
+  let monthsElapsed = (now.getFullYear()-start.getFullYear())*12 + (now.getMonth()-start.getMonth());
+  if(now.getDate() < start.getDate()) monthsElapsed -= 1;
+  monthsElapsed = Math.max(0, Math.min(monthsElapsed, duration));
+  return amount + (amount * (roi/100) * monthsElapsed);
+}
+function isInvestmentMatured(i){
+  const m = toJsDate(i.maturityDate);
+  if(!m) return false;
+  return new Date() >= m;
+}
+
+async function requestWithdrawal(id){
+  const i = allInvestments.find(x=>x.id===id);
+  if(!i) return;
+  if(i.status!=='approved'){ toast('Only approved, active investments can be withdrawn.'); return; }
+  if(!isInvestmentMatured(i)){ toast('This investment unlocks on '+fmtDate(i.maturityDate)+'.'); return; }
+  if(!confirm('Request withdrawal of '+fmtNaira(i.totalReturn)+' for '+i.propertyName+'?')) return;
+  try{
+    await db.collection('investments').doc(i.id).update({status:'withdrawal_requested', withdrawalRequestedAt: firebase.firestore.FieldValue.serverTimestamp()});
+    toast('Withdrawal requested. Our team will process your payout shortly.');
+    const waText = `Hello Royal Luxury Mini Estate,\n\nI would like to withdraw my matured investment.\n\nInvestment ID: ${i.investmentId}\nProperty: ${i.propertyName}\nTotal Return Due: ${fmtNaira(i.totalReturn)}\n\nKindly process my payout.\n\nThank you.`;
+    const waLink = 'https://wa.me/' + (siteSettings.whatsapp||'2349134882222') + '?text=' + encodeURIComponent(waText);
+    window.open(waLink, '_blank');
+    loadUserInvestments();
+  }catch(err){ toast('Error: '+err.message); }
+}
+
 function renderUserDashboard(){
-  const active = allInvestments.filter(i=>i.status==='pending'||i.status==='approved');
-  const completed = allInvestments.filter(i=>i.status==='completed');
+  const active = allInvestments.filter(i=>i.status==='pending'||i.status==='approved'||i.status==='withdrawal_requested');
+  const completed = allInvestments.filter(i=>i.status==='completed'||i.status==='withdrawn');
   const totalInvested = allInvestments.reduce((s,i)=>s+(Number(i.amount)||0),0);
   const totalReturn = allInvestments.reduce((s,i)=>s+(Number(i.totalReturn)||0),0);
   document.getElementById('uStatActive').textContent = active.length;
@@ -1616,10 +1970,23 @@ function renderUserDashboard(){
     <td><span class="badge badge-${i.status}">${i.status}</span></td><td>${fmtDate(i.maturityDate)}</td></tr>
   `).join('') || '<tr><td colspan="6" class="small-muted" style="padding:20px;">No investments yet.</td></tr>';
 
-  document.getElementById('uActiveTable').innerHTML = active.map(i=>`
+  document.getElementById('uActiveTable').innerHTML = active.map(i=>{
+    const matured = isInvestmentMatured(i);
+    let actionHtml;
+    if(i.status==='withdrawal_requested'){
+      actionHtml = '<span class="small-muted">Processing…</span>';
+    } else if(i.status==='approved' && matured){
+      actionHtml = `<button class="btn btn-sm" onclick="requestWithdrawal('${i.id}')">Withdraw</button>`;
+    } else if(i.status==='approved'){
+      actionHtml = `<span class="small-muted">Unlocks ${fmtDate(i.maturityDate)}</span>`;
+    } else {
+      actionHtml = '<span class="small-muted">—</span>';
+    }
+    return `
     <tr><td>${i.investmentId}</td><td>${i.propertyName}</td><td>${fmtNaira(i.amount)}</td><td>${i.roi}%/mo</td>
-    <td>${fmtNaira(i.expectedProfit)}</td><td>${fmtDate(i.maturityDate)}</td><td><span class="badge badge-${i.status}">${i.status}</span></td></tr>
-  `).join('') || '<tr><td colspan="7" class="small-muted" style="padding:20px;">No active investments.</td></tr>';
+    <td>${fmtNaira(investmentCurrentValue(i))}</td><td>${fmtDate(i.maturityDate)}</td><td><span class="badge badge-${i.status}">${i.status.replace('_',' ')}</span></td>
+    <td>${actionHtml}</td></tr>`;
+  }).join('') || '<tr><td colspan="8" class="small-muted" style="padding:20px;">No active investments.</td></tr>';
 
   document.getElementById('uCompletedTable').innerHTML = completed.map(i=>`
     <tr><td>${i.investmentId}</td><td>${i.propertyName}</td><td>${fmtNaira(i.amount)}</td><td>${fmtNaira(i.totalReturn)}</td><td>${fmtDate(i.maturityDate)}</td></tr>
@@ -1650,7 +2017,7 @@ async function submitContact(e){
 
 /* ================= ADMIN: LOAD ALL ================= */
 async function loadAdminData(){
-  await Promise.all([loadAdminProperties(), loadAdminInvestments(), loadAdminUsers(), loadAdminPosts(), loadAdminAnnouncements(), loadAdminReviews()]);
+  await Promise.all([loadAdminProperties(), loadAdminInvestments(), loadAdminPurchases(), loadAdminUsers(), loadAdminPosts(), loadAdminAnnouncements(), loadAdminReviews()]);
   renderAdminDashboardStats();
   fillSettingsForm();
 }
@@ -1671,6 +2038,14 @@ async function loadAdminInvestments(){
   renderAdminInvestments();
 }
 
+async function loadAdminPurchases(){
+  try{
+    const snap = await db.collection('purchases').orderBy('createdAt','desc').get();
+    allPurchases = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  }catch(e){ console.warn(e); allPurchases=[]; }
+  renderAdminPurchases();
+}
+
 async function loadAdminUsers(){
   try{
     const snap = await db.collection('users').get();
@@ -1687,6 +2062,8 @@ function renderAdminDashboardStats(){
   document.getElementById('aStatActive').textContent = allInvestments.filter(i=>i.status==='pending'||i.status==='approved').length;
   document.getElementById('aStatCompleted').textContent = allInvestments.filter(i=>i.status==='completed').length;
   document.getElementById('aStatValue').textContent = fmtNaira(totalValue);
+  document.getElementById('aStatPurchases').textContent = allPurchases.length;
+  document.getElementById('aStatPendingPurchases').textContent = allPurchases.filter(pu=>pu.status==='pending').length;
 }
 
 function switchAdminPanel(panel){
@@ -1819,6 +2196,13 @@ async function saveProperty(e){
   try{
     const images = [...existingImageUrls, ...pendingImageFiles.map(p=>p.url)];
 
+    const durationVal = Number(document.getElementById('propDuration').value)||0;
+    if(durationVal < 1 || durationVal > 36){
+      msgEl.innerHTML = '<div class="err-msg">Investment duration must be between 1 and 36 months (3 years maximum lock-in).</div>';
+      btn.disabled = false; btn.textContent = 'Save Property';
+      return;
+    }
+
     if(totalImagePayloadBytes() > 950000){
       msgEl.innerHTML = '<div class="err-msg">Total image size is too large for Firestore (1MB document limit). Please remove an image or upload smaller ones.</div>';
       btn.disabled = false; btn.textContent = 'Save Property';
@@ -1901,7 +2285,8 @@ function viewInvestmentDetail(id){
       <div class="summary-row"><span>Monthly ROI</span><b>${i.roi}%/month</b></div>
       <div class="summary-row"><span>Expected Profit</span><b>${fmtNaira(i.expectedProfit)}</b></div>
       <div class="summary-row"><span>Maturity Date</span><b>${fmtDate(i.maturityDate)}</b></div>
-      <div class="summary-row"><span>Status</span><b>${i.status}</b></div>
+      <div class="summary-row"><span>Lock Status</span><b>${isInvestmentMatured(i) ? 'Unlocked (matured)' : 'Locked until maturity'}</b></div>
+      <div class="summary-row"><span>Status</span><b>${(i.status||'').replace('_',' ')}</b></div>
     </div>
     <div class="section-title-sm">Payment Receipt</div>
     ${i.receiptUrl
@@ -1915,6 +2300,8 @@ function viewInvestmentDetail(id){
                <button class="btn btn-sm" onclick="updateInvestmentStatus('${i.id}','approved')">Approve</button>`;
   } else if(i.status==='approved'){
     actions = `<button class="btn btn-sm" onclick="updateInvestmentStatus('${i.id}','completed')">Mark Completed</button>`;
+  } else if(i.status==='withdrawal_requested'){
+    actions = `<button class="btn btn-sm" onclick="updateInvestmentStatus('${i.id}','withdrawn')">Mark Withdrawn (Paid)</button>`;
   }
   document.getElementById('invDetailFoot').innerHTML = actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('invDetailModalBg')">Close</button>`;
   openModalEl('invDetailModalBg');
@@ -1926,6 +2313,70 @@ async function updateInvestmentStatus(id, status){
     toast('Investment marked as '+status);
     closeModal('invDetailModalBg');
     await loadAdminInvestments();
+    renderAdminDashboardStats();
+  }catch(err){ toast('Error: '+err.message); }
+}
+
+/* ---------- Admin: Purchases (buy property — full / installment) ---------- */
+function renderAdminPurchases(){
+  const q = (document.getElementById('purSearch')?.value||'').toLowerCase();
+  const status = document.getElementById('purStatusFilter')?.value||'';
+  let list = allPurchases.filter(pu=>{
+    const matchQ = !q || (pu.userName||'').toLowerCase().includes(q) || (pu.propertyName||'').toLowerCase().includes(q) || (pu.purchaseId||'').toLowerCase().includes(q);
+    const matchS = !status || pu.status===status;
+    return matchQ && matchS;
+  });
+  document.getElementById('aPurTable').innerHTML = list.map(pu=>`
+    <tr>
+      <td>${pu.purchaseId}</td><td>${pu.userName}<br><span class="small-muted">${pu.userEmail}</span></td>
+      <td>${pu.propertyName}</td><td>${pu.paymentPlan==='full' ? 'Full Payment' : 'Installment ('+pu.months+' mo)'}</td>
+      <td>${fmtNaira(pu.totalPayable)}</td>
+      <td><span class="badge badge-${pu.status}">${pu.status}</span></td>
+      <td class="row-actions"><button class="icon-btn" onclick="viewPurchaseDetail('${pu.id}')" title="View">👁</button></td>
+    </tr>
+  `).join('') || '<tr><td colspan="7" class="small-muted" style="padding:20px;">No purchases yet.</td></tr>';
+}
+
+function viewPurchaseDetail(id){
+  const pu = allPurchases.find(x=>x.id===id);
+  if(!pu) return;
+  const planText = pu.paymentPlan==='full' ? 'Full Payment — No Interest' : `Installment — ${pu.months} months at ${pu.interestRate}%/month`;
+  document.getElementById('purchaseDetailBody').innerHTML = `
+    <div class="summary-box">
+      <div class="summary-row"><span>Purchase ID</span><b>${pu.purchaseId}</b></div>
+      <div class="summary-row"><span>Buyer</span><b>${pu.userName}</b></div>
+      <div class="summary-row"><span>Email</span><b>${pu.userEmail}</b></div>
+      <div class="summary-row"><span>Property</span><b>${pu.propertyName}</b></div>
+      <div class="summary-row"><span>Property Price</span><b>${fmtNaira(pu.price)}</b></div>
+      <div class="summary-row"><span>Payment Plan</span><b>${planText}</b></div>
+      ${pu.paymentPlan==='installment' ? `<div class="summary-row"><span>Total Interest</span><b>${fmtNaira(pu.interestAmount)}</b></div>
+      <div class="summary-row"><span>Monthly Installment</span><b>${fmtNaira(pu.monthlyInstallment)}</b></div>` : ''}
+      <div class="summary-total"><span>Total Payable</span><b>${fmtNaira(pu.totalPayable)}</b></div>
+      <div class="summary-row"><span>Status</span><b>${pu.status}</b></div>
+    </div>
+    <div class="section-title-sm">Payment Receipt</div>
+    ${pu.receiptUrl
+      ? `<a href="${pu.receiptUrl}" target="_blank"><img src="${pu.receiptUrl}" style="width:100%; max-height:360px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a>
+         <p class="small-muted" style="margin-top:6px;">Tap the image to view it full size before approving.</p>`
+      : `<p class="err-msg">No receipt was uploaded for this purchase.</p>`}
+  `;
+  let actions = '';
+  if(pu.status==='pending'){
+    actions = `<button class="btn btn-ghost btn-sm" onclick="updatePurchaseStatus('${pu.id}','rejected')">Reject</button>
+               <button class="btn btn-sm" onclick="updatePurchaseStatus('${pu.id}','approved')">Approve</button>`;
+  } else if(pu.status==='approved'){
+    actions = `<button class="btn btn-sm" onclick="updatePurchaseStatus('${pu.id}','completed')">Mark Completed</button>`;
+  }
+  document.getElementById('purchaseDetailFoot').innerHTML = actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('purchaseDetailModalBg')">Close</button>`;
+  openModalEl('purchaseDetailModalBg');
+}
+
+async function updatePurchaseStatus(id, status){
+  try{
+    await db.collection('purchases').doc(id).update({status});
+    toast('Purchase marked as '+status);
+    closeModal('purchaseDetailModalBg');
+    await loadAdminPurchases();
     renderAdminDashboardStats();
   }catch(err){ toast('Error: '+err.message); }
 }
