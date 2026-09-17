@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Royal Luxury Mini Estate | Real Estate Investment</title>
 <meta name="description" content="Royal Luxury Mini Estate — premium property investment in Abeokuta, Ogun State, Nigeria.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%9B%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -347,7 +347,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
 <nav id="nav">
   <div class="nav-inner">
     <div class="brand" onclick="go('home')">
-      <div class="crest">R</div>
+      <img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
       <div class="brand-name">Royal Luxury <b>Mini Estate</b></div>
     </div>
     <div class="nav-links" id="navLinks">
@@ -391,7 +391,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       <div class="hero-stats">
         <div><b id="statProps">—</b><span>Active Properties</span></div>
         <div><b>Flexible</b><span>Monthly ROI · Any Duration</span></div>
-        <div><b id="statInvestors">—</b><span>Investors Onboard</span></div>
+        <div><b id="statInvestors">1000+</b><span>Investors Onboard</span></div>
       </div>
     </div>
   </div>
@@ -831,7 +831,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <div class="brand" style="margin-bottom:14px;"><div class="crest">R</div><div class="brand-name">Royal Luxury <b>Mini Estate</b></div></div>
+        <div class="brand" style="margin-bottom:14px;"><img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo" style="width:100%; height:100%; object-fit:cover; border-radius:50%;"><div class="brand-name">Royal Luxury <b>Mini Estate</b></div></div>
         <p style="font-size:13.5px; max-width:320px;">Premium real estate investment opportunities in Abeokuta, Ogun State, Nigeria — built on transparency and trust.</p>
       </div>
       <div>
@@ -1587,6 +1587,9 @@ async function submitInvestment(){
 function switchDashPanel(panel){
   document.querySelectorAll('#page-dashboard .dash-nav a').forEach(a=>a.classList.toggle('active', a.dataset.panel===panel));
   document.querySelectorAll('#page-dashboard .dash-panel').forEach(p=>p.classList.toggle('active', p.id==='dpanel-'+panel));
+  if(panel === 'inbox'){
+    markInboxRead();
+  }
 }
 
 async function loadUserInvestments(){
@@ -2124,25 +2127,61 @@ async function deleteAnnouncement(id){
   catch(err){ toast('Error: '+err.message); }
 }
 
+let latestInboxItems = [];
+
+function inboxReadKey(){
+  return currentUser ? 'rle_inbox_last_read_' + currentUser.uid : null;
+}
+function getLastReadTime(){
+  const key = inboxReadKey();
+  if(!key) return 0;
+  try{ return Number(localStorage.getItem(key)) || 0; }catch(e){ return 0; }
+}
+function markInboxRead(){
+  const key = inboxReadKey();
+  if(!key || !latestInboxItems.length) return;
+  const newest = latestInboxItems[0];
+  const ts = newest.createdAt && newest.createdAt.seconds ? newest.createdAt.seconds : Math.floor(Date.now()/1000);
+  try{ localStorage.setItem(key, String(ts)); }catch(e){}
+  document.getElementById('inboxBadge').classList.add('hidden');
+}
+
 async function loadInboxAnnouncements(){
   if(!currentUser) return;
   const list = document.getElementById('inboxList');
   try{
     const snap = await db.collection('announcements').orderBy('createdAt','desc').limit(50).get();
     const items = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    latestInboxItems = items;
     if(!items.length){ list.innerHTML = '<p class="small-muted">No announcements yet.</p>'; document.getElementById('inboxBadge').classList.add('hidden'); return; }
-    list.innerHTML = items.map(a=>`
-      <div class="form-card" style="max-width:none; padding:18px 22px;">
+    const lastRead = getLastReadTime();
+    list.innerHTML = items.map(a=>{
+      const ts = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
+      const isUnread = ts > lastRead;
+      return `
+      <div class="form-card" style="max-width:none; padding:18px 22px; ${isUnread?'border-color:var(--gold);':''}">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <b class="serif" style="font-size:16px;">${a.title}</b>
+          <b class="serif" style="font-size:16px;">${isUnread?'<span style="color:var(--gold); font-size:10px; margin-right:6px;">●</span>':''}${a.title}</b>
           <span class="small-muted">${a.createdAt?fmtDate(a.createdAt):''}</span>
         </div>
         <p style="font-size:13.5px; color:var(--muted-dark);">${a.message}</p>
       </div>
-    `).join('');
+    `;
+    }).join('');
+
+    const unreadCount = items.filter(a=>{
+      const ts = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
+      return ts > lastRead;
+    }).length;
     const badge = document.getElementById('inboxBadge');
-    badge.textContent = items.length;
-    badge.classList.remove('hidden');
+    // Only show the badge if the Inbox tab isn't already the active/open panel
+    const inboxPanelActive = document.getElementById('dpanel-inbox').classList.contains('active');
+    if(unreadCount > 0 && !inboxPanelActive){
+      badge.textContent = unreadCount;
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
   }catch(e){
     list.innerHTML = '<p class="small-muted">Could not load announcements.</p>';
   }
