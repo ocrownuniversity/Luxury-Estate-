@@ -688,8 +688,8 @@ tr:hover td{background:rgba(184,134,60,.05);}
       <div class="dash-panel" id="dpanel-purchases">
         <div class="dash-head"><h2>My Purchases</h2></div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Purchase ID</th><th>Property</th><th>Plan</th><th>Deposit Paid</th><th>Total Payable</th><th>Monthly</th><th>Status</th></tr></thead>
-          <tbody id="uPurchaseTable"><tr><td colspan="7" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
+          <thead><tr><th>Purchase ID</th><th>Property</th><th>Plan</th><th>Deposit Paid</th><th>Total Payable</th><th>Monthly</th><th>Progress</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="uPurchaseTable"><tr><td colspan="9" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -1036,6 +1036,39 @@ tr:hover td{background:rgba(184,134,60,.05);}
     <div class="modal-foot">
       <a class="btn btn-ghost" id="reopenBuyWaBtn" target="_blank">Reopen WhatsApp</a>
       <button class="btn" onclick="closeModal('buySummaryModalBg'); switchDashPanel('purchases'); go('dashboard');">Go to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pay Monthly Installment Modal (Buyer) -->
+<div class="modal-bg" id="installmentPayModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>Pay Monthly Installment</h3><button class="modal-close" onclick="closeModal('installmentPayModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <div id="ipMsg"></div>
+      <p class="small-muted" style="margin-bottom:16px;" id="ipPurchaseInfo"></p>
+      <div class="summary-box">
+        <div class="summary-row"><span>Months Paid</span><b id="ipProgress">—</b></div>
+        <div class="summary-row"><span>Amount Due This Month</span><b id="ipAmountDue">—</b></div>
+      </div>
+      <div class="divider"></div>
+      <div class="section-title-sm" style="margin-top:0;">Payment Details</div>
+      <div class="summary-box">
+        <div class="summary-row"><span>Bank Name</span><b id="ipBank">—</b></div>
+        <div class="summary-row"><span>Account Name</span><b id="ipAccName">—</b></div>
+        <div class="summary-row"><span>Account Number</span><b id="ipAccNumber">—</b></div>
+      </div>
+      <p class="small-muted" style="margin-top:10px;">Pay this month's installment to the account above, then upload your receipt below. It will be reflected here once the admin confirms it.</p>
+      <div class="field" style="margin-top:16px;">
+        <label>Payment Receipt <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('ipReceiptInput').click()">Click to upload your payment receipt (image)</div>
+        <input type="file" id="ipReceiptInput" accept="image/*" class="hidden" onchange="handleInstallmentReceiptUpload(event)">
+        <div class="img-upload-grid" id="ipReceiptPreviewGrid"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('installmentPayModalBg')">Cancel</button>
+      <button class="btn" id="submitIpBtn" onclick="submitInstallmentPayment()">Submit Payment</button>
     </div>
   </div>
 </div>
@@ -1860,6 +1893,7 @@ async function submitPurchase(){
     interestAmount: f.interest,   // 0 for full payment
     totalPayable: f.total,
     monthlyInstallment: f.monthly,// 0 for full payment
+    monthsPaid: 0,                // number of monthly installments approved so far (grows as buyer pays)
     status: 'pending',
     receiptUrl: buyReceiptDataUrl,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1901,6 +1935,90 @@ async function submitPurchase(){
   }
 }
 
+/* ---------- Monthly Installment Payments (buyer submits proof each month, admin confirms) ---------- */
+let currentInstallmentPurchase = null;
+let ipReceiptDataUrl = null;
+
+function openInstallmentPayModal(purchaseId){
+  const pu = allPurchases.find(x=>x.id===purchaseId);
+  if(!pu) return;
+  if(pu.status!=='approved'){ toast('This purchase must be approved before you can pay an installment.'); return; }
+  const months = Number(pu.months)||0;
+  const monthsPaid = Number(pu.monthsPaid)||0;
+  if(monthsPaid >= months){ toast('This purchase is already fully paid.'); return; }
+
+  currentInstallmentPurchase = pu;
+  ipReceiptDataUrl = null;
+  document.getElementById('ipMsg').innerHTML = '';
+  document.getElementById('ipPurchaseInfo').textContent = pu.propertyName + ' — Purchase ID ' + pu.purchaseId;
+  document.getElementById('ipProgress').textContent = monthsPaid + ' / ' + months + ' months paid';
+  document.getElementById('ipAmountDue').textContent = fmtNaira(pu.monthlyInstallment) + ' (month ' + (monthsPaid+1) + ' of ' + months + ')';
+  document.getElementById('ipBank').textContent = siteSettings.bankName || 'Not set — contact admin';
+  document.getElementById('ipAccName').textContent = siteSettings.accountName || 'Not set — contact admin';
+  document.getElementById('ipAccNumber').textContent = siteSettings.accountNumber || 'Not set — contact admin';
+  document.getElementById('ipReceiptPreviewGrid').innerHTML = '';
+  openModalEl('installmentPayModalBg');
+}
+
+async function handleInstallmentReceiptUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const grid = document.getElementById('ipReceiptPreviewGrid');
+  grid.innerHTML = '<span class="small-muted">Compressing receipt...</span>';
+  try{
+    ipReceiptDataUrl = await compressImage(file, 1000, 0.7);
+    grid.innerHTML = `<div class="img-thumb"><img src="${ipReceiptDataUrl}"><button type="button" onclick="removeInstallmentReceiptImg()">&times;</button></div>`;
+  }catch(err){
+    grid.innerHTML = '';
+    toast('Could not process that receipt image.');
+  }
+}
+function removeInstallmentReceiptImg(){
+  ipReceiptDataUrl = null;
+  document.getElementById('ipReceiptPreviewGrid').innerHTML = '';
+}
+
+async function submitInstallmentPayment(){
+  const pu = currentInstallmentPurchase;
+  const msgEl = document.getElementById('ipMsg');
+  msgEl.innerHTML = '';
+  if(!pu) return;
+  if(!ipReceiptDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please upload your payment receipt before submitting.</div>';
+    return;
+  }
+  const btn = document.getElementById('submitIpBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...';
+  const monthNumber = (Number(pu.monthsPaid)||0) + 1;
+
+  try{
+    await db.collection('purchases').doc(pu.id).collection('payments').add({
+      purchaseId: pu.id,
+      userId: currentUser.uid,
+      userName: pu.userName,
+      propertyName: pu.propertyName,
+      monthNumber,
+      amount: pu.monthlyInstallment,
+      status: 'pending',
+      receiptUrl: ipReceiptDataUrl,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    const waText = `Hello Royal Luxury Mini Estate,\n\nA monthly installment payment has been submitted.\n\nBuyer: ${pu.userName}\nPurchase ID: ${pu.purchaseId}\nProperty: ${pu.propertyName}\nMonth: ${monthNumber} of ${pu.months}\nAmount: ${fmtNaira(pu.monthlyInstallment)}\n\nKindly review and confirm this payment.\n\nThank you.`;
+    const waLink = 'https://wa.me/' + (siteSettings.whatsapp||'2349134882222') + '?text=' + encodeURIComponent(waText);
+
+    toast('Installment payment submitted for review.');
+    closeModal('installmentPayModalBg');
+    window.open(waLink, '_blank');
+    loadUserPurchases();
+  }catch(err){
+    msgEl.innerHTML = '<div class="err-msg">'+err.message+'</div>';
+  }finally{
+    btn.disabled = false; btn.textContent = 'Submit Payment';
+  }
+}
+
 async function loadUserPurchases(){
   if(!currentUser) return;
   try{
@@ -1913,13 +2031,30 @@ async function loadUserPurchases(){
 function renderUserPurchases(){
   const tbody = document.getElementById('uPurchaseTable');
   if(!tbody) return;
-  tbody.innerHTML = allPurchases.map(pu=>`
+  tbody.innerHTML = allPurchases.map(pu=>{
+    const isInstallment = pu.paymentPlan==='installment';
+    const months = Number(pu.months)||0;
+    const monthsPaid = Number(pu.monthsPaid)||0;
+    const progress = isInstallment ? (monthsPaid + ' / ' + months + ' months paid') : '—';
+    let actionHtml = '<span class="small-muted">—</span>';
+    if(isInstallment){
+      if(pu.status==='approved' && monthsPaid < months){
+        actionHtml = `<button class="btn btn-sm" onclick="openInstallmentPayModal('${pu.id}')">Pay Installment</button>`;
+      } else if(pu.status==='approved' && monthsPaid >= months){
+        actionHtml = '<span class="small-muted">Fully paid</span>';
+      } else if(pu.status==='pending'){
+        actionHtml = '<span class="small-muted">Awaiting approval</span>';
+      }
+    }
+    return `
     <tr><td>${pu.purchaseId}</td><td>${pu.propertyName}</td>
     <td>${pu.paymentPlan==='full' ? 'Full Payment' : 'Installment ('+pu.months+' mo)'}</td>
-    <td>${pu.paymentPlan==='installment' ? fmtNaira(pu.depositRequired) : '—'}</td>
-    <td>${fmtNaira(pu.totalPayable)}</td><td>${pu.paymentPlan==='installment' ? fmtNaira(pu.monthlyInstallment)+'/mo' : '—'}</td>
-    <td><span class="badge badge-${pu.status}">${pu.status}</span></td></tr>
-  `).join('') || '<tr><td colspan="7" class="small-muted" style="padding:20px;">No purchases yet.</td></tr>';
+    <td>${isInstallment ? fmtNaira(pu.depositRequired) : '—'}</td>
+    <td>${fmtNaira(pu.totalPayable)}</td><td>${isInstallment ? fmtNaira(pu.monthlyInstallment)+'/mo' : '—'}</td>
+    <td>${progress}</td>
+    <td><span class="badge badge-${pu.status}">${pu.status}</span></td>
+    <td>${actionHtml}</td></tr>`;
+  }).join('') || '<tr><td colspan="9" class="small-muted" style="padding:20px;">No purchases yet.</td></tr>';
 }
 
 /* ================= USER DASHBOARD ================= */
@@ -2386,15 +2521,18 @@ function viewPurchaseDetail(id){
       ${pu.paymentPlan==='installment' ? `<div class="summary-row"><span>Initial Deposit (due upfront)</span><b>${fmtNaira(pu.depositRequired)}</b></div>
       <div class="summary-row"><span>Balance After Deposit</span><b>${fmtNaira(pu.balanceAfterDeposit)}</b></div>
       <div class="summary-row"><span>Total Interest</span><b>${fmtNaira(pu.interestAmount)}</b></div>
-      <div class="summary-row"><span>Monthly Installment</span><b>${fmtNaira(pu.monthlyInstallment)}</b></div>` : ''}
+      <div class="summary-row"><span>Monthly Installment</span><b>${fmtNaira(pu.monthlyInstallment)}</b></div>
+      <div class="summary-row"><span>Months Paid</span><b>${Number(pu.monthsPaid)||0} / ${pu.months}</b></div>` : ''}
       <div class="summary-total"><span>Total Payable</span><b>${fmtNaira(pu.totalPayable)}</b></div>
       <div class="summary-row"><span>Status</span><b>${pu.status}</b></div>
     </div>
-    <div class="section-title-sm">Payment Receipt</div>
+    <div class="section-title-sm">Payment Receipt (deposit / full payment)</div>
     ${pu.receiptUrl
       ? `<a href="${pu.receiptUrl}" target="_blank"><img src="${pu.receiptUrl}" style="width:100%; max-height:360px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a>
          <p class="small-muted" style="margin-top:6px;">Tap the image to view it full size before approving.</p>`
       : `<p class="err-msg">No receipt was uploaded for this purchase.</p>`}
+    ${pu.paymentPlan==='installment' ? `<div class="section-title-sm">Monthly Installment Payments</div>
+    <div id="purchaseInstallmentPayments"><p class="small-muted">Loading payments...</p></div>` : ''}
   `;
   let actions = '';
   if(pu.status==='pending'){
@@ -2405,6 +2543,47 @@ function viewPurchaseDetail(id){
   }
   document.getElementById('purchaseDetailFoot').innerHTML = actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('purchaseDetailModalBg')">Close</button>`;
   openModalEl('purchaseDetailModalBg');
+  if(pu.paymentPlan==='installment') loadInstallmentPaymentsForAdmin(pu.id);
+}
+
+async function loadInstallmentPaymentsForAdmin(purchaseId){
+  const box = document.getElementById('purchaseInstallmentPayments');
+  if(!box) return;
+  try{
+    const snap = await db.collection('purchases').doc(purchaseId).collection('payments').orderBy('createdAt','desc').get();
+    const payments = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    box.innerHTML = payments.length ? payments.map(pay=>`
+      <div class="summary-box" style="margin-bottom:10px;">
+        <div class="summary-row"><span>Month ${pay.monthNumber}</span><b>${fmtNaira(pay.amount)}</b></div>
+        <div class="summary-row"><span>Status</span><b><span class="badge badge-${pay.status}">${pay.status}</span></b></div>
+        ${pay.receiptUrl ? `<a href="${pay.receiptUrl}" target="_blank"><img src="${pay.receiptUrl}" style="width:100%; max-height:220px; object-fit:contain; border:1px solid var(--line); background:var(--cream); margin-top:8px;"></a>` : '<p class="err-msg">No receipt uploaded.</p>'}
+        ${pay.status==='pending' ? `<div style="margin-top:8px; display:flex; gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="rejectInstallmentPayment('${purchaseId}','${pay.id}')">Reject</button>
+          <button class="btn btn-sm" onclick="approveInstallmentPayment('${purchaseId}','${pay.id}')">Approve Payment</button>
+        </div>` : ''}
+      </div>
+    `).join('') : '<p class="small-muted">No monthly installment payments submitted yet.</p>';
+  }catch(err){
+    box.innerHTML = '<p class="err-msg">Could not load installment payments: '+err.message+'</p>';
+  }
+}
+
+async function approveInstallmentPayment(purchaseId, paymentId){
+  try{
+    await db.collection('purchases').doc(purchaseId).collection('payments').doc(paymentId).update({status:'approved'});
+    await db.collection('purchases').doc(purchaseId).update({monthsPaid: firebase.firestore.FieldValue.increment(1)});
+    toast('Installment payment approved.');
+    await loadAdminPurchases();
+    viewPurchaseDetail(purchaseId);
+  }catch(err){ toast('Error: '+err.message); }
+}
+
+async function rejectInstallmentPayment(purchaseId, paymentId){
+  try{
+    await db.collection('purchases').doc(purchaseId).collection('payments').doc(paymentId).update({status:'rejected'});
+    toast('Installment payment rejected.');
+    loadInstallmentPaymentsForAdmin(purchaseId);
+  }catch(err){ toast('Error: '+err.message); }
 }
 
 async function updatePurchaseStatus(id, status){
