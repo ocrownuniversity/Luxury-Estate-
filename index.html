@@ -688,8 +688,8 @@ tr:hover td{background:rgba(184,134,60,.05);}
       <div class="dash-panel" id="dpanel-purchases">
         <div class="dash-head"><h2>My Purchases</h2></div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Purchase ID</th><th>Property</th><th>Plan</th><th>Total Payable</th><th>Monthly</th><th>Status</th></tr></thead>
-          <tbody id="uPurchaseTable"><tr><td colspan="6" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
+          <thead><tr><th>Purchase ID</th><th>Property</th><th>Plan</th><th>Deposit Paid</th><th>Total Payable</th><th>Monthly</th><th>Status</th></tr></thead>
+          <tbody id="uPurchaseTable"><tr><td colspan="7" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -979,16 +979,18 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <label>Number of Months</label>
         <input type="number" id="buyMonths" min="1" max="60" value="6" oninput="updateBuyPreview()">
         <p class="hint" id="buyRateHint"></p>
+        <p class="hint" id="buyDepositHint" style="color:var(--gold);"></p>
       </div>
 
       <div class="divider"></div>
       <div class="summary-box" id="buyPreviewBox" style="display:none;">
         <div class="summary-row"><span>Property Price</span><b id="bvPrice">—</b></div>
         <div class="summary-row" id="bvPlanRow"><span>Payment Plan</span><b id="bvPlan">—</b></div>
+        <div class="summary-row hidden" id="bvDepositRow"><span>Initial Deposit (due now)</span><b id="bvDeposit">—</b></div>
         <div class="summary-row hidden" id="bvRateRow"><span>Interest Rate</span><b id="bvRate">—</b></div>
         <div class="summary-row hidden" id="bvMonthsRow"><span>Number of Months</span><b id="bvMonths">—</b></div>
         <div class="summary-row hidden" id="bvInterestRow"><span>Total Interest</span><b id="bvInterest">—</b></div>
-        <div class="summary-row hidden" id="bvMonthlyRow"><span>Monthly Installment</span><b id="bvMonthly">—</b></div>
+        <div class="summary-row hidden" id="bvMonthlyRow"><span>Monthly Installment (after deposit)</span><b id="bvMonthly">—</b></div>
         <div class="summary-total"><span>Total Payable</span><b id="bvTotal">—</b></div>
       </div>
 
@@ -1000,7 +1002,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <div class="summary-row"><span>Account Number</span><b id="bbNumber">—</b></div>
       </div>
       <p class="hint" id="bbNote"></p>
-      <p class="small-muted" style="margin-top:10px;">For full payment, pay the total price. For installment, pay at least your first monthly installment, then upload your receipt below. Your purchase will be verified and approved once the admin confirms the receipt.</p>
+      <p class="small-muted" style="margin-top:10px;">For full payment, pay the total price. For installment, pay the initial deposit shown above first, then upload your receipt below. Your purchase will be verified and approved once the admin confirms the receipt.</p>
 
       <div class="field" style="margin-top:16px;">
         <label>Payment Receipt <span style="color:var(--bad)">*</span></label>
@@ -1026,6 +1028,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <div class="summary-row"><span>Purchase ID</span><b id="bsumId">—</b></div>
         <div class="summary-row"><span>Property</span><b id="bsumProperty">—</b></div>
         <div class="summary-row"><span>Payment Plan</span><b id="bsumPlan">—</b></div>
+        <div class="summary-row hidden" id="bsumDepositRow"><span>Initial Deposit (due now)</span><b id="bsumDeposit">—</b></div>
         <div class="summary-row hidden" id="bsumMonthlyRow"><span>Monthly Installment</span><b id="bsumMonthly">—</b></div>
         <div class="summary-total"><span>Total Payable</span><b id="bsumTotal">—</b></div>
       </div>
@@ -1075,6 +1078,10 @@ tr:hover td{background:rgba(184,134,60,.05);}
             <select id="propStatus"><option>Available</option><option>Sold Out</option><option>Completed</option></select>
           </div>
         </div>
+        <div class="divider"></div>
+        <div class="section-title-sm" style="margin-top:0;">Buy Property — Installment Plan</div>
+        <div class="field"><label>Initial Deposit Required for Installment Purchase (₦)</label><input type="number" min="0" id="propInstallmentDeposit" placeholder="e.g. 500000"></div>
+        <p class="hint" style="margin-top:-10px; margin-bottom:18px;">Buyers choosing to pay by installment must pay this deposit upfront before spreading the balance (plus interest) across their chosen months. Leave as 0 if no deposit is required. Buyers paying in full are never required to pay a deposit.</p>
         <div class="field">
           <label>Property Images</label>
           <div class="upload-drop" onclick="document.getElementById('propImgInput').click()">Click to upload images (multiple allowed) — auto-compressed</div>
@@ -1733,7 +1740,11 @@ function openBuyModal(propId){
   document.getElementById('buyMonths').value = 6;
   document.getElementById('buyMonthsField').classList.add('hidden');
   const rate = Number(siteSettings.installmentInterestRate)||0;
-  document.getElementById('buyRateHint').textContent = 'Current installment interest rate: ' + rate + '% per month, applied for the number of months chosen.';
+  const deposit = Number(p.installmentDeposit)||0;
+  document.getElementById('buyRateHint').textContent = 'Current installment interest rate: ' + rate + '% per month, applied on the balance for the number of months chosen.';
+  document.getElementById('buyDepositHint').textContent = deposit > 0
+    ? 'This property requires an initial deposit of ' + fmtNaira(deposit) + ' before the balance is spread across your chosen months.'
+    : 'No initial deposit is required for this property — the full balance is spread across your chosen months.';
   document.getElementById('bbBank').textContent = siteSettings.bankName || 'Not set — contact admin';
   document.getElementById('bbName').textContent = siteSettings.accountName || 'Not set — contact admin';
   document.getElementById('bbNumber').textContent = siteSettings.accountNumber || 'Not set — contact admin';
@@ -1750,17 +1761,21 @@ function onBuyPlanChange(){
   updateBuyPreview();
 }
 
+// Installment purchases: buyer pays the property's admin-set deposit upfront; interest applies
+// only to the remaining balance, spread across the number of months the buyer chooses.
 function computeBuyFigures(){
   const p = currentBuyProperty;
   if(!p) return null;
   const price = Number(p.price)||0;
   const plan = document.getElementById('buyPlan').value;
-  const rate = Number(siteSettings.installmentInterestRate)||0; // % per month, set by admin
+  const rate = Number(siteSettings.installmentInterestRate)||0; // % per month, set by admin (global rate)
+  const deposit = plan==='installment' ? Math.min(Number(p.installmentDeposit)||0, price) : 0; // per-property, set by admin
   const months = plan==='installment' ? Math.max(1, Number(document.getElementById('buyMonths').value)||0) : 0;
-  const interest = plan==='installment' ? price * (rate/100) * months : 0; // no interest on full payment
+  const balance = plan==='installment' ? Math.max(0, price - deposit) : 0;
+  const interest = plan==='installment' ? balance * (rate/100) * months : 0; // no interest on full payment
   const total = price + interest;
-  const monthly = plan==='installment' && months>0 ? total / months : 0;
-  return {price, plan, rate, months, interest, total, monthly};
+  const monthly = plan==='installment' && months>0 ? (balance + interest) / months : 0;
+  return {price, plan, rate, deposit, months, balance, interest, total, monthly};
 }
 
 function updateBuyPreview(){
@@ -1769,11 +1784,13 @@ function updateBuyPreview(){
   if(!f){ box.style.display='none'; return; }
   document.getElementById('bvPrice').textContent = fmtNaira(f.price);
   document.getElementById('bvPlan').textContent = f.plan==='full' ? 'Full Payment — No Interest' : 'Installment Payment';
+  document.getElementById('bvDepositRow').classList.toggle('hidden', f.plan!=='installment');
   document.getElementById('bvRateRow').classList.toggle('hidden', f.plan!=='installment');
   document.getElementById('bvMonthsRow').classList.toggle('hidden', f.plan!=='installment');
   document.getElementById('bvInterestRow').classList.toggle('hidden', f.plan!=='installment');
   document.getElementById('bvMonthlyRow').classList.toggle('hidden', f.plan!=='installment');
   if(f.plan==='installment'){
+    document.getElementById('bvDeposit').textContent = fmtNaira(f.deposit);
     document.getElementById('bvRate').textContent = f.rate + '%/month';
     document.getElementById('bvMonths').textContent = f.months + ' months';
     document.getElementById('bvInterest').textContent = fmtNaira(f.interest);
@@ -1837,6 +1854,8 @@ async function submitPurchase(){
     price: f.price,
     paymentPlan: f.plan,          // 'full' or 'installment'
     months: f.months,             // 0 for full payment
+    depositRequired: f.deposit,   // per-property deposit set by admin, 0 for full payment
+    balanceAfterDeposit: f.balance, // 0 for full payment
     interestRate: f.rate,         // % per month, snapshot of admin setting (0 for full payment)
     interestAmount: f.interest,   // 0 for full payment
     totalPayable: f.total,
@@ -1853,16 +1872,20 @@ async function submitPurchase(){
       amount: f.total, propertyName: p.name, createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    const planText = f.plan==='full' ? 'Full Payment (no interest)' : `Installment — ${f.months} months at ${f.rate}%/month`;
+    const planText = f.plan==='full' ? 'Full Payment (no interest)' : `Installment — ${f.months} months at ${f.rate}%/month on balance`;
     const dateStr = new Date().toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
-    const waText = `Hello Royal Luxury Mini Estate,\n\nA new property purchase has been submitted.\n\nBuyer Name: ${buyerName}\nBuyer Email: ${buyerEmail}\nPurchase ID: ${purchaseId}\nProperty: ${p.name}\nProperty Price: ${fmtNaira(f.price)}\nPayment Plan: ${planText}\nTotal Payable: ${fmtNaira(f.total)}${f.plan==='installment' ? '\nMonthly Installment: '+fmtNaira(f.monthly) : ''}\nDate: ${dateStr}\n\nKindly review and confirm this purchase.\n\nThank you.`;
+    const waText = `Hello Royal Luxury Mini Estate,\n\nA new property purchase has been submitted.\n\nBuyer Name: ${buyerName}\nBuyer Email: ${buyerEmail}\nPurchase ID: ${purchaseId}\nProperty: ${p.name}\nProperty Price: ${fmtNaira(f.price)}\nPayment Plan: ${planText}${f.plan==='installment' ? '\nInitial Deposit Due Now: '+fmtNaira(f.deposit)+'\nMonthly Installment: '+fmtNaira(f.monthly) : ''}\nTotal Payable: ${fmtNaira(f.total)}\nDate: ${dateStr}\n\nKindly review and confirm this purchase.\n\nThank you.`;
     const waLink = 'https://wa.me/' + (siteSettings.whatsapp||'2349134882222') + '?text=' + encodeURIComponent(waText);
 
     document.getElementById('bsumId').textContent = purchaseId;
     document.getElementById('bsumProperty').textContent = p.name;
     document.getElementById('bsumPlan').textContent = planText;
+    document.getElementById('bsumDepositRow').classList.toggle('hidden', f.plan!=='installment');
     document.getElementById('bsumMonthlyRow').classList.toggle('hidden', f.plan!=='installment');
-    if(f.plan==='installment') document.getElementById('bsumMonthly').textContent = fmtNaira(f.monthly);
+    if(f.plan==='installment'){
+      document.getElementById('bsumDeposit').textContent = fmtNaira(f.deposit);
+      document.getElementById('bsumMonthly').textContent = fmtNaira(f.monthly);
+    }
     document.getElementById('bsumTotal').textContent = fmtNaira(f.total);
     document.getElementById('reopenBuyWaBtn').href = waLink;
 
@@ -1893,9 +1916,10 @@ function renderUserPurchases(){
   tbody.innerHTML = allPurchases.map(pu=>`
     <tr><td>${pu.purchaseId}</td><td>${pu.propertyName}</td>
     <td>${pu.paymentPlan==='full' ? 'Full Payment' : 'Installment ('+pu.months+' mo)'}</td>
+    <td>${pu.paymentPlan==='installment' ? fmtNaira(pu.depositRequired) : '—'}</td>
     <td>${fmtNaira(pu.totalPayable)}</td><td>${pu.paymentPlan==='installment' ? fmtNaira(pu.monthlyInstallment)+'/mo' : '—'}</td>
     <td><span class="badge badge-${pu.status}">${pu.status}</span></td></tr>
-  `).join('') || '<tr><td colspan="6" class="small-muted" style="padding:20px;">No purchases yet.</td></tr>';
+  `).join('') || '<tr><td colspan="7" class="small-muted" style="padding:20px;">No purchases yet.</td></tr>';
 }
 
 /* ================= USER DASHBOARD ================= */
@@ -2101,6 +2125,7 @@ function openPropertyModal(id){
     document.getElementById('propDuration').value = p.duration||'';
     document.getElementById('propROI').value = p.roi||'';
     document.getElementById('propMinInvest').value = p.minInvestment||'';
+    document.getElementById('propInstallmentDeposit').value = p.installmentDeposit||0;
     document.getElementById('propStatus').value = p.status||'Available';
     existingImageUrls = (p.images||[]).slice();
   } else {
@@ -2203,6 +2228,14 @@ async function saveProperty(e){
       return;
     }
 
+    const priceVal = Number(document.getElementById('propPrice').value)||0;
+    const depositVal = Number(document.getElementById('propInstallmentDeposit').value)||0;
+    if(depositVal < 0 || depositVal > priceVal){
+      msgEl.innerHTML = '<div class="err-msg">Initial deposit cannot be negative or greater than the property price.</div>';
+      btn.disabled = false; btn.textContent = 'Save Property';
+      return;
+    }
+
     if(totalImagePayloadBytes() > 950000){
       msgEl.innerHTML = '<div class="err-msg">Total image size is too large for Firestore (1MB document limit). Please remove an image or upload smaller ones.</div>';
       btn.disabled = false; btn.textContent = 'Save Property';
@@ -2219,6 +2252,7 @@ async function saveProperty(e){
       duration: Number(document.getElementById('propDuration').value)||0,
       roi: Number(document.getElementById('propROI').value)||0,
       minInvestment: Number(document.getElementById('propMinInvest').value)||0,
+      installmentDeposit: depositVal,
       status: document.getElementById('propStatus').value,
       images
     };
@@ -2349,7 +2383,9 @@ function viewPurchaseDetail(id){
       <div class="summary-row"><span>Property</span><b>${pu.propertyName}</b></div>
       <div class="summary-row"><span>Property Price</span><b>${fmtNaira(pu.price)}</b></div>
       <div class="summary-row"><span>Payment Plan</span><b>${planText}</b></div>
-      ${pu.paymentPlan==='installment' ? `<div class="summary-row"><span>Total Interest</span><b>${fmtNaira(pu.interestAmount)}</b></div>
+      ${pu.paymentPlan==='installment' ? `<div class="summary-row"><span>Initial Deposit (due upfront)</span><b>${fmtNaira(pu.depositRequired)}</b></div>
+      <div class="summary-row"><span>Balance After Deposit</span><b>${fmtNaira(pu.balanceAfterDeposit)}</b></div>
+      <div class="summary-row"><span>Total Interest</span><b>${fmtNaira(pu.interestAmount)}</b></div>
       <div class="summary-row"><span>Monthly Installment</span><b>${fmtNaira(pu.monthlyInstallment)}</b></div>` : ''}
       <div class="summary-total"><span>Total Payable</span><b>${fmtNaira(pu.totalPayable)}</b></div>
       <div class="summary-row"><span>Status</span><b>${pu.status}</b></div>
