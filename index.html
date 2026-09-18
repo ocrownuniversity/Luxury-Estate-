@@ -172,19 +172,27 @@ section{padding:84px 0;}
 .prop-badge.complete{background:var(--good);}
 .prop-roi{position:absolute; bottom:12px; right:12px; background:var(--gold); color:var(--ink); font-weight:700; font-size:13px; padding:6px 12px; border-radius:2px;}
 .prop-photocount{position:absolute; bottom:12px; left:12px; background:rgba(20,17,13,.72); color:#fff; font-size:11px; padding:5px 9px; border-radius:2px; display:flex; align-items:center; gap:4px;}
+.prop-pills{position:absolute; top:12px; left:12px; display:flex; gap:6px; flex-wrap:wrap; max-width:calc(100% - 24px);}
+.prop-pill{background:var(--ink); color:var(--gold-light); font-size:10.5px; font-weight:600; letter-spacing:.3px; padding:5px 10px; border-radius:3px; white-space:nowrap;}
+.prop-pill.status-sold{background:var(--bad); color:#fff;}
+.prop-pill.status-complete{background:var(--good); color:#fff;}
+.prop-pill.featured{background:#b8355f; color:#fff;}
 .prop-featured{position:absolute; top:12px; right:12px; background:#b8355f; color:#fff; font-weight:700; font-size:10.5px; letter-spacing:.3px; padding:5px 10px; border-radius:2px; display:flex; align-items:center; gap:4px;}
-.prop-body{padding:22px;}
+.prop-body{padding:18px 20px 0;}
 .prop-body .ploc{font-size:12px; color:var(--gold); letter-spacing:.4px; margin-bottom:6px;}
-.prop-body h3{font-family:var(--serif); font-size:20px; font-weight:500; margin-bottom:8px;}
-.prop-body p{color:var(--muted-dark); font-size:13.5px; margin-bottom:16px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+.prop-title{font-family:var(--serif); font-size:17.5px; font-weight:600; color:var(--ink); margin-bottom:6px; line-height:1.32; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+.prop-loc{font-size:12.5px; color:var(--muted-dark); margin-bottom:10px; display:flex; align-items:center; gap:4px;}
+.prop-price-lg{font-family:var(--serif); font-size:21px; font-weight:700; color:var(--ink); margin-bottom:10px;}
+.prop-specs{display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--muted-dark); margin-bottom:12px;}
+.prop-specs b{color:var(--ink); font-weight:600;}
 .prop-tags{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;}
 .prop-tags span{border:1px solid var(--gold-dim); color:var(--gold); font-size:10px; font-weight:600; letter-spacing:.3px; padding:3px 8px; border-radius:2px; text-transform:uppercase;}
-.prop-beds{display:flex; gap:16px; font-size:12.5px; color:var(--muted-dark); margin-bottom:14px;}
-.prop-beds b{color:var(--ink); font-weight:600;}
-.prop-pid{font-size:11px; color:var(--muted-dark); margin-top:8px;}
-.prop-meta{display:flex; justify-content:space-between; border-top:1px solid var(--line); padding-top:14px; font-size:12.5px;}
-.prop-meta b{display:block; font-size:14.5px; color:var(--ink); font-family:var(--serif);}
-.prop-meta span{color:var(--muted-dark);}
+.prop-cta{font-size:12px; color:var(--gold); font-weight:600; letter-spacing:.3px; margin-bottom:14px; display:inline-block;}
+.prop-pid{font-size:11px; color:var(--muted-dark);}
+.prop-footer{display:flex; align-items:center; gap:10px; border-top:1px solid var(--line); padding:14px 20px; margin:0 -20px;}
+.prop-agent-avatar{width:34px; height:34px; border-radius:50%; background:var(--gold); color:var(--ink); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:700; font-size:14px; flex-shrink:0;}
+.prop-footer .fname{font-size:12.5px; font-weight:600; color:var(--ink);}
+.prop-footer .fsub{font-size:11px; color:var(--muted-dark);}
 .empty-state{padding:60px 20px; text-align:center; color:var(--muted-dark); border:1px dashed var(--line);}
 
 /* CTA band */
@@ -1699,27 +1707,39 @@ function propCardHtml(p){
   const img = (p.images && p.images[0]) || '';
   const photoCount = (p.images && p.images.length) || 0;
   const tags = (p.tags||[]).slice(0,3);
+  const statusClass = p.status==='Sold Out' ? 'status-sold' : (p.status==='Completed' ? 'status-complete' : '');
+  const companyName = siteSettings.companyName || 'Royal Luxury Mini Estate';
+  const initials = companyName.trim().charAt(0).toUpperCase() || 'R';
   return `
   <div class="prop-card" onclick="viewProperty('${p.id}')">
     <div class="prop-img">
       ${img ? `<img src="${img}" alt="${p.name}">` : ''}
-      <div class="prop-badge ${p.status==='Sold Out'?'sold':p.status==='Completed'?'complete':''}">${p.status||'Available'}</div>
-      ${p.featured ? `<div class="prop-featured">★ MUST SEE</div>` : ''}
+      <div class="prop-pills">
+        <span class="prop-pill ${statusClass}">${p.type || p.status || 'Property'}</span>
+        ${p.featured ? `<span class="prop-pill featured">★ Featured</span>` : ''}
+      </div>
       ${photoCount ? `<div class="prop-photocount">📷 ${photoCount}</div>` : ''}
       <div class="prop-roi">${p.roi||0}%/mo</div>
     </div>
     <div class="prop-body">
-      <div class="ploc">${p.location||''}</div>
-      <h3>${p.name||'Untitled Property'}</h3>
-      ${(p.bedrooms || p.bathrooms) ? `<div class="prop-beds">${p.bedrooms?`<span><b>${p.bedrooms}</b> Bed${p.bedrooms==1?'':'s'}</span>`:''}${p.bathrooms?`<span><b>${p.bathrooms}</b> Bath${p.bathrooms==1?'':'s'}</span>`:''}</div>` : ''}
-      <p>${p.description||''}</p>
-      ${tags.length ? `<div class="prop-tags">${tags.map(t=>`<span>${t}</span>`).join('')}</div>` : ''}
-      <div class="prop-meta">
-        <div><b>${fmtNaira(p.price)}</b><span>Price</span></div>
-        <div><b>${p.duration||0} mo</b><span>Duration</span></div>
-        <div><b>${fmtNaira(p.minInvestment)}</b><span>Min. Invest</span></div>
+      <h3 class="prop-title">${p.name||'Untitled Property'}</h3>
+      <div class="prop-loc">📍 ${p.location||''}</div>
+      <div class="prop-price-lg">${fmtNaira(p.price)}</div>
+      <div class="prop-specs">
+        ${p.bedrooms ? `<span><b>${p.bedrooms}</b> Bed${p.bedrooms==1?'':'s'}</span>` : ''}
+        ${p.bathrooms ? `<span><b>${p.bathrooms}</b> Bath${p.bathrooms==1?'':'s'}</span>` : ''}
+        <span><b>${p.duration||0} mo</b> Duration</span>
+        <span><b>${fmtNaira(p.minInvestment)}</b> Min. Invest</span>
       </div>
-      ${p.pid ? `<div class="prop-pid">PID: ${p.pid}</div>` : ''}
+      ${tags.length ? `<div class="prop-tags">${tags.map(t=>`<span>${t}</span>`).join('')}</div>` : ''}
+      <div class="prop-cta">View Details →</div>
+    </div>
+    <div class="prop-footer">
+      <div class="prop-agent-avatar">${initials}</div>
+      <div>
+        <div class="fname">${companyName}</div>
+        <div class="fsub">${p.pid ? 'PID: '+p.pid : 'Verified Listing'}</div>
+      </div>
     </div>
   </div>`;
 }
