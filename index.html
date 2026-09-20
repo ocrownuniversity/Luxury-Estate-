@@ -5,15 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Royal Luxury Mini Estate | Real Estate Investment</title>
 <meta name="description" content="Royal Luxury Mini Estate — premium property investment in Abeokuta, Ogun State, Nigeria.">
+<meta name="keywords" content="real estate investment Nigeria, property investment Abeokuta, land for sale Ogun State, Royal Luxury Mini Estate, buy property Nigeria, real estate ROI, property purchase Abeokuta">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Royal Luxury Mini Estate">
+<meta name="theme-color" content="#14110d">
+<!-- Replace with your live domain once the site is deployed -->
+<link rel="canonical" href="https://royalluxuryminiestate.com/">
+
+<!-- Open Graph / Facebook / WhatsApp link previews -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Royal Luxury Mini Estate">
+<meta property="og:title" content="Royal Luxury Mini Estate | Real Estate Investment">
+<meta property="og:description" content="Premium property investment and purchase opportunities in Abeokuta, Ogun State, Nigeria — transparent terms, verified titles, fixed returns.">
+<meta property="og:image" content="https://royalluxuryminiestate.com/logo.jpg">
+<meta property="og:url" content="https://royalluxuryminiestate.com/">
+<meta property="og:locale" content="en_NG">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Royal Luxury Mini Estate | Real Estate Investment">
+<meta name="twitter:description" content="Premium property investment and purchase opportunities in Abeokuta, Ogun State, Nigeria.">
+<meta name="twitter:image" content="https://royalluxuryminiestate.com/logo.jpg">
+
 <link rel="icon" href="logo.jpg">
+<link rel="apple-touch-icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Structured data for search engines -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "Royal Luxury Mini Estate",
+  "description": "Premium property investment and purchase opportunities in Abeokuta, Ogun State, Nigeria.",
+  "url": "https://royalluxuryminiestate.com/",
+  "image": "https://royalluxuryminiestate.com/logo.jpg",
+  "telephone": "+234 913 488 2222",
+  "email": "royalluxuryestate@gmail.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Abeokuta",
+    "addressRegion": "Ogun State",
+    "addressCountry": "NG"
+  }
+}
+</script>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 /* ============ TOKENS ============ */
@@ -179,6 +223,11 @@ section{padding:84px 0;}
 .prop-pill.status-complete{background:var(--good); color:#fff;}
 .prop-pill.featured{background:#b8355f; color:#fff;}
 .prop-featured{position:absolute; top:12px; right:12px; background:#b8355f; color:#fff; font-weight:700; font-size:10.5px; letter-spacing:.3px; padding:5px 10px; border-radius:2px; display:flex; align-items:center; gap:4px;}
+.wish-btn{position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.92); border:none; color:#6b6255; font-size:17px; line-height:1; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:transform .15s ease, color .15s ease; z-index:3; padding:0;}
+.wish-btn:hover{transform:scale(1.12);}
+.wish-btn.active{color:#c62368;}
+.wish-btn.pd-wish{position:static; width:auto; height:auto; border-radius:2px; background:transparent; border:1px solid var(--gold-dim); color:var(--muted-dark); font-size:13.5px; padding:10px 16px; gap:8px; display:inline-flex;}
+.wish-btn.pd-wish.active{color:#c62368; border-color:#c62368;}
 .prop-body{padding:18px 20px 0;}
 .prop-body .ploc{font-size:12px; color:var(--gold); letter-spacing:.4px; margin-bottom:6px;}
 .prop-title{font-family:var(--serif); font-size:17.5px; font-weight:600; color:var(--ink); margin-bottom:6px; line-height:1.32; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
@@ -216,6 +265,75 @@ section{padding:84px 0;}
 .chart-card h4{font-family:var(--serif); font-weight:500; font-size:15px; margin-bottom:16px; color:var(--ink);}
 .chart-card .chart-wrap{position:relative; height:260px;}
 .chart-empty{color:var(--muted-dark); font-size:12.5px; text-align:center; padding:40px 0;}
+
+/* FAQ Accordion */
+.faq-list{max-width:820px; margin:0 auto; border-top:1px solid var(--line);}
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-q{width:100%; display:flex; justify-content:space-between; align-items:center; gap:16px; padding:22px 4px; background:none; border:none; text-align:left; font-family:var(--serif); font-size:16px; font-weight:500; color:var(--ink); cursor:pointer;}
+.faq-q:hover{color:var(--gold);}
+.faq-icon{font-size:20px; color:var(--gold); flex-shrink:0; transition:transform .25s ease; line-height:1;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-a{max-height:0; overflow:hidden; transition:max-height .35s ease;}
+.faq-a p{padding:0 4px 22px; color:var(--muted-dark); font-size:14px; line-height:1.65; max-width:680px;}
+.faq-item.open .faq-a{max-height:400px;}
+
+/* Cookie Consent Banner */
+.cookie-banner{position:fixed; left:0; right:0; bottom:0; background:var(--ink); color:var(--cream); z-index:500; padding:18px 20px; box-shadow:0 -10px 30px rgba(0,0,0,.25); transform:translateY(120%); transition:transform .4s ease;}
+.cookie-banner.show{transform:translateY(0);}
+.cookie-banner-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+.cookie-banner p{font-size:13px; color:var(--muted); margin:0; max-width:640px; line-height:1.5;}
+.cookie-banner a{color:var(--gold-light); cursor:pointer; text-decoration:underline;}
+.cookie-actions{display:flex; gap:10px; flex-shrink:0;}
+@media(max-width:600px){.cookie-banner-inner{flex-direction:column; align-items:flex-start;} .cookie-actions{width:100%;} .cookie-actions .btn{flex:1;}}
+
+/* Testimonials */
+.testi-card{background:var(--paper); border:1px solid var(--line); padding:26px; display:flex; flex-direction:column;}
+.testi-stars{color:var(--gold); font-size:15px; margin-bottom:14px;}
+.testi-text{font-family:var(--serif); font-size:15px; font-style:italic; color:var(--ink); line-height:1.6; margin-bottom:20px; flex:1;}
+.testi-footer{display:flex; align-items:center; gap:12px; border-top:1px solid var(--line); padding-top:16px;}
+.testi-avatar{width:38px; height:38px; border-radius:50%; background:var(--gold); color:var(--ink); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:700; font-size:15px; flex-shrink:0;}
+.testi-name{font-size:13px; font-weight:600; color:var(--ink);}
+.testi-prop{font-size:11.5px; color:var(--muted-dark);}
+
+/* Skeleton Loading Placeholders */
+.skel{position:relative; overflow:hidden; background:#e9e1c9;}
+.skel::after{content:''; position:absolute; inset:0; transform:translateX(-100%); background:linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent); animation:skel-shimmer 1.4s infinite;}
+@keyframes skel-shimmer{100%{transform:translateX(100%);}}
+.skel-card{background:var(--paper); border:1px solid var(--line); overflow:hidden;}
+.skel-img{height:210px;}
+.skel-body{padding:22px;}
+.skel-line{height:11px; border-radius:2px; margin-bottom:11px; display:block;}
+.skel-row td{padding:14px 4px;}
+
+/* Banner Carousel (homepage advertising strip) */
+.banner-carousel{position:relative; width:100%; height:400px; overflow:hidden; background:var(--ink);}
+.banner-track{display:flex; height:100%; transition:transform .6s cubic-bezier(.65,0,.35,1);}
+.banner-slide{position:relative; min-width:100%; height:100%; background-size:cover; background-position:center; display:flex; align-items:center;}
+.banner-slide::before{content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(20,17,13,.82) 0%, rgba(20,17,13,.5) 55%, rgba(20,17,13,.25) 100%);}
+.banner-slide-content{position:relative; z-index:2; max-width:1200px; margin:0 auto; width:100%; padding:0 76px; box-sizing:border-box;}
+.banner-slide-content .inner{max-width:560px;}
+.banner-eyebrow{font-size:12px; letter-spacing:2px; color:var(--gold-light); text-transform:uppercase; margin-bottom:14px;}
+.banner-headline{font-family:var(--serif); font-size:clamp(22px,4vw,42px); font-weight:500; color:var(--cream); line-height:1.15; margin-bottom:12px;}
+.banner-subtext{font-size:14px; color:var(--muted); margin-bottom:20px; max-width:480px; line-height:1.5;}
+.banner-arrow{position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:50%; background:rgba(20,17,13,.5); border:1px solid rgba(246,241,231,.35); color:var(--cream); font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:3; transition:background .2s;}
+.banner-arrow:hover{background:rgba(20,17,13,.8);}
+.banner-arrow.prev{left:20px;}
+.banner-arrow.next{right:20px;}
+.banner-dots{position:absolute; bottom:16px; left:0; right:0; display:flex; justify-content:center; gap:8px; z-index:3;}
+.banner-dot{width:9px; height:9px; border-radius:50%; background:rgba(246,241,231,.4); border:none; cursor:pointer; padding:0; transition:background .2s, transform .2s;}
+.banner-dot.active{background:var(--gold); transform:scale(1.2);}
+@media(max-width:700px){
+  .banner-carousel{height:260px;}
+  .banner-slide-content{padding:0 50px;}
+  .banner-eyebrow{font-size:10px; margin-bottom:8px;}
+  .banner-headline{margin-bottom:6px;}
+  .banner-subtext{margin-bottom:14px; font-size:12.5px;}
+  .banner-slide-content .inner .btn{padding:9px 18px; font-size:12.5px;}
+  .banner-arrow{width:30px; height:30px; font-size:15px;}
+  .banner-arrow.prev{left:8px;}
+  .banner-arrow.next{right:8px;}
+  .banner-dots{bottom:10px;}
+}
 
 /* Property Detail Map */
 .pd-map-wrap{position:relative; width:100%; height:280px; border:1px solid var(--line); overflow:hidden; background:var(--cream);}
@@ -441,6 +559,15 @@ tr:hover td{background:rgba(184,134,60,.05);}
     </div>
   </div>
 
+  <section id="bannerSection" class="hidden">
+    <div class="banner-carousel" id="bannerCarousel">
+      <div class="banner-track" id="bannerTrack"></div>
+      <button class="banner-arrow prev" onclick="bannerNav(-1)" aria-label="Previous">‹</button>
+      <button class="banner-arrow next" onclick="bannerNav(1)" aria-label="Next">›</button>
+      <div class="banner-dots" id="bannerDots"></div>
+    </div>
+  </section>
+
   <section>
     <div class="wrap">
       <div class="section-head">
@@ -507,6 +634,17 @@ tr:hover td{background:rgba(184,134,60,.05);}
     </div>
   </section>
 
+  <section id="testimonialsSection" class="section-alt hidden">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">WHAT OUR CLIENTS SAY</div>
+        <h2>Trusted by investors and buyers</h2>
+        <p>Real feedback from people who have invested in or purchased property with us.</p>
+      </div>
+      <div class="prop-grid" id="testimonialsGrid"></div>
+    </div>
+  </section>
+
   <section id="homePostsSection" class="hidden">
     <div class="wrap">
       <div class="section-head">
@@ -516,6 +654,46 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
       <div class="prop-grid" id="homePostsGrid"></div>
       <div style="text-align:center; margin-top:40px;"><a class="btn btn-dark" onclick="go('posts')">View All Updates</a></div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">GOT QUESTIONS?</div>
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know before you invest or buy with us.</p>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item open">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>How does investing with Royal Luxury Mini Estate work?</span><span class="faq-icon">+</span></button>
+          <div class="faq-a"><p>Choose a property, decide how much you want to invest (at or above the minimum investment amount), and submit your investment. Once approved, your funds grow monthly at the stated ROI until the maturity date, when your capital and returns become available to withdraw.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>Can I buy a property outright instead of investing?</span><span class="faq-icon">+</span></button>
+          <div class="faq-a"><p>Yes. Every available property can be purchased directly, either as a full one-time payment or through a flexible installment plan with an initial deposit and monthly payments until it's fully paid off.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to pay before I can view a property?</span><span class="faq-icon">+</span></button>
+          <div class="faq-a"><p>No. You can book a free site inspection on any property page to see it in person before committing to any payment — there's no obligation to invest or buy afterward.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>Is my investment safe, and are the properties verified?</span><span class="faq-icon">+</span></button>
+          <div class="faq-a"><p>All properties listed are verified with proper documentation before they go live on the platform. We recommend investing only what you understand and are comfortable with, and our team is always available to answer questions before you commit.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>How do I withdraw my returns after maturity?</span><span class="faq-icon">+</span></button>
+          <div class="faq-a"><p>Once an investment reaches its maturity date, a Withdraw button unlocks automatically on that investment in your dashboard. Submit a withdrawal request and our team will process your payout.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>What happens if a property sells out while I'm deciding?</span><span class="faq-icon">+</span></button>
+          <div class="faq-a"><p>Properties are allocated on a first-come, first-served basis and are marked "Sold Out" once fully subscribed. We recommend acting promptly on properties you're interested in, or reaching out to our team via WhatsApp for similar upcoming opportunities.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>How do I get in touch with your team?</span><span class="faq-icon">+</span></button>
+          <div class="faq-a"><p>You can reach us anytime via the Call or WhatsApp buttons on any property page, through our Contact page, or by emailing us directly — our details are in the footer of every page.</p></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -736,6 +914,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <a data-panel="completed-inv" onclick="switchDashPanel('completed-inv')">Completed Investments</a>
         <a data-panel="history" onclick="switchDashPanel('history')">Investment History</a>
         <a data-panel="purchases" onclick="switchDashPanel('purchases')">My Purchases</a>
+        <a data-panel="wishlist" onclick="switchDashPanel('wishlist')">Saved Properties</a>
         <a data-panel="profile" onclick="switchDashPanel('profile')">My Profile</a>
       </div>
     </div>
@@ -761,7 +940,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
 
       <div class="dash-panel" id="dpanel-active-inv">
-        <div class="dash-head"><h2>Active Investments</h2><button class="btn btn-ghost btn-sm" onclick="printTableById('uActiveTable','Active Investments Statement')">🖨️ Print</button></div>
+        <div class="dash-head"><h2>Active Investments</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('uActiveTable','Active Investments Statement')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('uActiveTable','Active Investments Statement','active-investments')">⬇️ PDF</button></div></div>
         <p class="small-muted" style="margin-top:-10px; margin-bottom:16px;">Your investment value grows every month. Funds stay locked until the maturity date — the Withdraw button unlocks automatically once that date is reached.</p>
         <div class="table-wrap"><table>
           <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>ROI</th><th>Current Value</th><th>Maturity Date</th><th>Status</th><th>Action</th></tr></thead>
@@ -770,7 +949,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
 
       <div class="dash-panel" id="dpanel-completed-inv">
-        <div class="dash-head"><h2>Completed Investments</h2><button class="btn btn-ghost btn-sm" onclick="printTableById('uCompletedTable','Completed Investments Statement')">🖨️ Print</button></div>
+        <div class="dash-head"><h2>Completed Investments</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('uCompletedTable','Completed Investments Statement')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('uCompletedTable','Completed Investments Statement','completed-investments')">⬇️ PDF</button></div></div>
         <div class="table-wrap"><table>
           <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>Total Return</th><th>Maturity Date</th></tr></thead>
           <tbody id="uCompletedTable"><tr><td colspan="5" class="small-muted" style="padding:20px;">No completed investments.</td></tr></tbody>
@@ -778,7 +957,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
 
       <div class="dash-panel" id="dpanel-history">
-        <div class="dash-head"><h2>Investment History</h2><button class="btn btn-ghost btn-sm" onclick="printTableById('uHistoryTable','Investment History')">🖨️ Print</button></div>
+        <div class="dash-head"><h2>Investment History</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('uHistoryTable','Investment History')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('uHistoryTable','Investment History','investment-history')">⬇️ PDF</button></div></div>
         <div class="table-wrap"><table>
           <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
           <tbody id="uHistoryTable"><tr><td colspan="5" class="small-muted" style="padding:20px;">No history yet.</td></tr></tbody>
@@ -786,11 +965,17 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
 
       <div class="dash-panel" id="dpanel-purchases">
-        <div class="dash-head"><h2>My Purchases</h2><button class="btn btn-ghost btn-sm" onclick="printTableById('uPurchaseTable','My Purchases Statement')">🖨️ Print</button></div>
+        <div class="dash-head"><h2>My Purchases</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('uPurchaseTable','My Purchases Statement')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('uPurchaseTable','My Purchases Statement','my-purchases')">⬇️ PDF</button></div></div>
         <div class="table-wrap"><table>
           <thead><tr><th>Purchase ID</th><th>Property</th><th>Plan</th><th>Deposit Paid</th><th>Total Payable</th><th>Monthly</th><th>Progress</th><th>Status</th><th>Action</th></tr></thead>
           <tbody id="uPurchaseTable"><tr><td colspan="9" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
         </table></div>
+      </div>
+
+      <div class="dash-panel" id="dpanel-wishlist">
+        <div class="dash-head"><h2>Saved Properties</h2></div>
+        <p class="small-muted" style="margin-top:-10px; margin-bottom:18px;">Properties you've saved with the ♡ icon — come back any time to review or act on them.</p>
+        <div class="prop-grid" id="wishlistGrid"><div class="empty-state">You haven't saved any properties yet.</div></div>
       </div>
 
       <div class="dash-panel" id="dpanel-profile">
@@ -823,6 +1008,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       <div class="dash-nav">
         <a class="active" data-panel="a-dashboard" onclick="switchAdminPanel('a-dashboard')">Dashboard</a>
         <a data-panel="a-properties" onclick="switchAdminPanel('a-properties')">Properties</a>
+        <a data-panel="a-banners" onclick="switchAdminPanel('a-banners')">Banners</a>
         <a data-panel="a-investments" onclick="switchAdminPanel('a-investments')">Investments</a>
         <a data-panel="a-purchases" onclick="switchAdminPanel('a-purchases')">Purchases</a>
         <a data-panel="a-inspections" onclick="switchAdminPanel('a-inspections')">Inspections</a>
@@ -865,15 +1051,24 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
 
       <div class="dash-panel" id="apanel-a-properties">
-        <div class="dash-head"><h2>Property Management</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aPropTable','Property List')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aPropTable','properties')">⬇️ Export CSV</button><button class="btn btn-sm" onclick="openPropertyModal()">+ Add Property</button></div></div>
+        <div class="dash-head"><h2>Property Management</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aPropTable','Property List')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('aPropTable','Property List','properties')">⬇️ PDF</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aPropTable','properties')">⬇️ Export CSV</button><button class="btn btn-sm" onclick="openPropertyModal()">+ Add Property</button></div></div>
         <div class="table-wrap"><table>
           <thead><tr><th>Property</th><th>Type</th><th>Beds/Baths</th><th>Location</th><th>Price</th><th>ROI</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody id="aPropTable"><tr><td colspan="8" class="small-muted" style="padding:20px;">No properties yet.</td></tr></tbody>
         </table></div>
       </div>
 
+      <div class="dash-panel" id="apanel-a-banners">
+        <div class="dash-head"><h2>Homepage Banners</h2><button class="btn btn-sm" onclick="openBannerModal()">+ Add Banner</button></div>
+        <p class="small-muted" style="margin-top:-10px; margin-bottom:18px;">These appear as a sliding advertisement carousel right below the homepage hero. Only banners marked Active are shown to visitors.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Image</th><th>Headline</th><th>Linked Property</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="aBannerTable"><tr><td colspan="6" class="small-muted" style="padding:20px;">No banners yet.</td></tr></tbody>
+        </table></div>
+      </div>
+
       <div class="dash-panel" id="apanel-a-investments">
-        <div class="dash-head"><h2>Investment Management</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aInvTable','Investments Report')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aInvTable','investments')">⬇️ Export CSV</button></div></div>
+        <div class="dash-head"><h2>Investment Management</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aInvTable','Investments Report')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('aInvTable','Investments Report','investments')">⬇️ PDF</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aInvTable','investments')">⬇️ Export CSV</button></div></div>
         <div class="search-bar">
           <input type="text" id="invSearch" placeholder="Search investor, property, or ID..." oninput="renderAdminInvestments()">
           <select id="invStatusFilter" onchange="renderAdminInvestments()">
@@ -893,7 +1088,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
 
       <div class="dash-panel" id="apanel-a-purchases">
-        <div class="dash-head"><h2>Purchase Management</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aPurTable','Purchases Report')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aPurTable','purchases')">⬇️ Export CSV</button></div></div>
+        <div class="dash-head"><h2>Purchase Management</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aPurTable','Purchases Report')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('aPurTable','Purchases Report','purchases')">⬇️ PDF</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aPurTable','purchases')">⬇️ Export CSV</button></div></div>
         <div class="search-bar">
           <input type="text" id="purSearch" placeholder="Search buyer, property, or ID..." oninput="renderAdminPurchases()">
           <select id="purStatusFilter" onchange="renderAdminPurchases()">
@@ -911,7 +1106,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
 
       <div class="dash-panel" id="apanel-a-inspections">
-        <div class="dash-head"><h2>Site Inspection Requests</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aInspTable','Site Inspection Requests')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aInspTable','inspection-requests')">⬇️ Export CSV</button></div></div>
+        <div class="dash-head"><h2>Site Inspection Requests</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aInspTable','Site Inspection Requests')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('aInspTable','Site Inspection Requests','inspection-requests')">⬇️ PDF</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aInspTable','inspection-requests')">⬇️ Export CSV</button></div></div>
         <p class="small-muted" style="margin-top:-10px; margin-bottom:16px;">People who want to view a property in person before making any payment.</p>
         <div class="search-bar">
           <input type="text" id="inspSearch" placeholder="Search name, property, or reference..." oninput="renderAdminInspections()">
@@ -930,7 +1125,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
 
       <div class="dash-panel" id="apanel-a-users">
-        <div class="dash-head"><h2>User Management</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aUserTable','User List')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aUserTable','users')">⬇️ Export CSV</button></div></div>
+        <div class="dash-head"><h2>User Management</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aUserTable','User List')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('aUserTable','User List','users')">⬇️ PDF</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aUserTable','users')">⬇️ Export CSV</button></div></div>
         <div class="table-wrap"><table>
           <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
           <tbody id="aUserTable"><tr><td colspan="6" class="small-muted" style="padding:20px;">No users yet.</td></tr></tbody>
@@ -1020,10 +1215,37 @@ tr:hover td{background:rgba(184,134,60,.05);}
     </div>
     <div class="foot-bottom">
       <span>© <span id="yearNow"></span> Royal Luxury Mini Estate. All rights reserved.</span>
-      <span>Designed for discerning investors.</span>
+      <span><a onclick="openModalEl('privacyModalBg')" style="cursor:pointer; text-decoration:underline; color:inherit;">Privacy &amp; Cookie Policy</a> · Designed for discerning investors.</span>
     </div>
   </div>
 </footer>
+
+<!-- Cookie Consent Banner -->
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-banner-inner">
+    <p>We use essential browser storage to keep you logged in and to remember properties you've saved. We don't use tracking or advertising cookies. <a onclick="openModalEl('privacyModalBg')">Learn more</a></p>
+    <div class="cookie-actions">
+      <button class="btn btn-ghost btn-sm" onclick="setCookieConsent('declined')">Decline</button>
+      <button class="btn btn-sm" onclick="setCookieConsent('accepted')">Accept</button>
+    </div>
+  </div>
+</div>
+
+<!-- Privacy & Cookie Policy Modal -->
+<div class="modal-bg" id="privacyModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>Privacy &amp; Cookie Policy</h3><button class="modal-close" onclick="closeModal('privacyModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <div class="section-title-sm">What We Store</div>
+      <p class="small-muted">We use your browser's local storage to keep you logged in between visits and to remember properties you've saved to your wishlist. This information stays on your device — or, if you're logged in, is linked to your account — and is never sold or shared with advertisers.</p>
+      <div class="section-title-sm">What We Don't Do</div>
+      <p class="small-muted">We do not use third-party advertising or tracking cookies, and we do not sell your personal information to anyone.</p>
+      <div class="section-title-sm">Your Personal Data</div>
+      <p class="small-muted">Information you provide when investing or purchasing a property (such as your name, contact details, and next of kin) is used solely to process your transaction and communicate with you about it. Contact us at royalluxuryestate@gmail.com for any privacy-related requests, including account or data deletion.</p>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeModal('privacyModalBg')">Got It</button></div>
+  </div>
+</div>
 
 <!-- ============================================================= -->
 <!-- MODALS -->
@@ -1162,6 +1384,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="printElementContent('investSummaryBody','Investment Confirmation')">🖨️ Print</button>
+      <button class="btn btn-ghost" onclick="downloadElementPdf('investSummaryBody','Investment Confirmation','investment-confirmation')">⬇️ PDF</button>
       <a class="btn btn-ghost" id="reopenWaBtn" target="_blank">Reopen WhatsApp</a>
       <button class="btn" onclick="closeModal('summaryModalBg'); switchDashPanel('active-inv'); go('dashboard');">Go to Dashboard</button>
     </div>
@@ -1305,6 +1528,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="printElementContent('buySummaryBody','Property Purchase Receipt')">🖨️ Print</button>
+      <button class="btn btn-ghost" onclick="downloadElementPdf('buySummaryBody','Property Purchase Receipt','purchase-receipt')">⬇️ PDF</button>
       <a class="btn btn-ghost" id="reopenBuyWaBtn" target="_blank">Reopen WhatsApp</a>
       <button class="btn" onclick="closeModal('buySummaryModalBg'); switchDashPanel('purchases'); go('dashboard');">Go to Dashboard</button>
     </div>
@@ -1350,10 +1574,15 @@ tr:hover td{background:rgba(184,134,60,.05);}
     <div class="modal-head"><h3>Installment Payment History</h3><button class="modal-close" onclick="closeModal('installmentHistoryModalBg')">&times;</button></div>
     <div class="modal-body">
       <p class="small-muted" style="margin-bottom:16px;" id="ihPurchaseInfo"></p>
-      <div id="ihList"><p class="small-muted">Loading payments...</p></div>
+      <div id="ihList">
+        <div class="skel skel-line" style="width:85%;"></div>
+        <div class="skel skel-line" style="width:70%;"></div>
+        <div class="skel skel-line" style="width:55%;"></div>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="printElementContent('ihList','Installment Payment History')">🖨️ Print</button>
+      <button class="btn btn-ghost" onclick="downloadElementPdf('ihList','Installment Payment History','payment-history')">⬇️ PDF</button>
       <button class="btn btn-ghost" onclick="closeModal('installmentHistoryModalBg')">Close</button>
     </div>
   </div>
@@ -1412,6 +1641,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="printElementContent('inspectSummaryBody','Site Inspection Confirmation')">🖨️ Print</button>
+      <button class="btn btn-ghost" onclick="downloadElementPdf('inspectSummaryBody','Site Inspection Confirmation','inspection-confirmation')">⬇️ PDF</button>
       <a class="btn btn-ghost" id="reopenInspectWaBtn" target="_blank">Reopen WhatsApp</a>
       <button class="btn" onclick="closeModal('inspectSummaryModalBg')">Done</button>
     </div>
@@ -1511,6 +1741,41 @@ tr:hover td{background:rgba(184,134,60,.05);}
   </div>
 </div>
 
+<!-- Banner Add/Edit Modal -->
+<div class="modal-bg" id="bannerModalBg">
+  <div class="modal wide">
+    <div class="modal-head"><h3 id="bannerModalTitle">New Banner</h3><button class="modal-close" onclick="closeModal('bannerModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <div id="bannerMsg"></div>
+      <form id="bannerForm" onsubmit="saveBanner(event)">
+        <input type="hidden" id="bannerId">
+        <div class="field">
+          <label>Banner Image</label>
+          <div class="upload-drop" onclick="document.getElementById('bannerImgInput').click()">Click to upload a banner image — auto-compressed</div>
+          <input type="file" id="bannerImgInput" accept="image/*" class="hidden" onchange="handleBannerImageUpload(event)">
+          <div class="img-upload-grid" id="bannerImgGrid"></div>
+          <p class="hint">Wide landscape images work best (e.g. 1600×700). Text is overlaid on top of the image.</p>
+        </div>
+        <div class="field"><label>Headline</label><input required id="bannerHeadline" placeholder="e.g. New Launch: Palm Court Villas"></div>
+        <div class="field"><label>Subtext (optional)</label><input id="bannerSubtext" placeholder="e.g. Now open for investment — limited units available"></div>
+        <div class="field-row">
+          <div class="field"><label>Button Text</label><input id="bannerBtnText" placeholder="e.g. View Property" value="View Property"></div>
+          <div class="field"><label>Display Order</label><input type="number" id="bannerOrder" min="0" placeholder="e.g. 1"></div>
+        </div>
+        <div class="field"><label>Link to Property</label><select id="bannerPropertyId"><option value="">— No property link —</option></select></div>
+        <div class="field" style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" id="bannerActive" style="width:auto;" checked>
+          <label style="margin:0;" for="bannerActive">Active — show this banner on the homepage</label>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('bannerModalBg')">Cancel</button>
+      <button class="btn" id="saveBannerBtn" onclick="document.getElementById('bannerForm').requestSubmit()">Save Banner</button>
+    </div>
+  </div>
+</div>
+
 <!-- Announcement Modal -->
 <div class="modal-bg" id="announcementModalBg">
   <div class="modal">
@@ -1546,12 +1811,17 @@ const db = firebase.firestore();
 /* ================= GLOBAL STATE ================= */
 let currentUser = null;      // firebase auth user
 let currentUserDoc = null;   // users/{uid} doc data
+let wishlist = [];           // array of property IDs saved by the current visitor
 let isAdmin = false;
 let allProperties = [];
 let allInvestments = [];     // admin: all; user: own
 let allPurchases = [];       // admin: all; user: own — property buy/installment purchases
 let allUsers = [];
 let allInspections = [];     // admin: all — site inspection booking requests (no payment required)
+let allBanners = [];         // public: active homepage banners, sorted for display
+let allBannersAdmin = [];    // admin: all banners (active + inactive) for management
+let bannerIndex = 0;
+let bannerTimer = null;
 let siteSettings = { companyName:"Royal Luxury Mini Estate", email:"royalluxuryestate@gmail.com", phone:"+234 913 488 2222", whatsapp:"2349134882222", address:"Abeokuta, Ogun State, Nigeria", aboutText:"", bankName:"", accountName:"", accountNumber:"", paymentNote:"", installmentInterestRate:2, terms:"1. All investments are subject to availability at the time of confirmation.\n2. Returns are paid at the stated maturity date, based on the ROI shown for each property.\n3. Investment amounts are non-refundable once an investment is approved, except where otherwise agreed in writing.\n4. Royal Luxury Mini Estate reserves the right to request additional verification before approving an investment.\n5. All communications regarding an investment should be directed to our official email or WhatsApp number." };
 let currentDetailProperty = null;
 let pendingImageFiles = [];      // {file, url} for new uploads not yet saved
@@ -1696,11 +1966,70 @@ function exportTableToCSV(tbodyId, filenameBase){
   URL.revokeObjectURL(url);
   toast('CSV exported — opens directly in Excel');
 }
-function printPropertyBrochure(id){
-  const p = allProperties.find(x=>x.id===id);
-  if(!p) return;
+/* ================= WISHLIST / SAVED PROPERTIES ================= */
+function loadWishlist(){
+  if(currentUser && currentUserDoc){
+    wishlist = Array.isArray(currentUserDoc.wishlist) ? currentUserDoc.wishlist.slice() : [];
+  } else {
+    try{ wishlist = JSON.parse(localStorage.getItem('guestWishlist')||'[]'); }
+    catch(e){ wishlist = []; }
+  }
+}
+function isWishlisted(id){
+  return wishlist.includes(id);
+}
+async function toggleWishlist(id){
+  const adding = !wishlist.includes(id);
+  if(adding) wishlist.push(id); else wishlist = wishlist.filter(x=>x!==id);
+
+  if(currentUser){
+    try{
+      await db.collection('users').doc(currentUser.uid).update({
+        wishlist: adding ? firebase.firestore.FieldValue.arrayUnion(id) : firebase.firestore.FieldValue.arrayRemove(id)
+      });
+      if(currentUserDoc) currentUserDoc.wishlist = wishlist.slice();
+    }catch(e){
+      console.warn(e);
+      toast('Could not update wishlist. Please try again.');
+      if(adding) wishlist = wishlist.filter(x=>x!==id); else wishlist.push(id); // revert
+      return;
+    }
+  } else {
+    try{ localStorage.setItem('guestWishlist', JSON.stringify(wishlist)); }catch(e){}
+  }
+
+  toast(adding ? 'Saved to wishlist' : 'Removed from wishlist');
+  refreshWishlistUI();
+}
+function refreshWishlistUI(){
+  document.querySelectorAll('.prop-card .wish-btn').forEach(btn=>{
+    const card = btn.closest('.prop-card');
+    if(!card) return;
+    const m = (card.getAttribute('onclick')||'').match(/viewProperty\('([^']+)'\)/);
+    if(!m) return;
+    const id = m[1];
+    const saved = isWishlisted(id);
+    btn.classList.toggle('active', saved);
+    btn.textContent = saved ? '♥' : '♡';
+  });
+  const pdBtn = document.getElementById('pdWishBtn');
+  if(pdBtn && currentDetailProperty){
+    const saved = isWishlisted(currentDetailProperty.id);
+    pdBtn.classList.toggle('active', saved);
+    pdBtn.textContent = saved ? '♥ Saved' : '♡ Save';
+  }
+  renderWishlistPanel();
+}
+function renderWishlistPanel(){
+  const grid = document.getElementById('wishlistGrid');
+  if(!grid) return;
+  const saved = allProperties.filter(p=>wishlist.includes(p.id));
+  grid.innerHTML = saved.length ? saved.map(propCardHtml).join('') : '<div class="empty-state">You haven\'t saved any properties yet. Tap the ♡ on a property to save it here.</div>';
+}
+
+function propertyBrochureBodyHtml(p){
   const img = (p.images && p.images[0]) || '';
-  const body = `
+  return `
     ${img ? `<img src="${img}" style="width:100%; height:280px; object-fit:cover; margin-bottom:18px;">` : ''}
     <div class="summary-box">
       <div class="summary-row"><span>Property</span><b>${p.name||''}</b></div>
@@ -1721,7 +2050,79 @@ function printPropertyBrochure(id){
     <div class="section-title-sm">Terms &amp; Conditions</div>
     <p style="white-space:pre-line;">${siteSettings.terms || 'Standard terms apply. Contact us for full documentation.'}</p>
   `;
-  printHtmlDoc('Property Details — ' + (p.name||''), body);
+}
+function printPropertyBrochure(id){
+  const p = allProperties.find(x=>x.id===id);
+  if(!p) return;
+  printHtmlDoc('Property Details — ' + (p.name||''), propertyBrochureBodyHtml(p));
+}
+
+/* ---------- Downloadable PDF versions of the above ---------- */
+function pdfLetterheadHtml(title, bodyHtml){
+  const company = siteSettings.companyName || 'Royal Luxury Mini Estate';
+  const address = siteSettings.address || '';
+  const phone = siteSettings.phone || '';
+  const email = siteSettings.email || '';
+  return `
+    <div style="font-family:Georgia,'Times New Roman',serif; color:#14110d; background:#ffffff; max-width:720px; margin:0 auto; padding:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; border-bottom:3px solid #b8863c; padding-bottom:16px; margin-bottom:22px;">
+        <div>
+          <div style="font-size:21px; font-weight:700; margin:0 0 4px;">${company}</div>
+          <div style="font-size:11.5px; color:#555;">${address}</div>
+          <div style="font-size:11.5px; color:#555;">${[phone, email].filter(Boolean).join(' · ')}</div>
+        </div>
+        <div style="font-size:11.5px; color:#555; white-space:nowrap;">Generated: ${new Date().toLocaleString('en-NG')}</div>
+      </div>
+      <div style="font-size:17px; font-weight:bold; margin:0 0 18px; text-transform:uppercase; letter-spacing:.5px;">${title}</div>
+      <div>${bodyHtml}</div>
+      <div style="margin-top:36px; font-size:10.5px; color:#999; border-top:1px solid #e5ddc9; padding-top:12px;">This is a system-generated document from ${company}. For enquiries, contact us via the details above.</div>
+    </div>
+  `;
+}
+function stripInteractiveHtml(html){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  tmp.querySelectorAll('button, input, select, textarea, .row-actions, .icon-btn, form').forEach(el=>el.remove());
+  return tmp.innerHTML;
+}
+function downloadPdfFromHtml(filenameBase, title, bodyHtml){
+  if(typeof html2pdf === 'undefined'){ toast('PDF tool failed to load — check your connection and try again.'); return; }
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed; left:-9999px; top:0; width:760px; background:#ffffff;';
+  wrapper.innerHTML = pdfLetterheadHtml(title, stripInteractiveHtml(bodyHtml));
+  document.body.appendChild(wrapper);
+  const opt = {
+    margin: 10,
+    filename: filenameBase + '-' + new Date().toISOString().split('T')[0] + '.pdf',
+    image: { type:'jpeg', quality:0.98 },
+    html2canvas: { scale:2, useCORS:true, backgroundColor:'#ffffff' },
+    jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
+    pagebreak: { mode:['avoid-all','css','legacy'] }
+  };
+  toast('Preparing PDF…');
+  html2pdf().set(opt).from(wrapper).save().then(()=>{
+    document.body.removeChild(wrapper);
+  }).catch((e)=>{
+    console.warn(e);
+    if(wrapper.parentNode) document.body.removeChild(wrapper);
+    toast('Could not generate PDF — try Print instead.');
+  });
+}
+function downloadElementPdf(containerId, title, filenameBase){
+  const el = document.getElementById(containerId);
+  if(!el){ toast('Nothing to download yet.'); return; }
+  downloadPdfFromHtml(filenameBase, title, el.innerHTML);
+}
+function downloadTablePdf(tbodyId, title, filenameBase){
+  const tbody = document.getElementById(tbodyId);
+  const table = tbody ? tbody.closest('table') : null;
+  if(!table){ toast('Nothing to download yet.'); return; }
+  downloadPdfFromHtml(filenameBase, title, table.outerHTML);
+}
+function downloadPropertyBrochurePdf(id){
+  const p = allProperties.find(x=>x.id===id);
+  if(!p) return;
+  downloadPdfFromHtml('property-' + (p.pid || p.id), 'Property Details — ' + (p.name||''), propertyBrochureBodyHtml(p));
 }
 
 /* ================= SETTINGS ================= */
@@ -1869,12 +2270,26 @@ auth.onAuthStateChanged(async (user)=>{
     document.getElementById('pfEmail').value = currentUserDoc.email || user.email;
     document.getElementById('pfPhone').value = currentUserDoc.phone || '';
     document.getElementById('adminEmailTag').textContent = user.email;
+
+    // Merge any guest wishlist items saved before login into the account
+    try{
+      const guestList = JSON.parse(localStorage.getItem('guestWishlist')||'[]');
+      if(guestList.length){
+        await db.collection('users').doc(user.uid).update({ wishlist: firebase.firestore.FieldValue.arrayUnion(...guestList) });
+        currentUserDoc.wishlist = [...new Set([...(currentUserDoc.wishlist||[]), ...guestList])];
+        localStorage.removeItem('guestWishlist');
+      }
+    }catch(e){ console.warn(e); }
+    loadWishlist();
+    refreshWishlistUI();
   } else {
     currentUserDoc = null; isAdmin = false;
     document.getElementById('navAuth').classList.remove('hidden');
     document.getElementById('navLogout').classList.add('hidden');
     document.getElementById('navDashboard').classList.add('hidden');
     document.getElementById('navAdmin').classList.add('hidden');
+    loadWishlist();
+    refreshWishlistUI();
   }
 });
 
@@ -1904,12 +2319,13 @@ async function loadProperties(){
     console.warn('property load error', e);
     allProperties = [];
   }
-  document.getElementById('statProps').textContent = allProperties.filter(p=>p.status==='Available').length;
+  animateCounter(document.getElementById('statProps'), allProperties.filter(p=>p.status==='Available').length, {duration:1000});
   populateTypeFilter();
   populateCalcPropertySelect();
   runCalculator();
   renderHomeProperties();
   renderProperties();
+  refreshWishlistUI();
 }
 
 function populateTypeFilter(){
@@ -1970,6 +2386,7 @@ function propCardHtml(p){
   <div class="prop-card" onclick="viewProperty('${p.id}')">
     <div class="prop-img">
       ${img ? `<img src="${img}" alt="${p.name}">` : ''}
+      <button class="wish-btn ${isWishlisted(p.id)?'active':''}" onclick="event.stopPropagation(); toggleWishlist('${p.id}');" title="Save to wishlist">${isWishlisted(p.id) ? '♥' : '♡'}</button>
       <div class="prop-pills">
         <span class="prop-pill ${statusClass}">${p.type || p.status || 'Property'}</span>
         ${p.featured ? `<span class="prop-pill featured">★ Featured</span>` : ''}
@@ -2071,7 +2488,7 @@ function viewProperty(id){
         <div class="section-title-sm">Investment Terms & Conditions</div>
         <p style="color:var(--muted-dark); font-size:14.5px; white-space:pre-line;">${siteSettings.terms || 'Standard terms apply. Contact us for full documentation.'}</p>
         <div class="section-title-sm">Customer Reviews</div>
-        <div id="reviewsList"><p class="small-muted">Loading reviews...</p></div>
+        <div id="reviewsList">${skeletonLines(2)}</div>
         <div class="divider"></div>
         ${currentUser
           ? `<div class="form-card" style="max-width:none; padding:22px;">
@@ -2084,7 +2501,10 @@ function viewProperty(id){
           : `<p class="small-muted"><a onclick="go('auth')" style="color:var(--gold); cursor:pointer;">Login</a> to leave a review.</p>`}
       </div>
       <div class="pd-side">
-        <div class="tag-row"><span class="tag">${p.type||''}</span><span class="badge ${badgeClass(p.status)}">${p.status||'Available'}</span></div>
+        <div class="tag-row" style="justify-content:space-between; align-items:center;">
+          <div style="display:flex; gap:8px;"><span class="tag">${p.type||''}</span><span class="badge ${badgeClass(p.status)}">${p.status||'Available'}</span></div>
+          <button class="wish-btn pd-wish ${isWishlisted(p.id)?'active':''}" id="pdWishBtn" onclick="toggleWishlist('${p.id}')" title="Save to wishlist">${isWishlisted(p.id) ? '♥ Saved' : '♡ Save'}</button>
+        </div>
         <div class="pd-price">${fmtNaira(p.price)}</div>
         <div class="small-muted">${p.location||''}</div>
         <div class="pd-facts">
@@ -2114,12 +2534,30 @@ function viewProperty(id){
         <button class="btn btn-block btn-ghost" style="margin-top:10px;" onclick="printPropertyBrochure('${p.id}')">
           🖨️ Print Property Details
         </button>
+        <button class="btn btn-block btn-ghost" style="margin-top:10px;" onclick="downloadPropertyBrochurePdf('${p.id}')">
+          ⬇️ Download PDF
+        </button>
       </div>
     </div>
+    ${similarPropertiesHtml(p)}
   `;
   setupStarPicker();
   loadPropertyReviews(p.id);
   go('detail');
+}
+
+function similarPropertiesHtml(p){
+  const similar = allProperties.filter(x=>
+    x.id!==p.id && (x.type===p.type || x.location===p.location)
+  ).slice(0,3);
+  if(!similar.length) return '';
+  return `
+    <div class="section-head" style="margin-top:48px;">
+      <div class="section-eyebrow">YOU MAY ALSO LIKE</div>
+      <h2>Similar Properties</h2>
+    </div>
+    <div class="prop-grid">${similar.map(propCardHtml).join('')}</div>
+  `;
 }
 let selectedRating = 5;
 function setupStarPicker(){
@@ -3015,7 +3453,7 @@ async function openInstallmentHistoryModal(purchaseId){
   if(!pu) return;
   document.getElementById('ihPurchaseInfo').textContent = pu.propertyName + ' — Purchase ID ' + pu.purchaseId + ' — ' + (Number(pu.monthsPaid)||0) + ' of ' + pu.months + ' months paid';
   const list = document.getElementById('ihList');
-  list.innerHTML = '<p class="small-muted">Loading payments...</p>';
+  list.innerHTML = skeletonLines(4);
   openModalEl('installmentHistoryModalBg');
   try{
     const snap = await db.collection('purchases').doc(purchaseId).collection('payments').orderBy('monthNumber','asc').get();
@@ -3034,6 +3472,8 @@ async function openInstallmentHistoryModal(purchaseId){
 
 async function loadUserPurchases(){
   if(!currentUser) return;
+  const puTbody = document.getElementById('uPurchaseTable');
+  if(puTbody) puTbody.innerHTML = skeletonTableRows(9);
   try{
     const snap = await db.collection('purchases').where('userId','==',currentUser.uid).get();
     allPurchases = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
@@ -3083,6 +3523,10 @@ function switchDashPanel(panel){
 
 async function loadUserInvestments(){
   if(!currentUser) return;
+  ['uRecentTable','uActiveTable','uCompletedTable','uHistoryTable'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = skeletonTableRows(id==='uActiveTable' ? 8 : id==='uRecentTable' ? 6 : 5);
+  });
   try{
     const snap = await db.collection('investments').where('userId','==',currentUser.uid).get();
     allInvestments = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
@@ -3191,7 +3635,12 @@ async function submitContact(e){
 
 /* ================= ADMIN: LOAD ALL ================= */
 async function loadAdminData(){
-  await Promise.all([loadAdminProperties(), loadAdminInvestments(), loadAdminPurchases(), loadAdminInspections(), loadAdminUsers(), loadAdminPosts(), loadAdminAnnouncements(), loadAdminReviews()]);
+  const skelCols = {aPropTable:8, aBannerTable:6, aInvTable:8, aPurTable:7, aInspTable:8, aUserTable:6, aPostTable:3, aAnnTable:4, aReviewTable:6};
+  Object.entries(skelCols).forEach(([id, cols])=>{
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = skeletonTableRows(cols);
+  });
+  await Promise.all([loadAdminProperties(), loadAdminBanners(), loadAdminInvestments(), loadAdminPurchases(), loadAdminInspections(), loadAdminUsers(), loadAdminPosts(), loadAdminAnnouncements(), loadAdminReviews()]);
   renderAdminDashboardStats();
   fillSettingsForm();
 }
@@ -3202,6 +3651,117 @@ async function loadAdminInspections(){
     allInspections = snap.docs.map(d=>({id:d.id, ...d.data()}));
   }catch(e){ console.warn(e); allInspections=[]; }
   renderAdminInspections();
+}
+
+async function loadAdminBanners(){
+  try{
+    const snap = await db.collection('banners').orderBy('order','asc').get();
+    allBannersAdmin = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  }catch(e){ console.warn(e); allBannersAdmin=[]; }
+  renderAdminBanners();
+}
+function renderAdminBanners(){
+  document.getElementById('aBannerTable').innerHTML = allBannersAdmin.map(b=>{
+    const linkedProp = allProperties.find(p=>p.id===b.propertyId);
+    return `
+    <tr>
+      <td>${b.image ? `<img src="${b.image}" style="width:64px; height:40px; object-fit:cover; border:1px solid var(--line);">` : '—'}</td>
+      <td>${b.headline||''}</td>
+      <td>${linkedProp ? linkedProp.name : '<span class="small-muted">None</span>'}</td>
+      <td>${b.order||0}</td>
+      <td><span class="badge ${b.active!==false ? 'badge-approved' : 'badge-rejected'}">${b.active!==false ? 'Active' : 'Inactive'}</span></td>
+      <td class="row-actions">
+        <button class="icon-btn" onclick="openBannerModal('${b.id}')" title="Edit">✎</button>
+        <button class="icon-btn" onclick="deleteBanner('${b.id}')" title="Delete">🗑</button>
+      </td>
+    </tr>
+  `;}).join('') || '<tr><td colspan="6" class="small-muted" style="padding:20px;">No banners yet.</td></tr>';
+}
+let pendingBannerImage = null;
+function openBannerModal(id){
+  document.getElementById('bannerMsg').innerHTML = '';
+  pendingBannerImage = null;
+  const propSel = document.getElementById('bannerPropertyId');
+  propSel.innerHTML = '<option value="">— No property link —</option>' + allProperties.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  if(id){
+    const b = allBannersAdmin.find(x=>x.id===id);
+    document.getElementById('bannerModalTitle').textContent = 'Edit Banner';
+    document.getElementById('bannerId').value = id;
+    document.getElementById('bannerHeadline').value = b.headline||'';
+    document.getElementById('bannerSubtext').value = b.subtext||'';
+    document.getElementById('bannerBtnText').value = b.buttonText||'View Property';
+    document.getElementById('bannerOrder').value = (b.order!==undefined) ? b.order : '';
+    document.getElementById('bannerActive').checked = b.active!==false;
+    propSel.value = b.propertyId||'';
+    pendingBannerImage = b.image || null;
+  } else {
+    document.getElementById('bannerModalTitle').textContent = 'New Banner';
+    document.getElementById('bannerForm').reset();
+    document.getElementById('bannerId').value = '';
+    document.getElementById('bannerOrder').value = allBannersAdmin.length;
+    document.getElementById('bannerActive').checked = true;
+  }
+  renderBannerImgGrid();
+  openModalEl('bannerModalBg');
+}
+function renderBannerImgGrid(){
+  document.getElementById('bannerImgGrid').innerHTML = pendingBannerImage
+    ? `<div class="img-thumb"><img src="${pendingBannerImage}"><button type="button" onclick="pendingBannerImage=null; renderBannerImgGrid();">&times;</button></div>` : '';
+}
+async function handleBannerImageUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  try{
+    pendingBannerImage = await compressImage(file, 1600, 0.7);
+    renderBannerImgGrid();
+  }catch(err){ toast('Could not process that image.'); }
+}
+async function saveBanner(e){
+  e.preventDefault();
+  const id = document.getElementById('bannerId').value;
+  const btn = document.getElementById('saveBannerBtn');
+  const msgEl = document.getElementById('bannerMsg');
+  if(!pendingBannerImage){
+    msgEl.innerHTML = '<div class="err-msg">Please upload a banner image.</div>';
+    return;
+  }
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving...';
+  try{
+    const data = {
+      headline: document.getElementById('bannerHeadline').value.trim(),
+      subtext: document.getElementById('bannerSubtext').value.trim(),
+      buttonText: document.getElementById('bannerBtnText').value.trim() || 'View Property',
+      order: Number(document.getElementById('bannerOrder').value)||0,
+      propertyId: document.getElementById('bannerPropertyId').value || null,
+      active: document.getElementById('bannerActive').checked,
+      image: pendingBannerImage
+    };
+    if(id){
+      await db.collection('banners').doc(id).update(data);
+      toast('Banner updated');
+    } else {
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('banners').add(data);
+      toast('Banner added');
+    }
+    closeModal('bannerModalBg');
+    await loadAdminBanners();
+    await loadBanners();
+  }catch(err){
+    msgEl.innerHTML = '<div class="err-msg">'+err.message+'</div>';
+  }finally{
+    btn.disabled = false; btn.textContent = 'Save Banner';
+  }
+}
+async function deleteBanner(id){
+  if(!confirm('Delete this banner?')) return;
+  try{
+    await db.collection('banners').doc(id).delete();
+    toast('Banner deleted');
+    await loadAdminBanners();
+    await loadBanners();
+  }catch(err){ toast('Error: '+err.message); }
 }
 
 async function loadAdminProperties(){
@@ -3706,7 +4266,7 @@ function viewInvestmentDetail(id){
   } else if(i.status==='withdrawal_requested'){
     actions = `<button class="btn btn-sm" onclick="updateInvestmentStatus('${i.id}','withdrawn')">Mark Withdrawn (Paid)</button>`;
   }
-  document.getElementById('invDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('invDetailBody','Investment Details')">🖨️ Print</button>` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('invDetailModalBg')">Close</button>`;
+  document.getElementById('invDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('invDetailBody','Investment Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('invDetailBody','Investment Details','investment-details')">⬇️ PDF</button>` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('invDetailModalBg')">Close</button>`;
   openModalEl('invDetailModalBg');
 }
 
@@ -3813,7 +4373,7 @@ function viewPurchaseDetail(id){
          <p class="small-muted" style="margin-top:6px;">Tap the image to view it full size before approving.</p>`
       : `<p class="err-msg">No receipt was uploaded for this purchase.</p>`}
     ${pu.paymentPlan==='installment' ? `<div class="section-title-sm">Monthly Installment Payments</div>
-    <div id="purchaseInstallmentPayments"><p class="small-muted">Loading payments...</p></div>` : ''}
+    <div id="purchaseInstallmentPayments">${skeletonLines(3)}</div>` : ''}
   `;
   let actions = '';
   if(pu.status==='pending'){
@@ -3822,7 +4382,7 @@ function viewPurchaseDetail(id){
   } else if(pu.status==='approved'){
     actions = `<button class="btn btn-sm" onclick="updatePurchaseStatus('${pu.id}','completed')">Mark Completed</button>`;
   }
-  document.getElementById('purchaseDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('purchaseDetailBody','Purchase Details')">🖨️ Print</button>` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('purchaseDetailModalBg')">Close</button>`;
+  document.getElementById('purchaseDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('purchaseDetailBody','Purchase Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('purchaseDetailBody','Purchase Details','purchase-details')">⬇️ PDF</button>` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('purchaseDetailModalBg')">Close</button>`;
   openModalEl('purchaseDetailModalBg');
   if(pu.paymentPlan==='installment') loadInstallmentPaymentsForAdmin(pu.id);
 }
@@ -4155,11 +4715,193 @@ async function deleteReview(id){
   catch(err){ toast('Error: '+err.message); }
 }
 
+/* ================= ANIMATED COUNTERS ================= */
+function animateCounter(el, target, opts={}){
+  if(!el) return;
+  const duration = opts.duration || 1200;
+  const suffix = opts.suffix || '';
+  const prefix = opts.prefix || '';
+  target = Number(target)||0;
+  const startTime = performance.now();
+  function tick(now){
+    const progress = Math.min((now-startTime)/duration, 1);
+    const eased = 1 - Math.pow(1-progress, 3);
+    const value = Math.round(target*eased);
+    el.textContent = prefix + value.toLocaleString('en-NG') + suffix;
+    if(progress < 1) requestAnimationFrame(tick);
+    else el.textContent = prefix + target.toLocaleString('en-NG') + suffix;
+  }
+  requestAnimationFrame(tick);
+}
+function animateStatFromText(el){
+  if(!el) return;
+  const raw = el.textContent.trim();
+  const num = parseInt(raw.replace(/[^0-9]/g,''), 10);
+  if(isNaN(num)) return; // non-numeric stat (e.g. "Flexible") — leave untouched
+  const suffix = raw.replace(/^[0-9,]+/,'');
+  animateCounter(el, num, {suffix});
+}
+
+/* ================= SKELETON LOADING PLACEHOLDERS ================= */
+function skeletonPropCards(count){
+  const card = `
+    <div class="skel-card">
+      <div class="skel skel-img"></div>
+      <div class="skel-body">
+        <div class="skel skel-line" style="width:70%; height:17px; margin-bottom:14px;"></div>
+        <div class="skel skel-line" style="width:45%;"></div>
+        <div class="skel skel-line" style="width:35%; height:20px; margin:14px 0;"></div>
+        <div class="skel skel-line" style="width:90%;"></div>
+        <div class="skel skel-line" style="width:60%; margin-bottom:0;"></div>
+      </div>
+    </div>`;
+  return Array(count).fill(card).join('');
+}
+function skeletonTableRows(colCount, rowCount=4){
+  const cells = Array(colCount).fill('<td><div class="skel skel-line" style="width:80%; margin-bottom:0;"></div></td>').join('');
+  return Array(rowCount).fill('<tr class="skel-row">'+cells+'</tr>').join('');
+}
+function skeletonLines(n=3){
+  return Array(n).fill(0).map((_,i)=>`<div class="skel skel-line" style="width:${85-i*15}%;"></div>`).join('');
+}
+
+/* ================= FAQ ACCORDION ================= */
+function toggleFaq(btn){
+  const item = btn.closest('.faq-item');
+  if(!item) return;
+  const wasOpen = item.classList.contains('open');
+  const list = item.closest('.faq-list');
+  if(list) list.querySelectorAll('.faq-item.open').forEach(el=>el.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+/* ================= COOKIE CONSENT ================= */
+function initCookieConsent(){
+  let consent = null;
+  try{ consent = localStorage.getItem('cookieConsent'); }catch(e){}
+  if(!consent){
+    const banner = document.getElementById('cookieBanner');
+    if(banner) setTimeout(()=>banner.classList.add('show'), 800);
+  }
+}
+function setCookieConsent(value){
+  try{ localStorage.setItem('cookieConsent', value); }catch(e){}
+  const banner = document.getElementById('cookieBanner');
+  if(banner) banner.classList.remove('show');
+  toast(value==='accepted' ? 'Preferences saved' : 'Only essential storage will be used');
+}
+
+/* ================= TESTIMONIALS (homepage) ================= */
+/* ================= HOMEPAGE BANNER CAROUSEL (advertising) ================= */
+async function loadBanners(){
+  try{
+    const snap = await db.collection('banners').orderBy('order','asc').get();
+    allBanners = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(b=>b.active!==false);
+  }catch(e){ console.warn('banner load error', e); allBanners = []; }
+  renderBannerCarousel();
+}
+function renderBannerCarousel(){
+  const section = document.getElementById('bannerSection');
+  const track = document.getElementById('bannerTrack');
+  const dots = document.getElementById('bannerDots');
+  if(!section || !track || !dots) return;
+  clearInterval(bannerTimer);
+  if(!allBanners.length){ section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+  bannerIndex = 0;
+  track.innerHTML = allBanners.map(b=>`
+    <div class="banner-slide" style="background-image:url('${b.image||''}');">
+      <div class="banner-slide-content"><div class="inner">
+        <div class="banner-eyebrow">ROYAL LUXURY MINI ESTATE</div>
+        <div class="banner-headline">${b.headline||''}</div>
+        ${b.subtext ? `<div class="banner-subtext">${b.subtext}</div>` : ''}
+        ${b.propertyId ? `<button class="btn" onclick="viewProperty('${b.propertyId}')">${b.buttonText || 'View Property'}</button>` : ''}
+      </div></div>
+    </div>
+  `).join('');
+  dots.innerHTML = allBanners.map((b,i)=>`<button class="banner-dot ${i===0?'active':''}" onclick="goToBanner(${i})" aria-label="Slide ${i+1}"></button>`).join('');
+  const carousel = document.getElementById('bannerCarousel');
+  if(carousel && !carousel.dataset.swipeBound){
+    let touchStartX = 0;
+    carousel.addEventListener('touchstart', e=>{ touchStartX = e.changedTouches[0].screenX; }, {passive:true});
+    carousel.addEventListener('touchend', e=>{
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if(Math.abs(dx) > 40) bannerNav(dx < 0 ? 1 : -1);
+    }, {passive:true});
+    carousel.dataset.swipeBound = 'true';
+  }
+  updateBannerPosition();
+  if(allBanners.length > 1) startBannerAutoplay();
+}
+function updateBannerPosition(){
+  const track = document.getElementById('bannerTrack');
+  if(track) track.style.transform = `translateX(-${bannerIndex*100}%)`;
+  document.querySelectorAll('#bannerDots .banner-dot').forEach((d,i)=>d.classList.toggle('active', i===bannerIndex));
+}
+function bannerNav(dir){
+  if(!allBanners.length) return;
+  bannerIndex = (bannerIndex + dir + allBanners.length) % allBanners.length;
+  updateBannerPosition();
+  startBannerAutoplay();
+}
+function goToBanner(i){
+  bannerIndex = i;
+  updateBannerPosition();
+  startBannerAutoplay();
+}
+function startBannerAutoplay(){
+  clearInterval(bannerTimer);
+  if(allBanners.length > 1){
+    bannerTimer = setInterval(()=>{ bannerIndex = (bannerIndex+1) % allBanners.length; updateBannerPosition(); }, 5500);
+  }
+}
+
+async function loadTestimonials(){
+  const grid = document.getElementById('testimonialsGrid');
+  const section = document.getElementById('testimonialsSection');
+  if(!grid) return;
+  try{
+    const snap = await db.collection('reviews').orderBy('createdAt','desc').limit(30).get();
+    let reviews = snap.docs.map(d=>d.data()).filter(r=>(r.rating||0)>=4 && (r.text||'').trim().length>0);
+    reviews.sort((a,b)=>(b.rating||0)-(a.rating||0));
+    reviews = reviews.slice(0,6);
+    if(!reviews.length){ if(section) section.classList.add('hidden'); return; }
+    if(section) section.classList.remove('hidden');
+    grid.innerHTML = reviews.map(testimonialCardHtml).join('');
+  }catch(e){
+    console.warn('testimonials load error', e);
+    if(section) section.classList.add('hidden');
+  }
+}
+function testimonialCardHtml(r){
+  const initials = (r.userName||'A').trim().charAt(0).toUpperCase();
+  return `
+    <div class="testi-card">
+      <div class="testi-stars">${'★'.repeat(r.rating||0)}${'☆'.repeat(5-(r.rating||0))}</div>
+      <p class="testi-text">"${(r.text||'').trim()}"</p>
+      <div class="testi-footer">
+        <div class="testi-avatar">${initials}</div>
+        <div>
+          <div class="testi-name">${r.userName||'Investor'}</div>
+          <div class="testi-prop">${r.propertyName||''}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 /* ================= INIT ================= */
 (async function init(){
+  document.querySelectorAll('.hero-stats b').forEach(animateStatFromText);
+  document.getElementById('homePropGrid').innerHTML = skeletonPropCards(3);
+  document.getElementById('allPropGrid').innerHTML = skeletonPropCards(6);
+  loadWishlist();
+  initCookieConsent();
   await loadSettings();
   await loadProperties();
   await loadPosts();
+  loadTestimonials();
+  loadBanners();
 })();
 </script>
 </body>
