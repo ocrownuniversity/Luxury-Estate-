@@ -305,6 +305,11 @@ section{padding:84px 0;}
 .skel-line{height:11px; border-radius:2px; margin-bottom:11px; display:block;}
 .skel-row td{padding:14px 4px;}
 
+/* Admin Bulk Action Toolbar */
+.bulk-toolbar{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; background:rgba(184,134,60,.12); border:1px solid var(--gold-dim); border-radius:var(--radius); padding:12px 16px; margin-bottom:14px;}
+.bulk-toolbar span{font-size:13px; font-weight:600; color:var(--ink);}
+.bulk-actions{display:flex; gap:8px; flex-wrap:wrap;}
+
 /* Banner Carousel (homepage advertising strip) */
 .banner-carousel{position:relative; width:100%; height:400px; overflow:hidden; background:var(--ink);}
 .banner-track{display:flex; height:100%; transition:transform .6s cubic-bezier(.65,0,.35,1);}
@@ -322,6 +327,7 @@ section{padding:84px 0;}
 .banner-dots{position:absolute; bottom:16px; left:0; right:0; display:flex; justify-content:center; gap:8px; z-index:3;}
 .banner-dot{width:9px; height:9px; border-radius:50%; background:rgba(246,241,231,.4); border:none; cursor:pointer; padding:0; transition:background .2s, transform .2s;}
 .banner-dot.active{background:var(--gold); transform:scale(1.2);}
+#bannerSection{padding:0;}
 @media(max-width:700px){
   .banner-carousel{height:260px;}
   .banner-slide-content{padding:0 50px;}
@@ -375,6 +381,11 @@ section{padding:84px 0;}
 .field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--gold);}
 .field textarea{resize:vertical; min-height:100px;}
 .field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.password-field{position:relative;}
+.password-field input{padding-right:44px !important;}
+.password-toggle{position:absolute; top:50%; right:6px; transform:translateY(-50%); width:32px; height:32px; border:none; background:none; cursor:pointer; font-size:16px; opacity:.55; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:opacity .15s, background .15s;}
+.password-toggle:hover{opacity:1; background:rgba(184,134,60,.12);}
+.password-toggle.active{opacity:1;}
 @media(max-width:600px){.field-row{grid-template-columns:1fr;}}
 .form-card{background:var(--paper); border:1px solid var(--line); padding:32px; max-width:520px;}
 .form-note{font-size:12.5px; color:var(--muted-dark); margin-top:6px;}
@@ -876,7 +887,14 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <div id="loginMsg"></div>
         <form onsubmit="loginUser(event)">
           <div class="field"><label>Email</label><input required type="email" id="loginEmail"></div>
-          <div class="field"><label>Password</label><input required type="password" id="loginPassword"></div>
+          <div class="field">
+            <label>Password</label>
+            <div class="password-field">
+              <input required type="password" id="loginPassword">
+              <button type="button" class="password-toggle" onclick="togglePasswordVisibility('loginPassword', this)" aria-label="Show password">👁</button>
+            </div>
+            <a onclick="openForgotPassword()" style="display:inline-block; margin-top:8px; font-size:12.5px; color:var(--gold); cursor:pointer; text-decoration:underline;">Forgot password?</a>
+          </div>
           <button class="btn btn-block" type="submit" id="loginBtn">Login</button>
         </form>
       </div>
@@ -888,10 +906,35 @@ tr:hover td{background:rgba(184,134,60,.05);}
           <div class="field"><label>Full Name</label><input required id="regName"></div>
           <div class="field"><label>Email</label><input required type="email" id="regEmail"></div>
           <div class="field"><label>Phone</label><input required id="regPhone"></div>
-          <div class="field"><label>Password</label><input required type="password" id="regPassword" minlength="6"></div>
+          <div class="field">
+            <label>Password</label>
+            <div class="password-field">
+              <input required type="password" id="regPassword" minlength="6">
+              <button type="button" class="password-toggle" onclick="togglePasswordVisibility('regPassword', this)" aria-label="Show password">👁</button>
+            </div>
+          </div>
           <button class="btn btn-block" type="submit" id="registerBtn">Create Account</button>
         </form>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal-bg" id="forgotPasswordModalBg">
+  <div class="modal">
+    <div class="modal-head"><h3>Reset Your Password</h3><button class="modal-close" onclick="closeModal('forgotPasswordModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <div id="forgotPasswordMsg"></div>
+      <p class="small-muted" style="margin-bottom:16px;">Enter the email address linked to your account and we'll send you a link to reset your password.</p>
+      <form id="forgotPasswordForm" onsubmit="sendPasswordReset(event)">
+        <div class="field"><label>Email</label><input required type="email" id="forgotPasswordEmail"></div>
+      </form>
+      <p class="small-muted" style="margin-top:4px;">📩 Didn't get the email after a few minutes? Please check your <b>Junk / Spam folder</b> — reset emails sometimes land there instead of your main inbox.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('forgotPasswordModalBg')">Cancel</button>
+      <button class="btn" id="forgotPasswordBtn" onclick="document.getElementById('forgotPasswordForm').requestSubmit()">Send Reset Link</button>
     </div>
   </div>
 </div>
@@ -1012,6 +1055,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
         <a data-panel="a-investments" onclick="switchAdminPanel('a-investments')">Investments</a>
         <a data-panel="a-purchases" onclick="switchAdminPanel('a-purchases')">Purchases</a>
         <a data-panel="a-inspections" onclick="switchAdminPanel('a-inspections')">Inspections</a>
+        <a data-panel="a-messages" onclick="switchAdminPanel('a-messages')">Messages</a>
         <a data-panel="a-users" onclick="switchAdminPanel('a-users')">Users</a>
         <a data-panel="a-posts" onclick="switchAdminPanel('a-posts')">Posts</a>
         <a data-panel="a-announcements" onclick="switchAdminPanel('a-announcements')">Announcements</a>
@@ -1033,6 +1077,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
           <div class="stat-card"><b id="aStatPurchases">0</b><span>Total Purchases</span></div>
           <div class="stat-card"><b id="aStatPendingPurchases">0</b><span>Pending Purchases</span></div>
           <div class="stat-card"><b id="aStatInspections">0</b><span>Pending Inspections</span></div>
+          <div class="stat-card"><b id="aStatMessages">0</b><span>New Messages</span></div>
         </div>
         <div class="chart-grid">
           <div class="chart-card">
@@ -1081,9 +1126,18 @@ tr:hover td{background:rgba(184,134,60,.05);}
             <option value="rejected">Rejected</option>
           </select>
         </div>
+        <div class="bulk-toolbar hidden" id="invBulkToolbar">
+          <span id="invBulkCount">0 selected</span>
+          <div class="bulk-actions">
+            <button class="btn btn-sm" onclick="bulkUpdateInvestments('approved')">✔ Approve</button>
+            <button class="btn btn-sm btn-ghost" onclick="bulkUpdateInvestments('rejected')">✕ Reject</button>
+            <button class="btn btn-sm btn-ghost" onclick="bulkDeleteInvestments()">🗑 Delete</button>
+            <button class="btn btn-sm btn-ghost" onclick="clearSelection('investments')">Clear</button>
+          </div>
+        </div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Inv. ID</th><th>Investor</th><th>Property</th><th>Amount</th><th>ROI</th><th>Status</th><th>Maturity</th><th>Actions</th></tr></thead>
-          <tbody id="aInvTable"><tr><td colspan="8" class="small-muted" style="padding:20px;">No investments yet.</td></tr></tbody>
+          <thead><tr><th><input type="checkbox" id="invSelectAll" onchange="toggleSelectAll('investments', this)"></th><th>Inv. ID</th><th>Investor</th><th>Property</th><th>Amount</th><th>ROI</th><th>Status</th><th>Maturity</th><th>Actions</th></tr></thead>
+          <tbody id="aInvTable"><tr><td colspan="9" class="small-muted" style="padding:20px;">No investments yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -1099,9 +1153,18 @@ tr:hover td{background:rgba(184,134,60,.05);}
             <option value="rejected">Rejected</option>
           </select>
         </div>
+        <div class="bulk-toolbar hidden" id="purBulkToolbar">
+          <span id="purBulkCount">0 selected</span>
+          <div class="bulk-actions">
+            <button class="btn btn-sm" onclick="bulkUpdatePurchases('approved')">✔ Approve</button>
+            <button class="btn btn-sm btn-ghost" onclick="bulkUpdatePurchases('rejected')">✕ Reject</button>
+            <button class="btn btn-sm btn-ghost" onclick="bulkDeletePurchases()">🗑 Delete</button>
+            <button class="btn btn-sm btn-ghost" onclick="clearSelection('purchases')">Clear</button>
+          </div>
+        </div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Purchase ID</th><th>Buyer</th><th>Property</th><th>Plan</th><th>Total Payable</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="aPurTable"><tr><td colspan="7" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
+          <thead><tr><th><input type="checkbox" id="purSelectAll" onchange="toggleSelectAll('purchases', this)"></th><th>Purchase ID</th><th>Buyer</th><th>Property</th><th>Plan</th><th>Total Payable</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="aPurTable"><tr><td colspan="8" class="small-muted" style="padding:20px;">No purchases yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -1118,9 +1181,36 @@ tr:hover td{background:rgba(184,134,60,.05);}
             <option value="cancelled">Cancelled</option>
           </select>
         </div>
+        <div class="bulk-toolbar hidden" id="inspBulkToolbar">
+          <span id="inspBulkCount">0 selected</span>
+          <div class="bulk-actions">
+            <button class="btn btn-sm" onclick="bulkUpdateInspections('contacted')">💬 Contacted</button>
+            <button class="btn btn-sm btn-ghost" onclick="bulkUpdateInspections('completed')">✔ Completed</button>
+            <button class="btn btn-sm btn-ghost" onclick="bulkUpdateInspections('cancelled')">✕ Cancelled</button>
+            <button class="btn btn-sm btn-ghost" onclick="bulkDeleteInspections()">🗑 Delete</button>
+            <button class="btn btn-sm btn-ghost" onclick="clearSelection('inspections')">Clear</button>
+          </div>
+        </div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Reference</th><th>Name</th><th>Phone</th><th>Property</th><th>Preferred Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="aInspTable"><tr><td colspan="8" class="small-muted" style="padding:20px;">No inspection requests yet.</td></tr></tbody>
+          <thead><tr><th><input type="checkbox" id="inspSelectAll" onchange="toggleSelectAll('inspections', this)"></th><th>Reference</th><th>Name</th><th>Phone</th><th>Property</th><th>Preferred Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="aInspTable"><tr><td colspan="9" class="small-muted" style="padding:20px;">No inspection requests yet.</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <div class="dash-panel" id="apanel-a-messages">
+        <div class="dash-head"><h2>Contact Messages</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('aMsgTable','Contact Messages')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('aMsgTable','Contact Messages','contact-messages')">⬇️ PDF</button><button class="btn btn-ghost btn-sm" onclick="exportTableToCSV('aMsgTable','contact-messages')">⬇️ Export CSV</button></div></div>
+        <p class="small-muted" style="margin-top:-10px; margin-bottom:16px;">Messages submitted through the Contact page form.</p>
+        <div class="search-bar">
+          <input type="text" id="msgSearch" placeholder="Search name, email, or message..." oninput="renderAdminMessages()">
+          <select id="msgStatusFilter" onchange="renderAdminMessages()">
+            <option value="">All Status</option>
+            <option value="new">New</option>
+            <option value="read">Read</option>
+          </select>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="aMsgTable"><tr><td colspan="7" class="small-muted" style="padding:20px;">No messages yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -1818,6 +1908,10 @@ let allInvestments = [];     // admin: all; user: own
 let allPurchases = [];       // admin: all; user: own — property buy/installment purchases
 let allUsers = [];
 let allInspections = [];     // admin: all — site inspection booking requests (no payment required)
+let allMessages = [];        // admin: all — contact form messages (stored as type:'contact_message' in transactions)
+let selectedInvestments = new Set();
+let selectedPurchases = new Set();
+let selectedInspections = new Set();
 let allBanners = [];         // public: active homepage banners, sorted for display
 let allBannersAdmin = [];    // admin: all banners (active + inactive) for management
 let bannerIndex = 0;
@@ -2235,6 +2329,40 @@ async function loginUser(e){
     document.getElementById('loginMsg').innerHTML = '<div class="err-msg">'+err.message+'</div>';
   }finally{
     btn.disabled=false; btn.textContent='Login';
+  }
+}
+
+function togglePasswordVisibility(inputId, btn){
+  const input = document.getElementById(inputId);
+  if(!input) return;
+  const showing = input.type === 'text';
+  input.type = showing ? 'password' : 'text';
+  btn.textContent = showing ? '👁' : '🙈';
+  btn.classList.toggle('active', !showing);
+  btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+}
+
+function openForgotPassword(){
+  document.getElementById('forgotPasswordMsg').innerHTML = '';
+  const prefill = document.getElementById('loginEmail').value.trim();
+  document.getElementById('forgotPasswordEmail').value = prefill;
+  openModalEl('forgotPasswordModalBg');
+}
+async function sendPasswordReset(e){
+  e.preventDefault();
+  const btn = document.getElementById('forgotPasswordBtn');
+  const msgEl = document.getElementById('forgotPasswordMsg');
+  const email = document.getElementById('forgotPasswordEmail').value.trim();
+  msgEl.innerHTML = '';
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Sending...';
+  try{
+    await auth.sendPasswordResetEmail(email);
+    msgEl.innerHTML = '<div class="ok-msg">Reset link sent! Check your inbox — and your Junk/Spam folder if it doesn\'t show up within a few minutes.</div>';
+    document.getElementById('forgotPasswordForm').reset();
+  }catch(err){
+    msgEl.innerHTML = '<div class="err-msg">'+err.message+'</div>';
+  }finally{
+    btn.disabled = false; btn.textContent = 'Send Reset Link';
   }
 }
 
@@ -3635,12 +3763,12 @@ async function submitContact(e){
 
 /* ================= ADMIN: LOAD ALL ================= */
 async function loadAdminData(){
-  const skelCols = {aPropTable:8, aBannerTable:6, aInvTable:8, aPurTable:7, aInspTable:8, aUserTable:6, aPostTable:3, aAnnTable:4, aReviewTable:6};
+  const skelCols = {aPropTable:8, aBannerTable:6, aInvTable:8, aPurTable:7, aInspTable:8, aMsgTable:7, aUserTable:6, aPostTable:3, aAnnTable:4, aReviewTable:6};
   Object.entries(skelCols).forEach(([id, cols])=>{
     const el = document.getElementById(id);
     if(el) el.innerHTML = skeletonTableRows(cols);
   });
-  await Promise.all([loadAdminProperties(), loadAdminBanners(), loadAdminInvestments(), loadAdminPurchases(), loadAdminInspections(), loadAdminUsers(), loadAdminPosts(), loadAdminAnnouncements(), loadAdminReviews()]);
+  await Promise.all([loadAdminProperties(), loadAdminBanners(), loadAdminInvestments(), loadAdminPurchases(), loadAdminInspections(), loadAdminMessages(), loadAdminUsers(), loadAdminPosts(), loadAdminAnnouncements(), loadAdminReviews()]);
   renderAdminDashboardStats();
   fillSettingsForm();
 }
@@ -3807,6 +3935,7 @@ function renderAdminDashboardStats(){
   document.getElementById('aStatPurchases').textContent = allPurchases.length;
   document.getElementById('aStatPendingPurchases').textContent = allPurchases.filter(pu=>pu.status==='pending').length;
   document.getElementById('aStatInspections').textContent = allInspections.filter(i=>i.status==='pending').length;
+  document.getElementById('aStatMessages').textContent = allMessages.filter(m=>(m.status||'new')==='new').length;
   renderAdminCharts();
 }
 
@@ -3918,6 +4047,88 @@ function renderTopPropertiesChart(){
 }
 
 /* ---------- Admin: Inspections ---------- */
+/* ---------- Admin: Bulk Selection & Actions ---------- */
+const bulkConfig = {
+  investments: { set: () => selectedInvestments, tbody:'aInvTable', toolbar:'invBulkToolbar', count:'invBulkCount', selectAll:'invSelectAll', collection:'investments', rerender: renderAdminInvestments },
+  purchases:   { set: () => selectedPurchases,   tbody:'aPurTable', toolbar:'purBulkToolbar', count:'purBulkCount', selectAll:'purSelectAll', collection:'purchases',   rerender: renderAdminPurchases },
+  inspections: { set: () => selectedInspections, tbody:'aInspTable', toolbar:'inspBulkToolbar', count:'inspBulkCount', selectAll:'inspSelectAll', collection:'inspections', rerender: renderAdminInspections }
+};
+function toggleRowSelection(kind, id, checked){
+  const cfg = bulkConfig[kind];
+  const set = cfg.set();
+  if(checked) set.add(id); else set.delete(id);
+  updateBulkToolbar(kind);
+}
+function toggleSelectAll(kind, checkboxEl){
+  const cfg = bulkConfig[kind];
+  const set = cfg.set();
+  const rowChecks = document.querySelectorAll('#'+cfg.tbody+' .row-check');
+  rowChecks.forEach(cb=>{
+    cb.checked = checkboxEl.checked;
+    if(checkboxEl.checked) set.add(cb.dataset.id); else set.delete(cb.dataset.id);
+  });
+  updateBulkToolbar(kind);
+}
+function clearSelection(kind){
+  const cfg = bulkConfig[kind];
+  cfg.set().clear();
+  cfg.rerender();
+}
+function updateBulkToolbar(kind){
+  const cfg = bulkConfig[kind];
+  const set = cfg.set();
+  const toolbar = document.getElementById(cfg.toolbar);
+  const countEl = document.getElementById(cfg.count);
+  const selectAllEl = document.getElementById(cfg.selectAll);
+  if(!toolbar || !countEl) return;
+  toolbar.classList.toggle('hidden', set.size===0);
+  countEl.textContent = set.size + ' selected';
+  if(selectAllEl){
+    const rowChecks = document.querySelectorAll('#'+cfg.tbody+' .row-check');
+    selectAllEl.checked = rowChecks.length>0 && Array.from(rowChecks).every(cb=>cb.checked);
+  }
+}
+async function bulkUpdateStatus(kind, status){
+  const cfg = bulkConfig[kind];
+  const ids = Array.from(cfg.set());
+  if(!ids.length) return;
+  if(!confirm(`Mark ${ids.length} item(s) as "${status}"?`)) return;
+  try{
+    const batch = db.batch();
+    ids.forEach(id=>batch.update(db.collection(cfg.collection).doc(id), {status}));
+    await batch.commit();
+    toast(ids.length + ' item(s) updated');
+    cfg.set().clear();
+    if(kind==='investments') await loadAdminInvestments();
+    else if(kind==='purchases') await loadAdminPurchases();
+    else if(kind==='inspections') await loadAdminInspections();
+    renderAdminDashboardStats();
+  }catch(err){ toast('Error: '+err.message); }
+}
+async function bulkDelete(kind){
+  const cfg = bulkConfig[kind];
+  const ids = Array.from(cfg.set());
+  if(!ids.length) return;
+  if(!confirm(`Delete ${ids.length} item(s)? This cannot be undone.`)) return;
+  try{
+    const batch = db.batch();
+    ids.forEach(id=>batch.delete(db.collection(cfg.collection).doc(id)));
+    await batch.commit();
+    toast(ids.length + ' item(s) deleted');
+    cfg.set().clear();
+    if(kind==='investments') await loadAdminInvestments();
+    else if(kind==='purchases') await loadAdminPurchases();
+    else if(kind==='inspections') await loadAdminInspections();
+    renderAdminDashboardStats();
+  }catch(err){ toast('Error: '+err.message); }
+}
+function bulkUpdateInvestments(status){ bulkUpdateStatus('investments', status); }
+function bulkDeleteInvestments(){ bulkDelete('investments'); }
+function bulkUpdatePurchases(status){ bulkUpdateStatus('purchases', status); }
+function bulkDeletePurchases(){ bulkDelete('purchases'); }
+function bulkUpdateInspections(status){ bulkUpdateStatus('inspections', status); }
+function bulkDeleteInspections(){ bulkDelete('inspections'); }
+
 function renderAdminInspections(){
   const q = (document.getElementById('inspSearch').value||'').toLowerCase();
   const status = document.getElementById('inspStatusFilter').value;
@@ -3928,6 +4139,7 @@ function renderAdminInspections(){
   });
   document.getElementById('aInspTable').innerHTML = list.map(i=>`
     <tr>
+      <td><input type="checkbox" class="row-check" data-id="${i.id}" onchange="toggleRowSelection('inspections','${i.id}', this.checked)" ${selectedInspections.has(i.id)?'checked':''}></td>
       <td>${i.inspectionId||''}</td><td>${i.fullName||''}<div class="small-muted">${i.email||''}</div></td><td>${i.phone||''}</td>
       <td>${i.propertyName||''}</td><td>${i.preferredDate||''}</td><td>${i.preferredTime||''}</td>
       <td><span class="badge badge-${i.status}">${i.status}</span></td>
@@ -3938,7 +4150,8 @@ function renderAdminInspections(){
         <button class="icon-btn" onclick="deleteInspection('${i.id}')" title="Delete">🗑</button>
       </td>
     </tr>
-  `).join('') || '<tr><td colspan="8" class="small-muted" style="padding:20px;">No inspection requests yet.</td></tr>';
+  `).join('') || '<tr><td colspan="9" class="small-muted" style="padding:20px;">No inspection requests yet.</td></tr>';
+  updateBulkToolbar('inspections');
 }
 async function updateInspectionStatus(id, status){
   try{
@@ -3951,6 +4164,57 @@ async function updateInspectionStatus(id, status){
 async function deleteInspection(id){
   if(!confirm('Delete this inspection request?')) return;
   try{ await db.collection('inspections').doc(id).delete(); toast('Inspection request deleted'); await loadAdminInspections(); renderAdminDashboardStats(); }
+  catch(err){ toast('Error: '+err.message); }
+}
+
+/* ---------- Admin: Contact Messages ---------- */
+async function loadAdminMessages(){
+  try{
+    const snap = await db.collection('transactions').where('type','==','contact_message').get();
+    allMessages = snap.docs.map(d=>({id:d.id, ...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  }catch(e){ console.warn(e); allMessages = []; }
+  renderAdminMessages();
+}
+function renderAdminMessages(){
+  const searchEl = document.getElementById('msgSearch');
+  const statusEl = document.getElementById('msgStatusFilter');
+  if(!searchEl || !statusEl) return;
+  const q = (searchEl.value||'').toLowerCase();
+  const status = statusEl.value;
+  let list = allMessages.filter(m=>{
+    const matchQ = !q || (m.name||'').toLowerCase().includes(q) || (m.email||'').toLowerCase().includes(q) || (m.message||'').toLowerCase().includes(q);
+    const matchS = !status || (m.status||'new')===status;
+    return matchQ && matchS;
+  });
+  document.getElementById('aMsgTable').innerHTML = list.map(m=>{
+    const st = m.status || 'new';
+    const waLink = m.phone ? 'https://wa.me/' + m.phone.replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent('Hi ' + (m.name||'') + ', thanks for reaching out to Royal Luxury Mini Estate — ') : '';
+    return `
+    <tr>
+      <td>${m.name||''}</td><td>${m.email||''}</td><td>${m.phone||'—'}</td>
+      <td style="max-width:260px; white-space:normal;">${m.message||''}</td>
+      <td>${m.createdAt ? fmtDate(m.createdAt) : '—'}</td>
+      <td><span class="badge ${st==='new' ? 'badge-pending' : 'badge-approved'}">${st}</span></td>
+      <td class="row-actions">
+        ${st==='new' ? `<button class="icon-btn" onclick="updateMessageStatus('${m.id}','read')" title="Mark as Read">✔</button>` : ''}
+        ${m.phone ? `<a class="icon-btn" href="${waLink}" target="_blank" title="Reply on WhatsApp">💬</a>` : ''}
+        <button class="icon-btn" onclick="deleteMessage('${m.id}')" title="Delete">🗑</button>
+      </td>
+    </tr>
+  `;}).join('') || '<tr><td colspan="7" class="small-muted" style="padding:20px;">No messages yet.</td></tr>';
+}
+async function updateMessageStatus(id, status){
+  try{
+    await db.collection('transactions').doc(id).update({status});
+    toast('Message marked ' + status);
+    await loadAdminMessages();
+    renderAdminDashboardStats();
+  }catch(err){ toast('Error: '+err.message); }
+}
+async function deleteMessage(id){
+  if(!confirm('Delete this message?')) return;
+  try{ await db.collection('transactions').doc(id).delete(); toast('Message deleted'); await loadAdminMessages(); renderAdminDashboardStats(); }
   catch(err){ toast('Error: '+err.message); }
 }
 
@@ -4184,12 +4448,14 @@ function renderAdminInvestments(){
   });
   document.getElementById('aInvTable').innerHTML = list.map(i=>`
     <tr>
+      <td><input type="checkbox" class="row-check" data-id="${i.id}" onchange="toggleRowSelection('investments','${i.id}', this.checked)" ${selectedInvestments.has(i.id)?'checked':''}></td>
       <td>${i.investmentId}</td><td>${i.userName}<br><span class="small-muted">${i.userEmail}</span></td>
       <td>${i.propertyName}</td><td>${fmtNaira(i.amount)}</td><td>${i.roi}%/mo</td>
       <td><span class="badge badge-${i.status}">${i.status}</span></td><td>${fmtDate(i.maturityDate)}</td>
       <td class="row-actions"><button class="icon-btn" onclick="viewInvestmentDetail('${i.id}')" title="View">👁</button></td>
     </tr>
-  `).join('') || '<tr><td colspan="8" class="small-muted" style="padding:20px;">No investments yet.</td></tr>';
+  `).join('') || '<tr><td colspan="9" class="small-muted" style="padding:20px;">No investments yet.</td></tr>';
+  updateBulkToolbar('investments');
 }
 
 function viewInvestmentDetail(id){
@@ -4291,13 +4557,15 @@ function renderAdminPurchases(){
   });
   document.getElementById('aPurTable').innerHTML = list.map(pu=>`
     <tr>
+      <td><input type="checkbox" class="row-check" data-id="${pu.id}" onchange="toggleRowSelection('purchases','${pu.id}', this.checked)" ${selectedPurchases.has(pu.id)?'checked':''}></td>
       <td>${pu.purchaseId}</td><td>${pu.userName}<br><span class="small-muted">${pu.userEmail}</span></td>
       <td>${pu.propertyName}</td><td>${pu.paymentPlan==='full' ? 'Full Payment' : 'Installment ('+pu.months+' mo)'}</td>
       <td>${fmtNaira(pu.totalPayable)}</td>
       <td><span class="badge badge-${pu.status}">${pu.status}</span></td>
       <td class="row-actions"><button class="icon-btn" onclick="viewPurchaseDetail('${pu.id}')" title="View">👁</button></td>
     </tr>
-  `).join('') || '<tr><td colspan="7" class="small-muted" style="padding:20px;">No purchases yet.</td></tr>';
+  `).join('') || '<tr><td colspan="8" class="small-muted" style="padding:20px;">No purchases yet.</td></tr>';
+  updateBulkToolbar('purchases');
 }
 
 function viewPurchaseDetail(id){
