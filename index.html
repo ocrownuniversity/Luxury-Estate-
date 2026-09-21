@@ -31,6 +31,8 @@
 <link rel="apple-touch-icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Structured data for search engines -->
 <script type="application/ld+json">
@@ -532,6 +534,185 @@ tr:hover td{background:rgba(184,134,60,.05);}
 .section-title-sm{font-family:var(--serif); font-size:18px; margin:22px 0 12px; font-weight:500;}
 .divider{height:1px; background:var(--line); margin:24px 0;}
 .small-muted{font-size:12.5px; color:var(--muted-dark);}
+/* =====================================================================
+   HOMEPAGE UPGRADE
+   Everything in this block is scoped to the homepage (#page-home) so no
+   other page is affected. The site header/footer only pick up the new
+   font while the homepage is showing.
+   ===================================================================== */
+#page-home,
+body:has(#page-home.active) footer{
+  --serif:'Poppins','Segoe UI',Roboto,Arial,sans-serif;
+  --sans:'Poppins','Segoe UI',Roboto,Arial,sans-serif;
+  font-family:var(--sans);
+}
+body:has(#page-home.active) #nav .brand-name{font-family:'Poppins','Segoe UI',Roboto,Arial,sans-serif; font-size:16px; font-weight:600; white-space:nowrap;}
+#page-home{
+  --gold-text:#83591b;
+  --hero-muted:#cfc5b3;
+  line-height:1.65;
+}
+#page-home a,
+body:has(#page-home.active) #nav a,
+body:has(#page-home.active) footer a{cursor:pointer;}
+#page-home h1,#page-home h2,#page-home h3{font-family:var(--sans); text-wrap:balance;}
+#page-home button:focus-visible,
+#page-home select:focus-visible,
+#page-home input:focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
+
+@media(min-width:961px) and (max-width:1160px){
+  body:has(#page-home.active) #nav .nav-link{white-space:nowrap; padding:10px 8px; font-size:12.5px;}
+}
+
+/* buttons */
+#page-home .btn{padding:15px 30px; font-size:14px; font-weight:600; letter-spacing:.01em; border-radius:6px;}
+#page-home .btn-dark:hover{background:var(--gold); border-color:var(--gold); color:var(--ink);}
+
+/* ---- hero: centred, clean ---- */
+#page-home .hero{
+  padding:clamp(64px,9vw,120px) 0 0; text-align:center;
+  background:
+    radial-gradient(60% 70% at 50% 0%, rgba(184,134,60,.20), transparent 65%),
+    linear-gradient(180deg, var(--ink) 0%, #191510 100%);
+}
+#page-home .hero::before{display:none;}
+#page-home .hero-inner{display:block; max-width:1180px; padding:0 24px;}
+#page-home .hero-eyebrow{
+  justify-content:center; margin-bottom:22px;
+  font-size:12.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+}
+#page-home .hero-eyebrow::before{display:none;}
+#page-home .hero h1{
+  font-size:clamp(32px,5vw,58px); font-weight:700; line-height:1.15; letter-spacing:-.02em;
+  color:var(--cream); max-width:17em; margin:0 auto;
+}
+#page-home .hero p{
+  margin:24px auto 0; max-width:42em; font-size:clamp(15.5px,1.4vw,17.5px); line-height:1.8; color:var(--hero-muted);
+}
+#page-home .hero-actions{margin-top:36px; gap:14px; justify-content:center;}
+#page-home .hero .btn-outline{border-color:rgba(246,241,231,.45);}
+#page-home .hero-stats{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+  margin-top:clamp(48px,6vw,76px); padding:0 0 clamp(56px,7vw,88px); border:0;
+  max-width:920px; margin-left:auto; margin-right:auto;
+}
+#page-home .hero-stats div{
+  padding:28px 16px; border:1px solid rgba(217,178,106,.28); border-radius:8px;
+  background:rgba(255,255,255,.035); text-align:center;
+}
+#page-home .hero-stats b{
+  font-family:var(--sans); font-size:clamp(26px,3.2vw,38px); font-weight:700; line-height:1.15;
+  color:var(--gold-light); margin-bottom:6px;
+}
+#page-home .hero-stats span{font-size:13.5px; font-weight:500; color:var(--hero-muted); letter-spacing:0;}
+
+/* ---- sections: centred headings ---- */
+#page-home section{padding:clamp(60px,7vw,96px) 0;}
+#page-home #bannerSection{padding:0;}
+#page-home .section-head{max-width:720px; margin:0 auto clamp(36px,4.5vw,56px); text-align:center;}
+#page-home .section-eyebrow{
+  font-size:12.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--gold-text); margin-bottom:14px;
+}
+#page-home .section-head h2{
+  font-size:clamp(26px,3.5vw,40px); font-weight:700; line-height:1.2; letter-spacing:-.015em;
+}
+#page-home .section-head p{margin:16px auto 0; font-size:16px; line-height:1.75; color:var(--muted-dark); max-width:38em;}
+#page-home .section-alt{border-color:rgba(184,134,60,.22);}
+
+/* why us: three clean cards */
+#page-home .feat-grid{grid-template-columns:repeat(3,1fr); gap:24px; background:none; border:0;}
+#page-home .feat{
+  background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:34px 30px;
+}
+#page-home .feat .num{width:54px; height:54px; margin:0 0 22px; border:0; border-radius:12px; background:rgba(184,134,60,.14); color:var(--gold-text);}
+#page-home .feat .num svg{width:26px; height:26px;}
+#page-home .feat h3{font-size:19px; font-weight:600; line-height:1.3; margin-bottom:10px;}
+#page-home .feat p{font-size:14.5px; line-height:1.75; color:var(--muted-dark);}
+
+/* property + update cards */
+#page-home .prop-grid{gap:28px;}
+#page-home .prop-card{display:flex; flex-direction:column; border-radius:8px; transition:transform .25s, box-shadow .25s, border-color .25s;}
+#page-home .prop-card:hover{transform:translateY(-3px); border-color:rgba(184,134,60,.55);}
+#page-home .prop-img{height:auto; aspect-ratio:16/11;}
+#page-home .prop-badge,#page-home .prop-pill,#page-home .prop-roi,#page-home .prop-photocount{border-radius:4px;}
+#page-home .prop-body{flex:1; display:flex; flex-direction:column; padding:22px 22px 20px;}
+#page-home .prop-title{font-size:17px; font-weight:600; line-height:1.4; margin-bottom:8px;}
+#page-home .prop-loc{font-size:13px; margin-bottom:12px;}
+#page-home .prop-price-lg{font-family:var(--sans); font-size:22px; font-weight:700; letter-spacing:-.01em; margin-bottom:14px;}
+#page-home .prop-specs{gap:8px 18px; font-size:12.5px; padding:14px 0 0; border-top:1px solid var(--line); margin-bottom:14px;}
+#page-home .prop-tags span{color:var(--gold-text); border-color:rgba(184,134,60,.4); border-radius:4px;}
+#page-home .prop-cta-row{margin-top:auto; padding-top:2px;}
+#page-home .prop-cta{font-size:13px; font-weight:600; letter-spacing:0; color:var(--gold-text); margin-bottom:0;}
+#page-home .prop-roi{font-weight:700;}
+#page-home .prop-footer{margin:0; padding:14px 22px; background:rgba(184,134,60,.05);}
+#page-home .prop-agent-avatar{font-weight:600;}
+#page-home .prop-footer .fname{font-size:12.5px; font-weight:600;}
+#page-home .prop-footer .fsub{font-size:11px;}
+#page-home .prop-body .ploc{font-size:12.5px; font-weight:600; letter-spacing:0; color:var(--gold-text); margin-bottom:10px;}
+#page-home .prop-body h3:not(.prop-title){font-size:18px; font-weight:600; line-height:1.35; margin-bottom:10px;}
+#page-home .prop-body > p{font-size:14px; line-height:1.7; color:var(--muted-dark);}
+#page-home .section-cta{text-align:center; margin-top:44px;}
+
+/* investment calculator */
+#page-home .calc-card{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); border-radius:10px; overflow:hidden;}
+#page-home .calc-form{padding:clamp(26px,4vw,44px);}
+#page-home .calc-form .field-row{display:flex; gap:16px;}
+#page-home .field{margin-bottom:20px;}
+#page-home .field label{font-size:13px; font-weight:600; letter-spacing:0; color:var(--ink); margin-bottom:8px;}
+#page-home .field input,#page-home .field select{padding:14px 16px; font-size:14.5px; font-weight:500; border-radius:6px;}
+#page-home .field input:focus,#page-home .field select:focus{border-color:var(--gold); box-shadow:0 0 0 3px rgba(184,134,60,.18);}
+#page-home .calc-form .small-muted{font-size:12.5px; line-height:1.6;}
+#page-home .calc-result{
+  padding:clamp(28px,4vw,46px);
+  background:radial-gradient(90% 70% at 100% 0%, rgba(184,134,60,.2), transparent 65%), var(--ink);
+}
+#page-home .calc-result-row{padding:16px 0; font-size:14px; color:var(--hero-muted);}
+#page-home .calc-result-row b{font-family:var(--sans); font-size:17px; font-weight:600; color:var(--cream);}
+#page-home .calc-result-total{flex-direction:column; align-items:flex-start; gap:6px; padding-top:26px; font-size:13.5px; font-weight:500; color:var(--gold-light);}
+#page-home .calc-result-total b{font-family:var(--sans); font-size:clamp(28px,3.4vw,38px); font-weight:700; line-height:1.15; color:var(--gold-light);}
+#page-home .calc-result .btn{margin-top:26px !important;}
+
+/* testimonials */
+#page-home .testi-card{padding:30px; border-radius:8px;}
+#page-home .testi-stars{color:var(--gold); letter-spacing:2px; margin-bottom:16px;}
+#page-home .testi-text{font-family:var(--sans); font-style:normal; font-size:15px; line-height:1.8; margin-bottom:24px;}
+#page-home .testi-avatar{font-weight:600;}
+#page-home .testi-name{font-size:13.5px; font-weight:600;}
+#page-home .testi-prop{font-size:12px;}
+
+/* FAQ */
+#page-home .faq-list{max-width:820px; margin:0 auto;}
+#page-home .faq-q{font-family:var(--sans); font-size:16px; font-weight:600; line-height:1.45; padding:22px 4px; gap:24px;}
+#page-home .faq-icon{font-size:24px; color:var(--gold-text);}
+#page-home .faq-a p{padding:0 40px 24px 4px; font-size:14.5px; line-height:1.8; max-width:none;}
+
+/* closing call to action */
+#page-home .cta-band{
+  padding:clamp(60px,8vw,96px) 0; border-top:1px solid var(--line);
+  background:radial-gradient(60% 120% at 50% 0%, rgba(184,134,60,.18), transparent 65%), linear-gradient(120deg,var(--ink),#241d14);
+}
+#page-home .cta-band h2{font-size:clamp(26px,3.8vw,42px); font-weight:700; line-height:1.2; letter-spacing:-.015em; margin-bottom:16px;}
+#page-home .cta-band p{font-size:16px; line-height:1.75; color:var(--hero-muted); max-width:34em; margin-bottom:32px;}
+
+/* Cookie banner: the "Decline" label was dark text on a dark bar (invisible) */
+.cookie-banner .btn-ghost{color:var(--cream); border-color:rgba(246,241,231,.35);}
+.cookie-banner .btn-ghost:hover{background:rgba(246,241,231,.1);}
+
+/* ---- homepage responsive ---- */
+@media(max-width:980px){
+  #page-home .calc-card{grid-template-columns:1fr;}
+}
+@media(max-width:800px){
+  #page-home .feat-grid{grid-template-columns:1fr;}
+}
+@media(max-width:640px){
+  #page-home .hero-stats{grid-template-columns:1fr; gap:12px;}
+  #page-home .hero-stats div{padding:20px 16px;}
+  #page-home .hero-actions .btn{flex:1 1 100%;}
+  #page-home .calc-form .field-row{flex-direction:column; gap:0;}
+  #page-home .faq-a p{padding-right:0;}
+}
 </style>
 </head>
 <body>
@@ -540,7 +721,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
 <nav id="nav">
   <div class="nav-inner">
     <div class="brand" onclick="go('home')">
-      <img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo">
+      <img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('span'),{className:'crest',textContent:'R'}))">
       <div class="brand-name">Royal Luxury <b>Mini Estate</b></div>
     </div>
     <div class="nav-links" id="navLinks">
@@ -570,11 +751,11 @@ tr:hover td{background:rgba(184,134,60,.05);}
 <!-- HOME -->
 <!-- ============================================================= -->
 <div class="page active" id="page-home">
-  <div class="hero">
+  <div class="hero home-hero">
     <div class="hero-inner">
-      <div>
-        <div class="hero-eyebrow">ABEOKUTA · OGUN STATE · NIGERIA</div>
-        <h1>Build wealth through <em>curated</em> real estate investment &amp; purchase.</h1>
+      <div class="hero-copy">
+        <div class="hero-eyebrow">Abeokuta, Ogun State, Nigeria</div>
+        <h1>Build wealth through curated real estate investment &amp; purchase.</h1>
         <p>Royal Luxury Mini Estate gives discerning investors and buyers direct access to premium land and property opportunities across Abeokuta — whether you're investing for returns or purchasing property outright, with transparent terms and verified titles.</p>
         <div class="hero-actions">
           <a class="btn" onclick="go('properties')">View Investment &amp; Purchase Options</a>
@@ -583,7 +764,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
       </div>
       <div class="hero-stats">
         <div><b id="statProps">—</b><span>Active Properties</span></div>
-        <div><b>Flexible</b><span>Monthly ROI · Any Duration</span></div>
+        <div><b>Flexible</b><span>Monthly ROI, any duration</span></div>
         <div><b id="statInvestors">1000+</b><span>Investors Onboard</span></div>
       </div>
     </div>
@@ -598,17 +779,26 @@ tr:hover td{background:rgba(184,134,60,.05);}
     </div>
   </section>
 
-  <section>
+  <section class="home-why">
     <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">WHY INVEST OR PURCHASE WITH US</div>
+        <div class="section-eyebrow">Why invest or purchase with us</div>
         <h2>Property investment and purchase, made transparent.</h2>
         <p>Every opportunity we list is documented, priced, and clearly termed — whether you're investing for a return or purchasing a property outright, you know exactly what you're getting into.</p>
       </div>
       <div class="feat-grid">
-        <div class="feat"><div class="num">1</div><h3>Verified Properties</h3><p>Every listing includes title status, location details, and full property documentation before you commit — for investment or outright purchase.</p></div>
-        <div class="feat"><div class="num">2</div><h3>Fixed Returns</h3><p>Each investment opportunity carries a stated ROI and maturity date, calculated automatically the moment you invest.</p></div>
-        <div class="feat"><div class="num">3</div><h3>Track Everything</h3><p>Your personal dashboard shows active, completed, and historical investments in one place, always up to date.</p></div>
+        <div class="feat">
+          <div class="num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <div class="feat-body"><h3>Verified Properties</h3><p>Every listing includes title status, location details, and full property documentation before you commit — for investment or outright purchase.</p></div>
+        </div>
+        <div class="feat">
+          <div class="num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div>
+          <div class="feat-body"><h3>Fixed Returns</h3><p>Each investment opportunity carries a stated ROI and maturity date, calculated automatically the moment you invest.</p></div>
+        </div>
+        <div class="feat">
+          <div class="num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20v-8"/><path d="M12 20V4"/><path d="M19 20v-5"/><path d="M3 20h18"/></svg></div>
+          <div class="feat-body"><h3>Track Everything</h3><p>Your personal dashboard shows active, completed, and historical investments in one place, always up to date.</p></div>
+        </div>
       </div>
     </div>
   </section>
@@ -616,19 +806,19 @@ tr:hover td{background:rgba(184,134,60,.05);}
   <section class="section-alt">
     <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">FEATURED OPPORTUNITIES</div>
+        <div class="section-eyebrow">Featured opportunities</div>
         <h2>Current investment properties</h2>
         <p>A selection of available properties currently open for investment.</p>
       </div>
       <div class="prop-grid" id="homePropGrid"><div class="empty-state">Loading properties…</div></div>
-      <div style="text-align:center; margin-top:40px;"><a class="btn btn-dark" onclick="go('properties')">View All Properties</a></div>
+      <div class="section-cta"><a class="btn btn-dark" onclick="go('properties')">View All Properties</a></div>
     </div>
   </section>
 
   <section>
     <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">PLAN YOUR RETURNS</div>
+        <div class="section-eyebrow">Plan your returns</div>
         <h2>Investment Calculator</h2>
         <p>See what your money could earn before you commit — pick a live property or enter your own numbers.</p>
       </div>
@@ -667,7 +857,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
   <section id="testimonialsSection" class="section-alt hidden">
     <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">WHAT OUR CLIENTS SAY</div>
+        <div class="section-eyebrow">What our clients say</div>
         <h2>Trusted by investors and buyers</h2>
         <p>Real feedback from people who have invested in or purchased property with us.</p>
       </div>
@@ -678,19 +868,19 @@ tr:hover td{background:rgba(184,134,60,.05);}
   <section id="homePostsSection" class="hidden">
     <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">LATEST UPDATES</div>
+        <div class="section-eyebrow">Latest updates</div>
         <h2>News from Royal Luxury Mini Estate</h2>
         <p>Recent announcements and updates from our team.</p>
       </div>
       <div class="prop-grid" id="homePostsGrid"></div>
-      <div style="text-align:center; margin-top:40px;"><a class="btn btn-dark" onclick="go('posts')">View All Updates</a></div>
+      <div class="section-cta"><a class="btn btn-dark" onclick="go('posts')">View All Updates</a></div>
     </div>
   </section>
 
   <section class="section-alt">
     <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">GOT QUESTIONS?</div>
+        <div class="section-eyebrow">Got questions?</div>
         <h2>Frequently Asked Questions</h2>
         <p>Everything you need to know before you invest or buy with us.</p>
       </div>
@@ -1330,7 +1520,7 @@ tr:hover td{background:rgba(184,134,60,.05);}
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <div class="brand" style="margin-bottom:14px;"><img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo"><div class="brand-name">Royal Luxury <b>Mini Estate</b></div></div>
+        <div class="brand" style="margin-bottom:14px;"><img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('span'),{className:'crest',textContent:'R'}))"><div class="brand-name">Royal Luxury <b>Mini Estate</b></div></div>
         <p style="font-size:13.5px; max-width:320px;">Premium real estate investment opportunities in Abeokuta, Ogun State, Nigeria — built on transparency and trust.</p>
       </div>
       <div>
