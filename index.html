@@ -310,6 +310,25 @@ section{padding:84px 0;}
 .bulk-toolbar span{font-size:13px; font-weight:600; color:var(--ink);}
 .bulk-actions{display:flex; gap:8px; flex-wrap:wrap;}
 
+/* Property Comparison */
+.prop-cta-row{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+.compare-check{display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--muted-dark); cursor:pointer; white-space:nowrap;}
+.compare-check input{width:auto; margin:0; cursor:pointer;}
+.compare-bar{position:fixed; left:0; right:0; bottom:0; background:var(--ink); color:var(--cream); z-index:400; padding:14px 20px; box-shadow:0 -8px 24px rgba(0,0,0,.3); transform:translateY(120%); transition:transform .3s ease;}
+.compare-bar.show{transform:translateY(0);}
+.compare-bar-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.compare-chips{display:flex; gap:8px; flex-wrap:wrap;}
+.compare-chip{display:flex; align-items:center; gap:6px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); padding:6px 12px; border-radius:20px; font-size:12px;}
+.compare-chip button{background:none; border:none; color:var(--muted); cursor:pointer; font-size:15px; line-height:1; padding:0;}
+.compare-chip button:hover{color:var(--bad);}
+.compare-bar-actions{display:flex; gap:10px;}
+.compare-table{min-width:560px;}
+.compare-table th, .compare-table td{padding:12px 14px; border-bottom:1px solid var(--line); text-align:center; vertical-align:top;}
+.compare-table .compare-label{text-align:left; font-weight:600; color:var(--muted-dark); font-size:12.5px; white-space:nowrap; background:var(--cream);}
+.compare-col-head img{width:100%; max-width:160px; height:90px; object-fit:cover; border-radius:4px; margin-bottom:8px;}
+.compare-col-name{font-family:var(--serif); font-size:14px; font-weight:600;}
+@media(max-width:700px){.compare-bar-inner{flex-direction:column; align-items:stretch;} .compare-bar-actions{justify-content:flex-end;}}
+
 /* Banner Carousel (homepage advertising strip) */
 .banner-carousel{position:relative; width:100%; height:400px; overflow:hidden; background:var(--ink);}
 .banner-track{display:flex; height:100%; transition:transform .6s cubic-bezier(.65,0,.35,1);}
@@ -789,6 +808,26 @@ tr:hover td{background:rgba(184,134,60,.05);}
       <div class="prop-grid" id="allPropGrid"><div class="empty-state">Loading properties…</div></div>
     </div>
   </section>
+  <div class="compare-bar" id="compareBar">
+    <div class="compare-bar-inner">
+      <div class="compare-chips" id="compareChips"></div>
+      <div class="compare-bar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="clearCompare()">Clear</button>
+        <button class="btn btn-sm" id="compareNowBtn" onclick="openCompareModal()" disabled>Compare (<span id="compareCount">0</span>)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Property Comparison Modal -->
+<div class="modal-bg" id="compareModalBg">
+  <div class="modal wide">
+    <div class="modal-head"><h3>Compare Properties</h3><button class="modal-close" onclick="closeModal('compareModalBg')">&times;</button></div>
+    <div class="modal-body" id="compareModalBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('compareModalBg')">Close</button>
+    </div>
+  </div>
 </div>
 
 <!-- ============================================================= -->
@@ -994,8 +1033,8 @@ tr:hover td{background:rgba(184,134,60,.05);}
       <div class="dash-panel" id="dpanel-completed-inv">
         <div class="dash-head"><h2>Completed Investments</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('uCompletedTable','Completed Investments Statement')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('uCompletedTable','Completed Investments Statement','completed-investments')">⬇️ PDF</button></div></div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>Total Return</th><th>Maturity Date</th></tr></thead>
-          <tbody id="uCompletedTable"><tr><td colspan="5" class="small-muted" style="padding:20px;">No completed investments.</td></tr></tbody>
+          <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>Total Return</th><th>Maturity Date</th><th>Certificate</th></tr></thead>
+          <tbody id="uCompletedTable"><tr><td colspan="6" class="small-muted" style="padding:20px;">No completed investments.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -1902,6 +1941,7 @@ const db = firebase.firestore();
 let currentUser = null;      // firebase auth user
 let currentUserDoc = null;   // users/{uid} doc data
 let wishlist = [];           // array of property IDs saved by the current visitor
+let compareList = [];        // array of up to 3 property IDs selected for side-by-side comparison
 let isAdmin = false;
 let allProperties = [];
 let allInvestments = [];     // admin: all; user: own
@@ -2219,6 +2259,160 @@ function downloadPropertyBrochurePdf(id){
   downloadPdfFromHtml('property-' + (p.pid || p.id), 'Property Details — ' + (p.name||''), propertyBrochureBodyHtml(p));
 }
 
+/* ================= INVESTMENT CERTIFICATE (decorative landscape PDF) ================= */
+function downloadInvestmentCertificate(id){
+  const inv = allInvestments.find(x=>x.id===id);
+  if(!inv) return;
+  if(!['approved','withdrawal_requested','completed','withdrawn'].includes(inv.status)){
+    toast('Certificates are available once an investment has been approved.');
+    return;
+  }
+  if(typeof html2pdf === 'undefined'){ toast('PDF tool failed to load — check your connection and try again.'); return; }
+
+  const company = siteSettings.companyName || 'Royal Luxury Mini Estate';
+  const investorName = inv.userName || 'Valued Investor';
+  const issueDate = new Date().toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
+  const startDate = inv.createdAt ? fmtDate(inv.createdAt) : '—';
+  const maturityDate = inv.maturityDate ? fmtDate(inv.maturityDate) : '—';
+  const certNo = inv.investmentId || inv.id;
+
+  const html = `
+    <div style="width:1000px; padding:26px; background:#faf7ef; font-family:Georgia,'Times New Roman',serif; color:#14110d;">
+      <div style="border:2px solid #b8863c; padding:6px;">
+        <div style="border:1px solid #b8863c; padding:50px 60px; text-align:center; position:relative;">
+          <div style="font-size:12px; letter-spacing:4px; color:#b8863c; margin-bottom:6px;">${company.toUpperCase()}</div>
+          <div style="font-size:34px; font-weight:700; letter-spacing:2px; margin-bottom:6px;">CERTIFICATE OF INVESTMENT</div>
+          <div style="width:120px; height:2px; background:#b8863c; margin:14px auto 30px;"></div>
+
+          <div style="font-size:14px; color:#555; margin-bottom:10px;">This is to certify that</div>
+          <div style="font-size:30px; font-weight:600; margin-bottom:14px; border-bottom:1px solid #d8cba8; display:inline-block; padding:0 30px 8px;">${investorName}</div>
+          <div style="font-size:14px; color:#555; max-width:720px; margin:18px auto; line-height:1.8;">
+            has invested the sum of <b style="color:#b8863c; font-size:18px;">${fmtNaira(inv.amount)}</b> in
+            <b>${inv.propertyName||''}</b> under ${company}'s investment plan, at a fixed monthly return of
+            <b>${inv.roi||0}%</b> for a duration of <b>${inv.duration||0} months</b>, commencing
+            <b>${startDate}</b> and maturing on <b>${maturityDate}</b>.
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:60px; padding:0 20px;">
+            <div style="text-align:left; font-size:11.5px; color:#666;">
+              <div>Certificate No: <b style="color:#14110d;">${certNo}</b></div>
+              <div>Date Issued: <b style="color:#14110d;">${issueDate}</b></div>
+            </div>
+            <div style="width:90px; height:90px; border:2px solid #b8863c; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column; color:#b8863c; font-size:10px; letter-spacing:1px; text-align:center;">
+              <div style="font-size:20px;">★</div>
+              <div>OFFICIAL<br>SEAL</div>
+            </div>
+            <div style="text-align:center; font-size:11.5px; color:#666;">
+              <div style="border-bottom:1px solid #14110d; width:160px; margin-bottom:6px;">&nbsp;</div>
+              <div>Authorized Signatory</div>
+              <div style="font-weight:600; color:#14110d;">${company}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed; left:-9999px; top:0;';
+  wrapper.innerHTML = html;
+  document.body.appendChild(wrapper);
+
+  const opt = {
+    margin: 0,
+    filename: 'investment-certificate-' + certNo + '.pdf',
+    image: { type:'jpeg', quality:0.98 },
+    html2canvas: { scale:2, useCORS:true, backgroundColor:'#faf7ef' },
+    jsPDF: { unit:'mm', format:'a4', orientation:'landscape' }
+  };
+  toast('Preparing certificate…');
+  html2pdf().set(opt).from(wrapper).save().then(()=>{
+    document.body.removeChild(wrapper);
+  }).catch((e)=>{
+    console.warn(e);
+    if(wrapper.parentNode) document.body.removeChild(wrapper);
+    toast('Could not generate certificate PDF.');
+  });
+}
+
+function downloadPurchaseCertificate(id){
+  const pu = allPurchases.find(x=>x.id===id);
+  if(!pu) return;
+  if(!['approved','completed'].includes(pu.status)){
+    toast('Certificates are available once a purchase has been approved.');
+    return;
+  }
+  if(typeof html2pdf === 'undefined'){ toast('PDF tool failed to load — check your connection and try again.'); return; }
+
+  const company = siteSettings.companyName || 'Royal Luxury Mini Estate';
+  const buyerName = pu.userName || 'Valued Client';
+  const issueDate = new Date().toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
+  const purchaseDate = pu.createdAt ? fmtDate(pu.createdAt) : '—';
+  const certNo = pu.purchaseId || pu.id;
+  const planText = pu.paymentPlan==='full' ? 'Full Payment' : `Installment Plan (${pu.months||0} months)`;
+  const paymentStatus = pu.paymentPlan==='full'
+    ? 'Fully Paid'
+    : (Number(pu.monthsPaid)||0) >= (pu.months||0) ? 'Fully Paid' : `${Number(pu.monthsPaid)||0} of ${pu.months||0} installments paid`;
+
+  const html = `
+    <div style="width:1000px; padding:26px; background:#faf7ef; font-family:Georgia,'Times New Roman',serif; color:#14110d;">
+      <div style="border:2px solid #b8863c; padding:6px;">
+        <div style="border:1px solid #b8863c; padding:50px 60px; text-align:center; position:relative;">
+          <div style="font-size:12px; letter-spacing:4px; color:#b8863c; margin-bottom:6px;">${company.toUpperCase()}</div>
+          <div style="font-size:34px; font-weight:700; letter-spacing:2px; margin-bottom:6px;">CERTIFICATE OF PURCHASE</div>
+          <div style="width:120px; height:2px; background:#b8863c; margin:14px auto 30px;"></div>
+
+          <div style="font-size:14px; color:#555; margin-bottom:10px;">This is to certify that</div>
+          <div style="font-size:30px; font-weight:600; margin-bottom:14px; border-bottom:1px solid #d8cba8; display:inline-block; padding:0 30px 8px;">${buyerName}</div>
+          <div style="font-size:14px; color:#555; max-width:720px; margin:18px auto; line-height:1.8;">
+            has entered into an agreement to purchase <b>${pu.propertyName||''}</b> from ${company}
+            for the total sum of <b style="color:#b8863c; font-size:18px;">${fmtNaira(pu.totalPayable)}</b>,
+            under a <b>${planText}</b>, recorded on <b>${purchaseDate}</b>.
+            <br><br>Payment Status: <b>${paymentStatus}</b>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:50px; padding:0 20px;">
+            <div style="text-align:left; font-size:11.5px; color:#666;">
+              <div>Certificate No: <b style="color:#14110d;">${certNo}</b></div>
+              <div>Date Issued: <b style="color:#14110d;">${issueDate}</b></div>
+            </div>
+            <div style="width:90px; height:90px; border:2px solid #b8863c; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column; color:#b8863c; font-size:10px; letter-spacing:1px; text-align:center;">
+              <div style="font-size:20px;">★</div>
+              <div>OFFICIAL<br>SEAL</div>
+            </div>
+            <div style="text-align:center; font-size:11.5px; color:#666;">
+              <div style="border-bottom:1px solid #14110d; width:160px; margin-bottom:6px;">&nbsp;</div>
+              <div>Authorized Signatory</div>
+              <div style="font-weight:600; color:#14110d;">${company}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed; left:-9999px; top:0;';
+  wrapper.innerHTML = html;
+  document.body.appendChild(wrapper);
+
+  const opt = {
+    margin: 0,
+    filename: 'purchase-certificate-' + certNo + '.pdf',
+    image: { type:'jpeg', quality:0.98 },
+    html2canvas: { scale:2, useCORS:true, backgroundColor:'#faf7ef' },
+    jsPDF: { unit:'mm', format:'a4', orientation:'landscape' }
+  };
+  toast('Preparing certificate…');
+  html2pdf().set(opt).from(wrapper).save().then(()=>{
+    document.body.removeChild(wrapper);
+  }).catch((e)=>{
+    console.warn(e);
+    if(wrapper.parentNode) document.body.removeChild(wrapper);
+    toast('Could not generate certificate PDF.');
+  });
+}
+
 /* ================= SETTINGS ================= */
 function applySettingsToUI(){
   document.getElementById('cEmail').textContent = siteSettings.email;
@@ -2330,6 +2524,16 @@ async function loginUser(e){
   }finally{
     btn.disabled=false; btn.textContent='Login';
   }
+}
+
+/* Converts a customer-typed phone number (often local Nigerian format, e.g. 07080951392)
+   into the international digits-only format WhatsApp's wa.me links require (2347080951392). */
+function toWhatsAppNumber(phone){
+  let digits = (phone||'').replace(/[^0-9]/g,'');
+  if(!digits) return '';
+  if(digits.startsWith('0')) digits = '234' + digits.slice(1);
+  else if(digits.length===10 && !digits.startsWith('234')) digits = '234' + digits;
+  return digits;
 }
 
 function togglePasswordVisibility(inputId, btn){
@@ -2503,7 +2707,7 @@ function badgeClass(status){
   return '';
 }
 
-function propCardHtml(p){
+function propCardHtml(p, withCompare){
   const img = (p.images && p.images[0]) || '';
   const photoCount = (p.images && p.images.length) || 0;
   const tags = (p.tags||[]).slice(0,3);
@@ -2533,7 +2737,10 @@ function propCardHtml(p){
         <span><b>${fmtNaira(p.minInvestment)}</b> Min. Invest</span>
       </div>
       ${tags.length ? `<div class="prop-tags">${tags.map(t=>`<span>${t}</span>`).join('')}</div>` : ''}
-      <div class="prop-cta">View Details →</div>
+      <div class="prop-cta-row">
+        <span class="prop-cta">View Details →</span>
+        ${withCompare ? `<label class="compare-check" onclick="event.stopPropagation();"><input type="checkbox" onchange="toggleCompare('${p.id}', this)" ${compareList.includes(p.id)?'checked':''}> Compare</label>` : ''}
+      </div>
     </div>
     <div class="prop-footer">
       <div class="prop-agent-avatar">${initials}</div>
@@ -2548,7 +2755,7 @@ function propCardHtml(p){
 function renderHomeProperties(){
   const grid = document.getElementById('homePropGrid');
   const list = allProperties.filter(p=>p.status==='Available').slice(0,3);
-  grid.innerHTML = list.length ? list.map(propCardHtml).join('') : '<div class="empty-state">No properties listed yet. Check back soon.</div>';
+  grid.innerHTML = list.length ? list.map(p=>propCardHtml(p)).join('') : '<div class="empty-state">No properties listed yet. Check back soon.</div>';
 }
 
 function renderProperties(){
@@ -2575,7 +2782,78 @@ function renderProperties(){
 
   const countEl = document.getElementById('propResultsCount');
   if(countEl) countEl.textContent = list.length + ' propert' + (list.length===1?'y':'ies') + ' found';
-  grid.innerHTML = list.length ? list.map(propCardHtml).join('') : '<div class="empty-state">No properties match your search.</div>';
+  grid.innerHTML = list.length ? list.map(p=>propCardHtml(p, true)).join('') : '<div class="empty-state">No properties match your search.</div>';
+}
+
+/* ================= PROPERTY COMPARISON ================= */
+function toggleCompare(id, checkboxEl){
+  if(checkboxEl.checked){
+    if(compareList.length>=3){
+      checkboxEl.checked = false;
+      toast('You can compare up to 3 properties at a time.');
+      return;
+    }
+    if(!compareList.includes(id)) compareList.push(id);
+  } else {
+    compareList = compareList.filter(x=>x!==id);
+  }
+  updateCompareBar();
+}
+function removeFromCompare(id){
+  compareList = compareList.filter(x=>x!==id);
+  updateCompareBar();
+  renderProperties();
+}
+function clearCompare(){
+  compareList = [];
+  updateCompareBar();
+  renderProperties();
+}
+function updateCompareBar(){
+  const bar = document.getElementById('compareBar');
+  const chips = document.getElementById('compareChips');
+  const countEl = document.getElementById('compareCount');
+  const btn = document.getElementById('compareNowBtn');
+  if(!bar) return;
+  bar.classList.toggle('show', compareList.length>0);
+  chips.innerHTML = compareList.map(id=>{
+    const p = allProperties.find(x=>x.id===id);
+    return p ? `<span class="compare-chip">${p.name}<button onclick="removeFromCompare('${id}')" aria-label="Remove">&times;</button></span>` : '';
+  }).join('');
+  countEl.textContent = compareList.length;
+  btn.disabled = compareList.length < 2;
+}
+function openCompareModal(){
+  if(compareList.length<2) return;
+  const props = compareList.map(id=>allProperties.find(p=>p.id===id)).filter(Boolean);
+  const rows = [
+    {label:'Price', get:p=>fmtNaira(p.price)},
+    {label:'Type', get:p=>p.type||'—'},
+    {label:'Status', get:p=>p.status||'—'},
+    {label:'Location', get:p=>p.location||'—'},
+    {label:'Monthly ROI', get:p=>(p.roi||0)+'%'},
+    {label:'Duration', get:p=>(p.duration||0)+' months'},
+    {label:'Min. Investment', get:p=>fmtNaira(p.minInvestment)},
+    {label:'Bedrooms', get:p=>p.bedrooms||'—'},
+    {label:'Bathrooms', get:p=>p.bathrooms||'—'},
+    {label:'Features', get:p=>(p.tags&&p.tags.length)?p.tags.join(', '):'—'}
+  ];
+  let html = '<div class="table-wrap"><table class="compare-table"><thead><tr><th></th>';
+  props.forEach(p=>{
+    const img = (p.images && p.images[0]) || '';
+    html += `<th><div class="compare-col-head">${img?`<img src="${img}">`:''}<div class="compare-col-name">${p.name}</div></div></th>`;
+  });
+  html += '</tr></thead><tbody>';
+  rows.forEach(r=>{
+    html += `<tr><td class="compare-label">${r.label}</td>`;
+    props.forEach(p=>{ html += `<td>${r.get(p)}</td>`; });
+    html += '</tr>';
+  });
+  html += `<tr><td></td>`;
+  props.forEach(p=>{ html += `<td><button class="btn btn-sm btn-block" onclick="closeModal('compareModalBg'); viewProperty('${p.id}');">View Property</button></td>`; });
+  html += '</tr></tbody></table></div>';
+  document.getElementById('compareModalBody').innerHTML = html;
+  openModalEl('compareModalBg');
 }
 
 function clearPropertyFilters(){
@@ -3629,6 +3907,9 @@ function renderUserPurchases(){
         actionHtml = '<span class="small-muted">Awaiting approval</span>';
       }
     }
+    if(pu.status==='approved' || pu.status==='completed'){
+      actionHtml += `<br><button class="btn btn-ghost btn-sm" style="margin-top:6px;" onclick="downloadPurchaseCertificate('${pu.id}')">🎓 Certificate</button>`;
+    }
     return `
     <tr><td>${pu.purchaseId}</td><td>${pu.propertyName}</td>
     <td>${pu.paymentPlan==='full' ? 'Full Payment' : 'Installment ('+pu.months+' mo)'}</td>
@@ -3653,7 +3934,7 @@ async function loadUserInvestments(){
   if(!currentUser) return;
   ['uRecentTable','uActiveTable','uCompletedTable','uHistoryTable'].forEach(id=>{
     const el = document.getElementById(id);
-    if(el) el.innerHTML = skeletonTableRows(id==='uActiveTable' ? 8 : id==='uRecentTable' ? 6 : 5);
+    if(el) el.innerHTML = skeletonTableRows(id==='uActiveTable' ? 8 : id==='uRecentTable' ? 6 : id==='uCompletedTable' ? 6 : 5);
   });
   try{
     const snap = await db.collection('investments').where('userId','==',currentUser.uid).get();
@@ -3728,6 +4009,9 @@ function renderUserDashboard(){
     } else {
       actionHtml = '<span class="small-muted">—</span>';
     }
+    if(i.status==='approved' || i.status==='withdrawal_requested'){
+      actionHtml += `<br><button class="btn btn-ghost btn-sm" style="margin-top:6px;" onclick="downloadInvestmentCertificate('${i.id}')">🎓 Certificate</button>`;
+    }
     return `
     <tr><td>${i.investmentId}</td><td>${i.propertyName}</td><td>${fmtNaira(i.amount)}</td><td>${i.roi}%/mo</td>
     <td>${fmtNaira(investmentCurrentValue(i))}</td><td>${fmtDate(i.maturityDate)}</td><td><span class="badge badge-${i.status}">${i.status.replace('_',' ')}</span></td>
@@ -3735,8 +4019,9 @@ function renderUserDashboard(){
   }).join('') || '<tr><td colspan="8" class="small-muted" style="padding:20px;">No active investments.</td></tr>';
 
   document.getElementById('uCompletedTable').innerHTML = completed.map(i=>`
-    <tr><td>${i.investmentId}</td><td>${i.propertyName}</td><td>${fmtNaira(i.amount)}</td><td>${fmtNaira(i.totalReturn)}</td><td>${fmtDate(i.maturityDate)}</td></tr>
-  `).join('') || '<tr><td colspan="5" class="small-muted" style="padding:20px;">No completed investments.</td></tr>';
+    <tr><td>${i.investmentId}</td><td>${i.propertyName}</td><td>${fmtNaira(i.amount)}</td><td>${fmtNaira(i.totalReturn)}</td><td>${fmtDate(i.maturityDate)}</td>
+    <td><button class="btn btn-ghost btn-sm" onclick="downloadInvestmentCertificate('${i.id}')">🎓 Certificate</button></td></tr>
+  `).join('') || '<tr><td colspan="6" class="small-muted" style="padding:20px;">No completed investments.</td></tr>';
 
   document.getElementById('uHistoryTable').innerHTML = allInvestments.map(i=>`
     <tr><td>${i.investmentId}</td><td>${i.propertyName}</td><td>${fmtNaira(i.amount)}</td>
@@ -4189,7 +4474,7 @@ function renderAdminMessages(){
   });
   document.getElementById('aMsgTable').innerHTML = list.map(m=>{
     const st = m.status || 'new';
-    const waLink = m.phone ? 'https://wa.me/' + m.phone.replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent('Hi ' + (m.name||'') + ', thanks for reaching out to Royal Luxury Mini Estate — ') : '';
+    const waLink = m.phone ? 'https://wa.me/' + toWhatsAppNumber(m.phone) + '?text=' + encodeURIComponent('Hi ' + (m.name||'') + ', thanks for reaching out to Royal Luxury Mini Estate — ') : '';
     return `
     <tr>
       <td>${m.name||''}</td><td>${m.email||''}</td><td>${m.phone||'—'}</td>
@@ -4532,7 +4817,7 @@ function viewInvestmentDetail(id){
   } else if(i.status==='withdrawal_requested'){
     actions = `<button class="btn btn-sm" onclick="updateInvestmentStatus('${i.id}','withdrawn')">Mark Withdrawn (Paid)</button>`;
   }
-  document.getElementById('invDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('invDetailBody','Investment Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('invDetailBody','Investment Details','investment-details')">⬇️ PDF</button>` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('invDetailModalBg')">Close</button>`;
+  document.getElementById('invDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('invDetailBody','Investment Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('invDetailBody','Investment Details','investment-details')">⬇️ PDF</button>${(i.status==='approved'||i.status==='withdrawal_requested'||i.status==='completed'||i.status==='withdrawn') ? `<button class="btn btn-ghost btn-sm" onclick="downloadInvestmentCertificate('${i.id}')">🎓 Certificate</button>` : ''}` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('invDetailModalBg')">Close</button>`;
   openModalEl('invDetailModalBg');
 }
 
@@ -4650,7 +4935,7 @@ function viewPurchaseDetail(id){
   } else if(pu.status==='approved'){
     actions = `<button class="btn btn-sm" onclick="updatePurchaseStatus('${pu.id}','completed')">Mark Completed</button>`;
   }
-  document.getElementById('purchaseDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('purchaseDetailBody','Purchase Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('purchaseDetailBody','Purchase Details','purchase-details')">⬇️ PDF</button>` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('purchaseDetailModalBg')">Close</button>`;
+  document.getElementById('purchaseDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('purchaseDetailBody','Purchase Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('purchaseDetailBody','Purchase Details','purchase-details')">⬇️ PDF</button>${(pu.status==='approved'||pu.status==='completed') ? `<button class="btn btn-ghost btn-sm" onclick="downloadPurchaseCertificate('${pu.id}')">🎓 Certificate</button>` : ''}` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('purchaseDetailModalBg')">Close</button>`;
   openModalEl('purchaseDetailModalBg');
   if(pu.paymentPlan==='installment') loadInstallmentPaymentsForAdmin(pu.id);
 }
