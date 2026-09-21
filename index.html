@@ -31,8 +31,6 @@
 <link rel="apple-touch-icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Manrope:wght@400..800&display=swap" rel="stylesheet">
 
 <!-- Structured data for search engines -->
 <script type="application/ld+json">
@@ -534,223 +532,6 @@ tr:hover td{background:rgba(184,134,60,.05);}
 .section-title-sm{font-family:var(--serif); font-size:18px; margin:22px 0 12px; font-weight:500;}
 .divider{height:1px; background:var(--line); margin:24px 0;}
 .small-muted{font-size:12.5px; color:var(--muted-dark);}
-/* =====================================================================
-   HOMEPAGE UPGRADE
-   Everything in this block is scoped to the homepage (#page-home) so no
-   other page is affected. The site header/footer only pick up the new
-   fonts while the homepage is showing.
-   ===================================================================== */
-#page-home,
-body:has(#page-home.active) #nav,
-body:has(#page-home.active) footer{
-  --serif:'Bodoni Moda','Didot','Bodoni 72',Georgia,serif;
-  --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  font-family:var(--sans);
-  font-optical-sizing:auto;
-}
-#page-home{
-  --gold-text:#83591b;           /* darker gold: readable on cream/paper */
-  --hero-muted:#c2b8a6;
-  line-height:1.65;
-}
-#page-home a,
-body:has(#page-home.active) #nav a,
-body:has(#page-home.active) footer a{cursor:pointer;}
-#page-home h1,#page-home h2,#page-home h3{font-family:var(--serif); text-wrap:balance;}
-#page-home button:focus-visible,
-#page-home select:focus-visible,
-#page-home input:focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
-
-/* ---- buttons ---- */
-#page-home .btn{padding:15px 28px; font-size:14.5px; font-weight:700; letter-spacing:.01em; border-radius:2px;}
-#page-home .btn-dark:hover{background:var(--gold); border-color:var(--gold); color:var(--ink);}
-
-/* ---- hero ---- */
-#page-home .hero{
-  padding:clamp(44px,5.5vw,72px) 0 0;
-  background:
-    radial-gradient(55% 75% at 88% 25%, rgba(184,134,60,.17), transparent 62%),
-    radial-gradient(45% 55% at 0% 0%, rgba(184,134,60,.09), transparent 60%),
-    linear-gradient(180deg, var(--ink) 0%, #191510 100%);
-}
-#page-home .hero::before{display:none;}
-#page-home .hero-inner{
-  padding:0 24px;
-  grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
-  gap:clamp(36px,5vw,72px);
-  align-items:center;
-}
-#page-home .hero-eyebrow{font-size:14px; font-weight:600; letter-spacing:.02em; margin-bottom:26px; gap:14px;}
-#page-home .hero-eyebrow::before{width:36px;}
-#page-home .hero h1{
-  font-size:clamp(38px,4.8vw,64px); font-weight:500; line-height:1.06;
-  letter-spacing:-.015em; color:var(--cream); max-width:13em;
-}
-#page-home .hero p{margin-top:26px; font-size:clamp(16px,1.3vw,18px); line-height:1.75; color:var(--hero-muted); max-width:34em;}
-#page-home .hero-actions{margin-top:38px; gap:12px;}
-#page-home .hero .btn-outline{border-color:rgba(246,241,231,.4);}
-
-/* hero drawing: illustrative estate layout plan */
-#page-home .hero-plan{margin:0; width:100%; max-width:520px; justify-self:end;}
-#page-home .hero-plan svg{display:block; width:100%; height:auto;}
-#page-home .plan-line{fill:none; stroke:rgba(217,178,106,.62); stroke-width:1;}
-#page-home .plan-faint{stroke:rgba(217,178,106,.28);}
-#page-home .plan-dash{fill:none; stroke:rgba(246,241,231,.22); stroke-width:1; stroke-dasharray:1;}
-#page-home .plan-round{fill:none; stroke:rgba(217,178,106,.7); stroke-width:1;}
-#page-home .plan-hi{fill:rgba(217,178,106,.24);}
-#page-home .plan-north{fill:none; stroke:var(--gold-light); stroke-width:1;}
-#page-home .plan-scale{fill:none; stroke:var(--gold-light); stroke-width:1;}
-#page-home .hero-plan text{font-family:var(--sans); font-size:9.5px; font-weight:600; fill:rgba(246,241,231,.42); letter-spacing:.04em;}
-#page-home .hero-plan .plan-txt-hi{fill:var(--gold-light);}
-#page-home .plan-draw{stroke-dasharray:1; stroke-dashoffset:1; animation:planDraw 1.5s cubic-bezier(.4,0,.2,1) forwards; animation-delay:calc(var(--i,0) * 40ms + .15s);}
-#page-home .plan-hi,#page-home .plan-txt{opacity:0; animation:planFade .8s ease forwards;}
-#page-home .plan-txt{animation-delay:1.5s;}
-#page-home .plan-hi{animation-delay:1.9s;}
-@keyframes planDraw{to{stroke-dashoffset:0;}}
-@keyframes planFade{to{opacity:1;}}
-@media(prefers-reduced-motion:reduce){
-  #page-home .plan-draw{animation:none; stroke-dashoffset:0;}
-  #page-home .plan-hi,#page-home .plan-txt{animation:none; opacity:1;}
-}
-
-/* hero stats strip */
-#page-home .hero-stats{
-  grid-column:1/-1; grid-template-columns:repeat(3,1fr);
-  margin-top:clamp(28px,4vw,44px); padding-top:0;
-  border-top:1px solid rgba(217,178,106,.32);
-}
-#page-home .hero-stats div{padding:30px 24px 34px 0; border-right:1px solid var(--line);}
-#page-home .hero-stats div + div{padding-left:clamp(20px,3vw,40px);}
-#page-home .hero-stats div:last-child{border-right:none;}
-#page-home .hero-stats b{
-  font-family:var(--serif); font-size:clamp(30px,3.6vw,46px); font-weight:500; line-height:1.1;
-  color:var(--gold-light); margin-bottom:8px; font-variant-numeric:lining-nums;
-}
-#page-home .hero-stats span{font-size:14px; font-weight:500; color:var(--hero-muted); letter-spacing:0;}
-
-/* ---- sections ---- */
-#page-home section{padding:clamp(64px,8vw,112px) 0;}
-#page-home #bannerSection{padding:0;}
-#page-home .section-head{max-width:none; margin-bottom:clamp(36px,4.5vw,56px);}
-#page-home .section-eyebrow{
-  display:flex; align-items:center; gap:12px;
-  font-size:14px; font-weight:700; letter-spacing:.01em; color:var(--gold-text); margin-bottom:16px;
-}
-#page-home .section-eyebrow::before{content:''; width:28px; height:1px; background:currentColor;}
-#page-home .section-head h2{
-  font-size:clamp(30px,3.9vw,50px); font-weight:500; line-height:1.1;
-  letter-spacing:-.012em; max-width:15em;
-}
-#page-home .section-head p{margin-top:18px; font-size:16.5px; line-height:1.75; color:var(--muted-dark); max-width:34em;}
-#page-home .section-head.split{display:flex; align-items:flex-end; justify-content:space-between; gap:24px 48px; flex-wrap:wrap;}
-#page-home .section-head.split > div{max-width:640px;}
-#page-home .section-alt{border-color:rgba(184,134,60,.22);}
-
-/* why us: heading on the left, three benefits on the right */
-#page-home .why-grid{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(40px,6vw,96px); align-items:start;}
-#page-home .why-grid .section-head{margin-bottom:0; position:sticky; top:112px;}
-#page-home .feat-grid{display:block; background:none; border:0; border-top:1px solid var(--line);}
-#page-home .feat{display:grid; grid-template-columns:52px minmax(0,1fr); gap:clamp(18px,2.4vw,28px); padding:34px 0; background:none; border-bottom:1px solid var(--line);}
-#page-home .feat .num{width:52px; height:52px; margin:0; border:1px solid rgba(184,134,60,.45); color:var(--gold-text); border-radius:50%;}
-#page-home .feat .num svg{width:23px; height:23px;}
-#page-home .feat h3{font-size:24px; font-weight:500; line-height:1.2; margin:2px 0 10px;}
-#page-home .feat p{font-size:15.5px; line-height:1.75; color:var(--muted-dark); max-width:34em;}
-
-/* property + update cards */
-#page-home .prop-grid{gap:28px;}
-#page-home .prop-card{display:flex; flex-direction:column; border-radius:2px; transition:transform .25s, box-shadow .25s, border-color .25s;}
-#page-home .prop-card:hover{transform:translateY(-3px); border-color:rgba(184,134,60,.55);}
-#page-home .prop-img{height:auto; aspect-ratio:16/11;}
-#page-home .prop-body{flex:1; display:flex; flex-direction:column; padding:22px 22px 20px;}
-#page-home .prop-title{font-size:21px; font-weight:600; line-height:1.25; margin-bottom:8px;}
-#page-home .prop-loc{font-size:13.5px; margin-bottom:12px;}
-#page-home .prop-price-lg{font-family:var(--sans); font-size:23px; font-weight:800; letter-spacing:-.02em; margin-bottom:14px;}
-#page-home .prop-specs{gap:8px 18px; font-size:13px; padding:14px 0 0; border-top:1px solid var(--line); margin-bottom:14px;}
-#page-home .prop-tags span{color:var(--gold-text); border-color:rgba(184,134,60,.4);}
-#page-home .prop-cta-row{margin-top:auto; padding-top:2px;}
-#page-home .prop-cta{font-size:13.5px; font-weight:700; letter-spacing:0; color:var(--gold-text); margin-bottom:0;}
-#page-home .prop-roi{font-weight:800;}
-#page-home .prop-footer{margin:0; padding:14px 22px; background:rgba(184,134,60,.05);}
-#page-home .prop-agent-avatar{font-weight:600;}
-#page-home .prop-footer .fname{font-size:13px; font-weight:700;}
-#page-home .prop-footer .fsub{font-size:11.5px;}
-#page-home .prop-body .ploc{font-size:13px; font-weight:700; letter-spacing:0; color:var(--gold-text); margin-bottom:10px;}
-#page-home .prop-body h3:not(.prop-title){font-size:22px; font-weight:500; line-height:1.25; margin-bottom:10px;}
-#page-home .prop-body > p{font-size:14.5px; line-height:1.7; color:var(--muted-dark);}
-#page-home .empty-state{font-size:15px;}
-
-/* investment calculator */
-#page-home .calc-card{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); border-radius:2px; overflow:hidden;}
-#page-home .calc-form{padding:clamp(26px,4vw,46px);}
-#page-home .calc-form .field-row{display:flex; gap:16px;}
-#page-home .field{margin-bottom:20px;}
-#page-home .field label{font-size:13px; font-weight:700; letter-spacing:0; color:var(--ink); margin-bottom:8px;}
-#page-home .field input,#page-home .field select{padding:14px 16px; font-size:15.5px; font-weight:500; border-radius:2px;}
-#page-home .field input:focus,#page-home .field select:focus{border-color:var(--gold); box-shadow:0 0 0 3px rgba(184,134,60,.18);}
-#page-home .calc-form .small-muted{font-size:13px; line-height:1.6;}
-#page-home .calc-result{
-  padding:clamp(28px,4vw,48px);
-  background:radial-gradient(90% 70% at 100% 0%, rgba(184,134,60,.18), transparent 65%), var(--ink);
-}
-#page-home .calc-result-row{padding:17px 0; font-size:14.5px; color:var(--hero-muted);}
-#page-home .calc-result-row b{font-family:var(--sans); font-size:18px; font-weight:700; color:var(--cream); font-variant-numeric:tabular-nums;}
-#page-home .calc-result-total{flex-direction:column; align-items:flex-start; gap:8px; padding-top:28px; font-size:14px; font-weight:600; color:var(--gold-light);}
-#page-home .calc-result-total b{font-family:var(--sans); font-size:clamp(30px,3.6vw,42px); font-weight:800; letter-spacing:-.02em; line-height:1.1; color:var(--gold-light); font-variant-numeric:tabular-nums;}
-#page-home .calc-result .btn{margin-top:28px !important;}
-
-/* testimonials */
-#page-home .testi-card{padding:30px; border-radius:2px;}
-#page-home .testi-stars{color:var(--gold); letter-spacing:2px; margin-bottom:16px;}
-#page-home .testi-text{font-family:var(--sans); font-style:normal; font-size:16px; line-height:1.75; margin-bottom:24px;}
-#page-home .testi-avatar{font-weight:600;}
-#page-home .testi-name{font-size:13.5px; font-weight:700;}
-#page-home .testi-prop{font-size:12.5px;}
-
-/* FAQ: heading on the left, questions on the right */
-#page-home .faq-grid{display:grid; grid-template-columns:minmax(0,4fr) minmax(0,7fr); gap:clamp(40px,6vw,96px); align-items:start;}
-#page-home .faq-grid .section-head{margin-bottom:0; position:sticky; top:112px;}
-#page-home .faq-list{max-width:none; margin:0;}
-#page-home .faq-q{font-size:19px; font-weight:500; line-height:1.3; padding:24px 0; gap:24px;}
-#page-home .faq-icon{font-size:24px; color:var(--gold-text);}
-#page-home .faq-a p{padding:0 48px 28px 0; font-size:15.5px; line-height:1.75; max-width:none;}
-
-/* closing call to action */
-#page-home .cta-band{
-  padding:clamp(64px,8vw,104px) 0; border-top:1px solid var(--line);
-  background:radial-gradient(60% 120% at 50% 0%, rgba(184,134,60,.16), transparent 65%), linear-gradient(120deg,var(--ink),#241d14);
-}
-#page-home .cta-band h2{font-size:clamp(30px,4.2vw,52px); font-weight:500; line-height:1.1; letter-spacing:-.012em; margin-bottom:18px;}
-#page-home .cta-band p{font-size:17px; line-height:1.7; color:var(--hero-muted); max-width:32em; margin-bottom:34px;}
-
-/* Cookie banner: the "Decline" label was dark text on a dark bar (invisible) */
-.cookie-banner .btn-ghost{color:var(--cream); border-color:rgba(246,241,231,.35);}
-.cookie-banner .btn-ghost:hover{background:rgba(246,241,231,.1);}
-
-/* ---- homepage responsive ---- */
-@media(max-width:980px){
-  #page-home .hero-inner{grid-template-columns:1fr;}
-  #page-home .hero-stats{order:2; margin-top:8px;}
-  #page-home .hero-plan{order:3; justify-self:center; max-width:400px; margin:16px 0 48px;}
-  #page-home .why-grid,#page-home .faq-grid{grid-template-columns:1fr; gap:40px;}
-  #page-home .why-grid .section-head,#page-home .faq-grid .section-head{position:static;}
-  #page-home .calc-card{grid-template-columns:1fr;}
-}
-@media(max-width:640px){
-  #page-home .hero-stats{grid-template-columns:1fr;}
-  #page-home .hero-stats div,#page-home .hero-stats div + div{
-    display:flex; justify-content:space-between; align-items:baseline; gap:16px;
-    padding:18px 0; border-right:none; border-bottom:1px solid var(--line);
-  }
-  #page-home .hero-stats div:last-child{border-bottom:none;}
-  #page-home .hero-stats b{margin-bottom:0;}
-  #page-home .hero-stats span{text-align:right;}
-  #page-home .hero-actions .btn{flex:1 1 100%;}
-  #page-home .feat{grid-template-columns:44px minmax(0,1fr); padding:28px 0;}
-  #page-home .feat .num{width:44px; height:44px;}
-  #page-home .calc-form .field-row{flex-direction:column; gap:0;}
-  #page-home .faq-a p{padding-right:0;}
-  #page-home .section-head.split .btn{width:100%;}
-}
 </style>
 </head>
 <body>
@@ -759,7 +540,7 @@ body:has(#page-home.active) footer a{cursor:pointer;}
 <nav id="nav">
   <div class="nav-inner">
     <div class="brand" onclick="go('home')">
-      <img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('span'),{className:'crest',textContent:'R'}))">
+      <img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo">
       <div class="brand-name">Royal Luxury <b>Mini Estate</b></div>
     </div>
     <div class="nav-links" id="navLinks">
@@ -789,86 +570,20 @@ body:has(#page-home.active) footer a{cursor:pointer;}
 <!-- HOME -->
 <!-- ============================================================= -->
 <div class="page active" id="page-home">
-  <div class="hero home-hero">
+  <div class="hero">
     <div class="hero-inner">
-      <div class="hero-copy">
-        <div class="hero-eyebrow">Abeokuta, Ogun State, Nigeria</div>
-        <h1>Build wealth through curated real estate investment &amp; purchase.</h1>
+      <div>
+        <div class="hero-eyebrow">ABEOKUTA · OGUN STATE · NIGERIA</div>
+        <h1>Build wealth through <em>curated</em> real estate investment &amp; purchase.</h1>
         <p>Royal Luxury Mini Estate gives discerning investors and buyers direct access to premium land and property opportunities across Abeokuta — whether you're investing for returns or purchasing property outright, with transparent terms and verified titles.</p>
         <div class="hero-actions">
           <a class="btn" onclick="go('properties')">View Investment &amp; Purchase Options</a>
           <a class="btn btn-outline" onclick="go('about')">Learn About Us</a>
         </div>
       </div>
-      <figure class="hero-plan" aria-hidden="true">
-        <svg viewBox="0 0 480 470" xmlns="http://www.w3.org/2000/svg">
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:1" x="20" y="40" width="440" height="400"/>
-        <rect class="plan-line plan-draw plan-faint" pathLength="1" style="--i:2" x="26" y="46" width="428" height="388"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:3" x="36" y="56" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:4" x="124" y="56" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:5" x="36" y="108" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:6" x="124" y="108" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:7" x="36" y="160" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:8" x="124" y="160" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:9" x="268" y="56" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:10" x="356" y="56" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:11" x="268" y="108" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:12" x="356" y="108" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:13" x="268" y="160" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:14" x="356" y="160" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:15" x="36" y="268" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:16" x="124" y="268" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:17" x="36" y="320" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:18" x="124" y="320" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:19" x="36" y="372" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:20" x="124" y="372" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:21" x="268" y="268" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:22" x="356" y="268" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:23" x="268" y="320" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:24" x="356" y="320" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:25" x="268" y="372" width="88" height="52"/>
-        <rect class="plan-line plan-draw" pathLength="1" style="--i:26" x="356" y="372" width="88" height="52"/>
-        <rect class="plan-hi" x="37" y="109" width="86" height="50"/>
-        <rect class="plan-hi" x="357" y="57" width="86" height="50"/>
-        <rect class="plan-hi" x="357" y="109" width="86" height="50"/>
-        <rect class="plan-hi" x="125" y="269" width="86" height="50"/>
-        <rect class="plan-hi" x="37" y="373" width="86" height="50"/>
-        <rect class="plan-hi" x="269" y="321" width="86" height="50"/>
-        <text class="plan-txt" x="80" y="86" text-anchor="middle">01</text>
-        <text class="plan-txt" x="168" y="86" text-anchor="middle">02</text>
-        <text class="plan-txt plan-txt-hi" x="80" y="138" text-anchor="middle">03</text>
-        <text class="plan-txt" x="168" y="138" text-anchor="middle">04</text>
-        <text class="plan-txt" x="80" y="190" text-anchor="middle">05</text>
-        <text class="plan-txt" x="168" y="190" text-anchor="middle">06</text>
-        <text class="plan-txt" x="312" y="86" text-anchor="middle">07</text>
-        <text class="plan-txt plan-txt-hi" x="400" y="86" text-anchor="middle">08</text>
-        <text class="plan-txt" x="312" y="138" text-anchor="middle">09</text>
-        <text class="plan-txt plan-txt-hi" x="400" y="138" text-anchor="middle">10</text>
-        <text class="plan-txt" x="312" y="190" text-anchor="middle">11</text>
-        <text class="plan-txt" x="400" y="190" text-anchor="middle">12</text>
-        <text class="plan-txt" x="80" y="298" text-anchor="middle">13</text>
-        <text class="plan-txt plan-txt-hi" x="168" y="298" text-anchor="middle">14</text>
-        <text class="plan-txt" x="80" y="350" text-anchor="middle">15</text>
-        <text class="plan-txt" x="168" y="350" text-anchor="middle">16</text>
-        <text class="plan-txt plan-txt-hi" x="80" y="402" text-anchor="middle">17</text>
-        <text class="plan-txt" x="168" y="402" text-anchor="middle">18</text>
-        <text class="plan-txt" x="312" y="298" text-anchor="middle">19</text>
-        <text class="plan-txt" x="400" y="298" text-anchor="middle">20</text>
-        <text class="plan-txt plan-txt-hi" x="312" y="350" text-anchor="middle">21</text>
-        <text class="plan-txt" x="400" y="350" text-anchor="middle">22</text>
-        <text class="plan-txt" x="312" y="402" text-anchor="middle">23</text>
-        <text class="plan-txt" x="400" y="402" text-anchor="middle">24</text>
-        <line class="plan-dash plan-draw" pathLength="1" style="--i:27" x1="36" y1="240" x2="444" y2="240"/>
-        <line class="plan-dash plan-draw" pathLength="1" style="--i:28" x1="240" y1="56" x2="240" y2="424"/>
-        <circle class="plan-round plan-draw" pathLength="1" style="--i:29" cx="240" cy="240" r="20"/>
-        <circle class="plan-round plan-draw" pathLength="1" style="--i:30" cx="240" cy="240" r="7"/>
-        <g class="plan-txt"><path class="plan-north" d="M440 30 L446 14 L452 30 L446 25 Z"/><text x="446" y="10" text-anchor="middle">N</text></g>
-        <g class="plan-txt"><path class="plan-scale" d="M20 456 H100 M20 452 V460 M60 453 V459 M100 452 V460"/><text x="108" y="460">50 m</text></g>
-        </svg>
-      </figure>
       <div class="hero-stats">
         <div><b id="statProps">—</b><span>Active Properties</span></div>
-        <div><b>Flexible</b><span>Monthly ROI, any duration</span></div>
+        <div><b>Flexible</b><span>Monthly ROI · Any Duration</span></div>
         <div><b id="statInvestors">1000+</b><span>Investors Onboard</span></div>
       </div>
     </div>
@@ -883,48 +598,37 @@ body:has(#page-home.active) footer a{cursor:pointer;}
     </div>
   </section>
 
-  <section class="home-why">
-    <div class="wrap why-grid">
+  <section>
+    <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">Why invest or purchase with us</div>
+        <div class="section-eyebrow">WHY INVEST OR PURCHASE WITH US</div>
         <h2>Property investment and purchase, made transparent.</h2>
         <p>Every opportunity we list is documented, priced, and clearly termed — whether you're investing for a return or purchasing a property outright, you know exactly what you're getting into.</p>
       </div>
       <div class="feat-grid">
-        <div class="feat">
-          <div class="num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
-          <div class="feat-body"><h3>Verified Properties</h3><p>Every listing includes title status, location details, and full property documentation before you commit — for investment or outright purchase.</p></div>
-        </div>
-        <div class="feat">
-          <div class="num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div>
-          <div class="feat-body"><h3>Fixed Returns</h3><p>Each investment opportunity carries a stated ROI and maturity date, calculated automatically the moment you invest.</p></div>
-        </div>
-        <div class="feat">
-          <div class="num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20v-8"/><path d="M12 20V4"/><path d="M19 20v-5"/><path d="M3 20h18"/></svg></div>
-          <div class="feat-body"><h3>Track Everything</h3><p>Your personal dashboard shows active, completed, and historical investments in one place, always up to date.</p></div>
-        </div>
+        <div class="feat"><div class="num">1</div><h3>Verified Properties</h3><p>Every listing includes title status, location details, and full property documentation before you commit — for investment or outright purchase.</p></div>
+        <div class="feat"><div class="num">2</div><h3>Fixed Returns</h3><p>Each investment opportunity carries a stated ROI and maturity date, calculated automatically the moment you invest.</p></div>
+        <div class="feat"><div class="num">3</div><h3>Track Everything</h3><p>Your personal dashboard shows active, completed, and historical investments in one place, always up to date.</p></div>
       </div>
     </div>
   </section>
 
   <section class="section-alt">
     <div class="wrap">
-      <div class="section-head split">
-        <div>
-          <div class="section-eyebrow">Featured opportunities</div>
-          <h2>Current investment properties</h2>
-          <p>A selection of available properties currently open for investment.</p>
-        </div>
-        <a class="btn btn-dark" onclick="go('properties')">View All Properties</a>
+      <div class="section-head">
+        <div class="section-eyebrow">FEATURED OPPORTUNITIES</div>
+        <h2>Current investment properties</h2>
+        <p>A selection of available properties currently open for investment.</p>
       </div>
       <div class="prop-grid" id="homePropGrid"><div class="empty-state">Loading properties…</div></div>
+      <div style="text-align:center; margin-top:40px;"><a class="btn btn-dark" onclick="go('properties')">View All Properties</a></div>
     </div>
   </section>
 
   <section>
     <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">Plan your returns</div>
+        <div class="section-eyebrow">PLAN YOUR RETURNS</div>
         <h2>Investment Calculator</h2>
         <p>See what your money could earn before you commit — pick a live property or enter your own numbers.</p>
       </div>
@@ -963,7 +667,7 @@ body:has(#page-home.active) footer a{cursor:pointer;}
   <section id="testimonialsSection" class="section-alt hidden">
     <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">What our clients say</div>
+        <div class="section-eyebrow">WHAT OUR CLIENTS SAY</div>
         <h2>Trusted by investors and buyers</h2>
         <p>Real feedback from people who have invested in or purchased property with us.</p>
       </div>
@@ -973,22 +677,20 @@ body:has(#page-home.active) footer a{cursor:pointer;}
 
   <section id="homePostsSection" class="hidden">
     <div class="wrap">
-      <div class="section-head split">
-        <div>
-          <div class="section-eyebrow">Latest updates</div>
-          <h2>News from Royal Luxury Mini Estate</h2>
-          <p>Recent announcements and updates from our team.</p>
-        </div>
-        <a class="btn btn-dark" onclick="go('posts')">View All Updates</a>
+      <div class="section-head">
+        <div class="section-eyebrow">LATEST UPDATES</div>
+        <h2>News from Royal Luxury Mini Estate</h2>
+        <p>Recent announcements and updates from our team.</p>
       </div>
       <div class="prop-grid" id="homePostsGrid"></div>
+      <div style="text-align:center; margin-top:40px;"><a class="btn btn-dark" onclick="go('posts')">View All Updates</a></div>
     </div>
   </section>
 
   <section class="section-alt">
-    <div class="wrap faq-grid">
+    <div class="wrap">
       <div class="section-head">
-        <div class="section-eyebrow">Got questions?</div>
+        <div class="section-eyebrow">GOT QUESTIONS?</div>
         <h2>Frequently Asked Questions</h2>
         <p>Everything you need to know before you invest or buy with us.</p>
       </div>
@@ -1628,7 +1330,7 @@ body:has(#page-home.active) footer a{cursor:pointer;}
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <div class="brand" style="margin-bottom:14px;"><img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('span'),{className:'crest',textContent:'R'}))"><div class="brand-name">Royal Luxury <b>Mini Estate</b></div></div>
+        <div class="brand" style="margin-bottom:14px;"><img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo"><div class="brand-name">Royal Luxury <b>Mini Estate</b></div></div>
         <p style="font-size:13.5px; max-width:320px;">Premium real estate investment opportunities in Abeokuta, Ogun State, Nigeria — built on transparency and trust.</p>
       </div>
       <div>
