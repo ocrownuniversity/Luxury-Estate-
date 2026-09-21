@@ -2222,7 +2222,7 @@ function stripInteractiveHtml(html){
 function downloadPdfFromHtml(filenameBase, title, bodyHtml){
   if(typeof html2pdf === 'undefined'){ toast('PDF tool failed to load — check your connection and try again.'); return; }
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:fixed; left:-9999px; top:0; width:760px; background:#ffffff;';
+  wrapper.style.cssText = 'position:absolute; top:99999px; left:0; width:760px; background:#ffffff;';
   wrapper.innerHTML = pdfLetterheadHtml(title, stripInteractiveHtml(bodyHtml));
   document.body.appendChild(wrapper);
   const opt = {
@@ -2314,7 +2314,7 @@ function downloadInvestmentCertificate(id){
   `;
 
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:fixed; left:-9999px; top:0;';
+  wrapper.style.cssText = 'position:absolute; top:99999px; left:0;';
   wrapper.innerHTML = html;
   document.body.appendChild(wrapper);
 
@@ -2392,7 +2392,7 @@ function downloadPurchaseCertificate(id){
   `;
 
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:fixed; left:-9999px; top:0;';
+  wrapper.style.cssText = 'position:absolute; top:99999px; left:0;';
   wrapper.innerHTML = html;
   document.body.appendChild(wrapper);
 
