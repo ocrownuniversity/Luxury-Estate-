@@ -2239,6 +2239,15 @@ function capturePdfElement(innerHtml, opt){
 
     // Give the browser a frame to lay out and paint the wrapper before capturing it.
     requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+      // html2canvas captures at the page's current scroll offset by default. The wrapper
+      // above is position:fixed (viewport-relative), so if the page is scrolled at all —
+      // which it usually is, since these buttons live inside dashboard tables/modals —
+      // html2canvas grabs the wrong region of the page and silently returns a blank canvas.
+      // Forcing scrollX/scrollY to cancel out the current scroll makes it always capture
+      // from (0,0), fixing the blank PDF/certificate downloads.
+      opt = Object.assign({}, opt, {
+        html2canvas: Object.assign({ scrollX: -window.scrollX, scrollY: -window.scrollY }, opt.html2canvas)
+      });
       html2pdf().set(opt).from(wrapper).save().then(()=>{
         document.body.removeChild(wrapper);
         document.body.removeChild(overlay);
