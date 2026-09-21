@@ -2219,12 +2219,41 @@ function stripInteractiveHtml(html){
   tmp.querySelectorAll('button, input, select, textarea, .row-actions, .icon-btn, form').forEach(el=>el.remove());
   return tmp.innerHTML;
 }
+/* Renders innerHtml inside a temporary on-screen element (covered by a loading overlay so
+   nothing looks broken to the user), captures it to PDF with html2pdf, then cleans up.
+   html2canvas needs the captured element inside the visible viewport — off-screen positions
+   (negative OR very large offsets) can silently produce a blank canvas, so we keep it on-screen
+   here and simply cover it with an opaque loading overlay instead of hiding it off-page. */
+function capturePdfElement(innerHtml, opt){
+  return new Promise((resolve, reject)=>{
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed; inset:0; background:rgba(20,17,13,.94); z-index:999998; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; color:#f6f1e7; font-family:Georgia,\'Times New Roman\',serif; font-size:14px;';
+    overlay.innerHTML = '<span class="spinner" style="width:26px; height:26px; border-width:3px;"></span><span>Preparing your document…</span>';
+
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'position:fixed; top:0; left:0; z-index:999997; background:#ffffff;';
+    wrapper.innerHTML = innerHtml;
+
+    document.body.appendChild(wrapper);
+    document.body.appendChild(overlay);
+
+    // Give the browser a frame to lay out and paint the wrapper before capturing it.
+    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+      html2pdf().set(opt).from(wrapper).save().then(()=>{
+        document.body.removeChild(wrapper);
+        document.body.removeChild(overlay);
+        resolve();
+      }).catch(err=>{
+        if(wrapper.parentNode) document.body.removeChild(wrapper);
+        if(overlay.parentNode) document.body.removeChild(overlay);
+        reject(err);
+      });
+    });});
+  });
+}
 function downloadPdfFromHtml(filenameBase, title, bodyHtml){
   if(typeof html2pdf === 'undefined'){ toast('PDF tool failed to load — check your connection and try again.'); return; }
-  const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:absolute; top:99999px; left:0; width:760px; background:#ffffff;';
-  wrapper.innerHTML = pdfLetterheadHtml(title, stripInteractiveHtml(bodyHtml));
-  document.body.appendChild(wrapper);
+  const innerHtml = `<div style="width:760px;">${pdfLetterheadHtml(title, stripInteractiveHtml(bodyHtml))}</div>`;
   const opt = {
     margin: 10,
     filename: filenameBase + '-' + new Date().toISOString().split('T')[0] + '.pdf',
@@ -2233,12 +2262,8 @@ function downloadPdfFromHtml(filenameBase, title, bodyHtml){
     jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
     pagebreak: { mode:['avoid-all','css','legacy'] }
   };
-  toast('Preparing PDF…');
-  html2pdf().set(opt).from(wrapper).save().then(()=>{
-    document.body.removeChild(wrapper);
-  }).catch((e)=>{
+  capturePdfElement(innerHtml, opt).catch((e)=>{
     console.warn(e);
-    if(wrapper.parentNode) document.body.removeChild(wrapper);
     toast('Could not generate PDF — try Print instead.');
   });
 }
@@ -2313,11 +2338,6 @@ function downloadInvestmentCertificate(id){
     </div>
   `;
 
-  const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:absolute; top:99999px; left:0;';
-  wrapper.innerHTML = html;
-  document.body.appendChild(wrapper);
-
   const opt = {
     margin: 0,
     filename: 'investment-certificate-' + certNo + '.pdf',
@@ -2325,12 +2345,8 @@ function downloadInvestmentCertificate(id){
     html2canvas: { scale:2, useCORS:true, backgroundColor:'#faf7ef' },
     jsPDF: { unit:'mm', format:'a4', orientation:'landscape' }
   };
-  toast('Preparing certificate…');
-  html2pdf().set(opt).from(wrapper).save().then(()=>{
-    document.body.removeChild(wrapper);
-  }).catch((e)=>{
+  capturePdfElement(html, opt).catch((e)=>{
     console.warn(e);
-    if(wrapper.parentNode) document.body.removeChild(wrapper);
     toast('Could not generate certificate PDF.');
   });
 }
@@ -2391,11 +2407,6 @@ function downloadPurchaseCertificate(id){
     </div>
   `;
 
-  const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:absolute; top:99999px; left:0;';
-  wrapper.innerHTML = html;
-  document.body.appendChild(wrapper);
-
   const opt = {
     margin: 0,
     filename: 'purchase-certificate-' + certNo + '.pdf',
@@ -2403,12 +2414,8 @@ function downloadPurchaseCertificate(id){
     html2canvas: { scale:2, useCORS:true, backgroundColor:'#faf7ef' },
     jsPDF: { unit:'mm', format:'a4', orientation:'landscape' }
   };
-  toast('Preparing certificate…');
-  html2pdf().set(opt).from(wrapper).save().then(()=>{
-    document.body.removeChild(wrapper);
-  }).catch((e)=>{
+  capturePdfElement(html, opt).catch((e)=>{
     console.warn(e);
-    if(wrapper.parentNode) document.body.removeChild(wrapper);
     toast('Could not generate certificate PDF.');
   });
 }
