@@ -933,7 +933,7 @@ body:has(#page-home.active) footer a{cursor:pointer;}
   <div class="hero" style="padding:70px 24px;">
     <div class="hero-inner" style="grid-template-columns:1fr; align-items:start;">
       <div>
-        <div class="hero-eyebrow">ABOUT ROYAL LUXURY ESTATE</div>
+        <div class="hero-eyebrow">ABOUT ROYAL LUXURY MINI ESTATE</div>
         <h1 style="font-size:clamp(30px,4.4vw,48px);">Rooted in Abeokuta. <em>Built on trust.</em></h1>
       </div>
     </div>
@@ -1010,6 +1010,12 @@ body:has(#page-home.active) footer a{cursor:pointer;}
 </div>
 
 <!-- Property Comparison Modal -->
+<div class="modal-bg" id="imgLightboxBg" onclick="if(event.target===this) closeModal('imgLightboxBg')">
+  <div class="modal wide" style="background:transparent; box-shadow:none; padding:0;">
+    <div class="modal-head" style="border:none;"><span></span><button class="modal-close" onclick="closeModal('imgLightboxBg')">&times;</button></div>
+    <div class="modal-body" style="padding:0; text-align:center;"><img id="imgLightboxImg" src="" style="max-width:100%; max-height:80vh; object-fit:contain; background:var(--cream); border-radius:4px;"></div>
+  </div>
+</div>
 <div class="modal-bg" id="compareModalBg">
   <div class="modal wide">
     <div class="modal-head"><h3>Compare Properties</h3><button class="modal-close" onclick="closeModal('compareModalBg')">&times;</button></div>
@@ -1201,8 +1207,8 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         </div>
         <div class="section-title-sm">Recent Investments</div>
         <div class="table-wrap"><table>
-          <thead><tr><th>ID</th><th>Property</th><th>Amount</th><th>ROI</th><th>Status</th><th>Maturity</th></tr></thead>
-          <tbody id="uRecentTable"><tr><td colspan="6" class="small-muted" style="padding:20px;">No investments yet.</td></tr></tbody>
+          <thead><tr><th>ID</th><th>Property</th><th>Amount</th><th>ROI</th><th>Status</th><th>Maturity</th><th>Certificate</th></tr></thead>
+          <tbody id="uRecentTable"><tr><td colspan="7" class="small-muted" style="padding:20px;">No investments yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -1231,8 +1237,8 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <div class="dash-panel" id="dpanel-history">
         <div class="dash-head"><h2>Investment History</h2><div style="display:flex; gap:10px; flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="printTableById('uHistoryTable','Investment History')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadTablePdf('uHistoryTable','Investment History','investment-history')">⬇️ PDF</button></div></div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
-          <tbody id="uHistoryTable"><tr><td colspan="5" class="small-muted" style="padding:20px;">No history yet.</td></tr></tbody>
+          <thead><tr><th>Investment ID</th><th>Property</th><th>Amount</th><th>Status</th><th>Date</th><th>Certificate</th></tr></thead>
+          <tbody id="uHistoryTable"><tr><td colspan="6" class="small-muted" style="padding:20px;">No history yet.</td></tr></tbody>
         </table></div>
       </div>
 
@@ -1504,6 +1510,16 @@ body:has(#page-home.active) footer a{cursor:pointer;}
             <p class="small-muted" style="margin-bottom:16px;">Buyers can pay for a property in full (no interest) or in monthly installments. This interest rate applies to all installment purchases, based on the number of months the buyer chooses.</p>
             <div class="field"><label>Installment Interest Rate (% per month)</label><input type="number" step="0.1" min="0" id="setInstallmentRate" placeholder="e.g. 2"></div>
             <p class="hint">Full payment never carries interest. Installment interest = Property Price × Rate × Number of Months chosen by the buyer.</p>
+            <div class="divider"></div>
+            <div class="section-title-sm" style="margin-top:0;">Certificate Signature</div>
+            <p class="small-muted" style="margin-bottom:16px;">This signature and name appear on the "Authorized Signatory" line of every Certificate of Investment and Certificate of Purchase.</p>
+            <div class="field"><label>CEO Name</label><input id="setCeoName" placeholder="e.g. Jane Doe"></div>
+            <div class="field">
+              <label>CEO Signature</label>
+              <p class="small-muted" style="margin-bottom:8px;">Sign inside the box below with your finger, stylus or mouse.</p>
+              <canvas id="ceoSigCanvas" width="600" height="180" style="width:100%; height:150px; border:1px solid var(--line); background:#fff; touch-action:none; border-radius:3px; display:block;"></canvas>
+              <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="clearCeoSignature()">Clear Signature</button>
+            </div>
             <button class="btn" type="submit">Save Settings</button>
           </form>
         </div>
@@ -1616,11 +1632,12 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <div class="field"><label>Investment Package / Plan</label><input type="text" id="investPackage" readonly></div>
       <div class="field"><label>Investment Amount (₦) <span style="color:var(--bad)">*</span></label><input type="number" id="investAmount" oninput="updateInvestPreview()"></div>
       <p class="hint" id="investMinHint"></p>
-      <div class="field"><label>Investment Duration</label><input type="text" id="investDurationDisplay" readonly></div>
+      <div class="field"><label>Investment Duration (months) <span style="color:var(--bad)">*</span></label><input type="number" id="investDuration" oninput="updateInvestPreview()"></div>
+      <p class="hint" id="investDurationHint"></p>
       <div class="field"><label>Expected Return Plan</label><input type="text" id="investReturnPlan" readonly></div>
       <div class="field">
         <label>Payment Method <span style="color:var(--bad)">*</span></label>
-        <select id="investPaymentMethod">
+        <select id="investPaymentMethod" onchange="onInvestPaymentMethodChange()">
           <option value="">Select payment method</option>
           <option>Bank Transfer</option>
           <option>Cash Deposit</option>
@@ -1638,7 +1655,7 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <div class="summary-row"><span>Maturity Date</span><b id="pvMaturity">—</b></div>
         <div class="summary-total"><span>Total Expected Return</span><b id="pvTotal">—</b></div>
       </div>
-      <p class="hint" id="pvLockHint" style="margin-top:8px;">Your investment value grows every month, but funds are locked until the maturity date shown above (maximum 3 years) — withdrawals open once that date is reached.</p>
+      <p class="hint" id="pvLockHint" style="margin-top:8px;">Your investment value grows every month, but funds are locked until the maturity date shown above — every investment runs for a minimum of 3 years, and withdrawals open once that date is reached.</p>
 
       <div class="divider"></div>
       <div class="section-title-sm" style="margin-top:0;">Bank Details for Payment</div>
@@ -1662,15 +1679,22 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="investKinPhone" placeholder="Next of kin phone number"></div>
       <div class="field"><label>Address <span style="color:var(--bad)">*</span></label><textarea id="investKinAddress" placeholder="Next of kin address"></textarea></div>
       <div class="field"><label>Relationship <span style="color:var(--bad)">*</span></label><input type="text" id="investKinRelationship" placeholder="e.g. Spouse, Sibling, Parent"></div>
+      <div class="field">
+        <label>Next of Kin Passport Photograph <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('investKinPhotoInput').click()">Click to upload a passport photograph of your next of kin</div>
+        <input type="file" id="investKinPhotoInput" accept="image/*" class="hidden" onchange="handleInvestKinPhotoUpload(event)">
+        <div class="img-upload-grid" id="investKinPhotoPreviewGrid"></div>
+      </div>
 
       <div class="divider"></div>
       <div class="section-title-sm">Supporting Documents</div>
-      <div class="field">
+      <div class="field" id="investReceiptField">
         <label>Proof of Payment <span style="color:var(--bad)">*</span></label>
         <div class="upload-drop" onclick="document.getElementById('receiptInput').click()">Click to upload your proof of payment (image)</div>
         <input type="file" id="receiptInput" accept="image/*" class="hidden" onchange="handleReceiptUpload(event)">
         <div class="img-upload-grid" id="receiptPreviewGrid"></div>
       </div>
+      <p class="hint" id="investCashDepositNote" style="display:none;">No receipt needed — your cash deposit will be confirmed by our team directly.</p>
       <div class="field">
         <label>Signature <span style="color:var(--bad)">*</span></label>
         <p class="hint" style="margin-top:0; margin-bottom:8px;">Sign inside the box below with your finger or mouse.</p>
@@ -1724,6 +1748,8 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <div class="field"><label>Email Address <span style="color:var(--bad)">*</span></label><input type="email" id="buyEmail" placeholder="you@email.com"></div>
       <div class="field"><label>Residential Address <span style="color:var(--bad)">*</span></label><textarea id="buyAddress" placeholder="Your current residential address"></textarea></div>
       <div class="field"><label>Occupation <span style="color:var(--bad)">*</span></label><input type="text" id="buyOccupation" placeholder="e.g. Business Owner"></div>
+      <div class="field"><label>Office Address <span style="color:var(--bad)">*</span></label><textarea id="buyOfficeAddress" placeholder="Your office / place of work address"></textarea></div>
+      <div class="field"><label>State of Origin <span style="color:var(--bad)">*</span></label><input type="text" id="buyStateOfOrigin" placeholder="e.g. Ogun State"></div>
       <div class="field">
         <label>Passport Photograph <span style="color:var(--bad)">*</span></label>
         <div class="upload-drop" onclick="document.getElementById('buyPassportInput').click()">Click to upload your passport photograph</div>
@@ -1757,13 +1783,19 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="buyKinPhone" placeholder="Next of kin phone number"></div>
       <div class="field"><label>Address <span style="color:var(--bad)">*</span></label><textarea id="buyKinAddress" placeholder="Next of kin address"></textarea></div>
       <div class="field"><label>Relationship to Buyer <span style="color:var(--bad)">*</span></label><input type="text" id="buyKinRelationship" placeholder="e.g. Spouse, Sibling, Parent"></div>
+      <div class="field">
+        <label>Next of Kin Passport Photograph <span style="color:var(--bad)">*</span></label>
+        <div class="upload-drop" onclick="document.getElementById('buyKinPhotoInput').click()">Click to upload a passport photograph of your next of kin</div>
+        <input type="file" id="buyKinPhotoInput" accept="image/*" class="hidden" onchange="handleBuyKinPhotoUpload(event)">
+        <div class="img-upload-grid" id="buyKinPhotoPreviewGrid"></div>
+      </div>
 
       <div class="divider"></div>
       <div class="section-title-sm">Property Purchase Details</div>
       <div class="field"><label>Property Address / Unit Number <span style="color:var(--bad)">*</span></label><input type="text" id="buyUnitNumber" placeholder="e.g. Block A, Plot 12"></div>
       <div class="field"><label>Agreed Purchase Price (₦) <span style="color:var(--bad)">*</span></label><input type="number" id="buyAgreedPrice" min="0"><p class="hint">Defaults to the listed price. Only change this if you and admin agreed a different price — the totals below are still calculated from the official listed price.</p></div>
       <div class="field">
-        <label>Payment Method</label>
+        <label>Purchase Plan</label>
         <select id="buyPlan" onchange="onBuyPlanChange()">
           <option value="full">Outright — Pay in Full, No Interest</option>
           <option value="installment">Installment — Interest Applies</option>
@@ -1774,6 +1806,16 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <input type="number" id="buyMonths" min="1" max="60" value="6" oninput="updateBuyPreview()">
         <p class="hint" id="buyRateHint"></p>
         <p class="hint" id="buyDepositHint" style="color:var(--gold);"></p>
+      </div>
+      <div class="field">
+        <label>Payment Method <span style="color:var(--bad)">*</span></label>
+        <select id="buyPaymentMethod" onchange="onBuyPaymentMethodChange()">
+          <option value="">Select payment method</option>
+          <option>Bank Transfer</option>
+          <option>Cash Deposit</option>
+          <option>Card Payment</option>
+          <option>Other</option>
+        </select>
       </div>
 
       <div class="divider"></div>
@@ -1816,12 +1858,13 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <div class="field"><label>Full Name</label><input type="text" id="buyEmergencyName" placeholder="Emergency contact name"></div>
       <div class="field"><label>Phone Number</label><input type="tel" id="buyEmergencyPhone" placeholder="Emergency contact phone number"></div>
 
-      <div class="field" style="margin-top:16px;">
+      <div class="field" style="margin-top:16px;" id="buyReceiptField">
         <label>Payment Receipt <span style="color:var(--bad)">*</span></label>
         <div class="upload-drop" onclick="document.getElementById('buyReceiptInput').click()">Click to upload your payment receipt (image)</div>
         <input type="file" id="buyReceiptInput" accept="image/*" class="hidden" onchange="handleBuyReceiptUpload(event)">
         <div class="img-upload-grid" id="buyReceiptPreviewGrid"></div>
       </div>
+      <p class="hint" id="buyCashDepositNote" style="display:none;">No receipt needed — your cash deposit will be confirmed by our team directly.</p>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeModal('buyModalBg')">Cancel</button>
@@ -1995,7 +2038,7 @@ body:has(#page-home.active) footer a{cursor:pointer;}
           <div class="field"><label>Available Units</label><input required type="number" id="propUnits"></div>
         </div>
         <div class="field-row">
-          <div class="field"><label>Investment Duration (months, max 36 = 3 years)</label><input required type="number" id="propDuration" min="1" max="36"></div>
+          <div class="field"><label>Investment Duration (months, minimum 36 = 3 years)</label><input required type="number" id="propDuration" min="36"></div>
           <div class="field"><label>Monthly ROI Percentage (%)</label><input required type="number" id="propROI" step="0.1"></div>
         </div>
         <p class="hint" style="margin-top:-10px; margin-bottom:18px;">Investments are locked for the full duration. Investors cannot withdraw before the maturity date — the maximum lock-in allowed is 3 years (36 months).</p>
@@ -2146,7 +2189,7 @@ let allBanners = [];         // public: active homepage banners, sorted for disp
 let allBannersAdmin = [];    // admin: all banners (active + inactive) for management
 let bannerIndex = 0;
 let bannerTimer = null;
-let siteSettings = { companyName:"Royal Luxury Mini Estate", email:"royalluxuryestate@gmail.com", phone:"+234 913 488 2222", whatsapp:"2349134882222", address:"Abeokuta, Ogun State, Nigeria", aboutText:"", bankName:"", accountName:"", accountNumber:"", paymentNote:"", installmentInterestRate:2, terms:"1. All investments are subject to availability at the time of confirmation.\n2. Returns are paid at the stated maturity date, based on the ROI shown for each property.\n3. Investment amounts are non-refundable once an investment is approved, except where otherwise agreed in writing.\n4. Royal Luxury Mini Estate reserves the right to request additional verification before approving an investment.\n5. All communications regarding an investment should be directed to our official email or WhatsApp number." };
+let siteSettings = { companyName:"Royal Luxury Mini Estate", email:"royalluxuryestate@gmail.com", phone:"+234 913 488 2222", whatsapp:"2349134882222", address:"Abeokuta, Ogun State, Nigeria", aboutText:"", bankName:"", accountName:"", accountNumber:"", paymentNote:"", installmentInterestRate:2, ceoName:"", ceoSignatureUrl:"", terms:"1. All investments are subject to availability at the time of confirmation.\n2. Returns are paid at the stated maturity date, based on the ROI shown for each property.\n3. Investment amounts are non-refundable once an investment is approved, except where otherwise agreed in writing.\n4. Royal Luxury Mini Estate reserves the right to request additional verification before approving an investment.\n5. All communications regarding an investment should be directed to our official email or WhatsApp number." };
 let currentDetailProperty = null;
 let pendingImageFiles = [];      // {file, url} for new uploads not yet saved
 let existingImageUrls = [];      // urls already on the property (edit mode)
@@ -2485,6 +2528,50 @@ function downloadPropertyBrochurePdf(id){
   downloadPdfFromHtml('property-' + (p.pid || p.id), 'Property Details — ' + (p.name||''), propertyBrochureBodyHtml(p));
 }
 
+/* ================= ADMIN: DOWNLOAD UPLOADED DOCUMENTS =================
+   Used by the Investment Details and Purchase Details admin modals so the admin
+   can download the passport, ID, next-of-kin photo, receipt and signature images
+   that the investor/purchaser uploaded — individually or all at once. */
+let docDownloadRegistry = [];
+function resetDocDownloadRegistry(){ docDownloadRegistry = []; }
+function registerDocDownload(url, filename){
+  if(!url) return -1;
+  docDownloadRegistry.push({url, filename});
+  return docDownloadRegistry.length - 1;
+}
+function downloadDataUrl(url, filename){
+  try{
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'document';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }catch(err){ toast('Could not download that file.'); }
+}
+function downloadDocFromRegistry(idx){
+  const item = docDownloadRegistry[idx];
+  if(!item){ toast('That file is no longer available.'); return; }
+  downloadDataUrl(item.url, item.filename);
+}
+function downloadAllRegisteredDocuments(){
+  if(!docDownloadRegistry.length){ toast('No uploaded documents to download.'); return; }
+  docDownloadRegistry.forEach((item, idx)=>{
+    setTimeout(()=> downloadDataUrl(item.url, item.filename), idx * 450);
+  });
+  toast('Downloading ' + docDownloadRegistry.length + ' document(s)...');
+}
+/* Full-size in-app viewer for uploaded document/photo images. Opening a large
+   base64 image directly in a new browser tab (via a plain <a target="_blank">)
+   can render blank on mobile because the data URL is too long for the browser
+   to navigate to — so instead we show it full-size inside the app itself. */
+function viewDocImage(idx){
+  const item = docDownloadRegistry[idx];
+  if(!item || !item.url){ toast('That file is no longer available.'); return; }
+  document.getElementById('imgLightboxImg').src = item.url;
+  openModalEl('imgLightboxBg');
+}
+
 /* ================= CERTIFICATE ENGINE =================
    Certificates are drawn straight onto a canvas (A4 landscape) and wrapped into a one-page PDF,
    so the result never depends on the phone's screen size or scroll position. */
@@ -2549,6 +2636,16 @@ function certRich(ctx, segs, cx, y, maxW, lineH, size){
   });
   return y + Math.max(0, lines.length-1)*lineH;
 }
+function certFitSpacedSize(ctx, text, maxSize, minSize, maxW, weight, spacing){
+  const measure = size=>{
+    certFont(ctx, size, weight);
+    const chars = Array.from(text);
+    return chars.reduce((a,ch)=>a+ctx.measureText(ch).width,0) + spacing*Math.max(0,chars.length-1);
+  };
+  let size = maxSize;
+  while(size > minSize && measure(size) > maxW){ size -= 0.5; }
+  return size;
+}
 function certSignature(ctx, cx, img, label, name){
   const lineY = 652;
   if(img){
@@ -2571,6 +2668,8 @@ async function certRender(o){
     ]);
   }catch(e){}
   const sigImg = await certLoadImage(o.sigUrl);
+  const ceoSigImg = await certLoadImage(siteSettings.ceoSignatureUrl);
+  const ceoName = (siteSettings.ceoName||'').trim();
 
   const S = CERT_SCALE, W = CERT_W, H = CERT_H, cx = W/2;
   const canvas = document.createElement('canvas');
@@ -2642,7 +2741,9 @@ async function certRender(o){
   o.facts.forEach((f,i)=>{
     const fx = bx + cw*i + cw/2;
     if(i>0){ ctx.strokeStyle = 'rgba(184,134,60,0.4)'; ctx.beginPath(); ctx.moveTo(bx+cw*i, by+14); ctx.lineTo(bx+cw*i, by+bh-14); ctx.stroke(); }
-    ctx.fillStyle = CERT_GOLD; certFont(ctx, 10.5, 600); certSpaced(ctx, f[0].toUpperCase(), fx, by+27, 2);
+    ctx.fillStyle = CERT_GOLD;
+    const labelSize = certFitSpacedSize(ctx, f[0].toUpperCase(), 10.5, 6.5, cw-16, 600, 2);
+    certFont(ctx, labelSize, 600); certSpaced(ctx, f[0].toUpperCase(), fx, by+27, 2);
     ctx.fillStyle = CERT_INK;
     certFitSize(ctx, String(f[1]), 18, 11, cw-24, 700); certCentered(ctx, String(f[1]), fx, by+53);
   });
@@ -2654,7 +2755,7 @@ async function certRender(o){
 
   // Signatures + seal
   certSignature(ctx, 256, sigImg, o.sigLabel, o.name);
-  certSignature(ctx, W-256, null, 'Authorized Signatory', o.company);
+  certSignature(ctx, W-256, ceoSigImg, 'Authorized Signatory', ceoName || o.company);
   const sy = 622;
   ctx.strokeStyle = CERT_GOLD; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(cx, sy, 46, 0, Math.PI*2); ctx.stroke();
   ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, sy, 40, 0, Math.PI*2); ctx.stroke();
@@ -2714,6 +2815,9 @@ function downloadInvestmentCertificate(id){
   const startDate = inv.createdAt ? fmtDate(inv.createdAt) : '—';
   const maturityDate = inv.maturityDate ? fmtDate(inv.maturityDate) : '—';
   const certNo = inv.investmentId || inv.id;
+  const totalPayout = (inv.totalReturn != null && inv.totalReturn !== '')
+    ? Number(inv.totalReturn)
+    : Number(inv.amount||0) + (Number(inv.amount||0) * (Number(inv.roi||0)/100)) * Number(inv.duration||0);
 
   certDownload({
     company, title:'CERTIFICATE OF INVESTMENT', name:investorName, certNo, issueDate,
@@ -2730,7 +2834,8 @@ function downloadInvestmentCertificate(id){
       ['Amount Invested', fmtNaira(inv.amount)],
       ['Monthly Return', `${inv.roi||0}%`],
       ['Duration', `${inv.duration||0} months`],
-      ['Maturity Date', maturityDate]
+      ['Maturity Date', maturityDate],
+      ['Total Payout', fmtNaira(totalPayout)]
     ]
   }, 'investment-certificate-' + certNo + '.pdf').catch((e)=>{
     console.warn(e);
@@ -2792,11 +2897,67 @@ async function loadSettings(){
     const doc = await db.collection('settings').doc('main').get();
     if(doc.exists){
       siteSettings = Object.assign(siteSettings, doc.data());
+      // Older saved settings may say "Royal Luxury Estate" — the official name includes "Mini"
+      if(/^royal luxury estate$/i.test((siteSettings.companyName||'').trim())) siteSettings.companyName = 'Royal Luxury Mini Estate';
     } else {
       await db.collection('settings').doc('main').set(siteSettings);
     }
   }catch(e){ console.warn('settings load failed', e); }
   applySettingsToUI();
+}
+
+let ceoSigCtx = null;
+let ceoSigDrawing = false;
+let ceoSigHasContent = false;
+let ceoSigRemoved = false;
+
+/* Signature pad (canvas) for the CEO signature in Settings */
+function initCeoSignaturePad(){
+  const canvas = document.getElementById('ceoSigCanvas');
+  if(!canvas) return;
+  ceoSigCtx = canvas.getContext('2d');
+  ceoSigCtx.clearRect(0,0,canvas.width,canvas.height);
+  ceoSigCtx.strokeStyle = '#14110d';
+  ceoSigCtx.lineWidth = 2.5;
+  ceoSigCtx.lineJoin = 'round';
+  ceoSigCtx.lineCap = 'round';
+  ceoSigHasContent = false;
+  ceoSigRemoved = false;
+  if(siteSettings.ceoSignatureUrl){
+    const im = new Image();
+    im.onload = ()=>{
+      const k = Math.min(canvas.width/im.width, canvas.height/im.height);
+      const w = im.width*k, h = im.height*k;
+      ceoSigCtx.drawImage(im, (canvas.width-w)/2, (canvas.height-h)/2, w, h);
+      ceoSigHasContent = true;
+    };
+    im.src = siteSettings.ceoSignatureUrl;
+  }
+  if(canvas.dataset.wired) return;
+  canvas.dataset.wired = '1';
+  function pos(evt){
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const p = evt.touches ? evt.touches[0] : evt;
+    return {x: (p.clientX-rect.left)*scaleX, y: (p.clientY-rect.top)*scaleY};
+  }
+  function start(evt){ evt.preventDefault(); ceoSigDrawing = true; const p = pos(evt); ceoSigCtx.beginPath(); ceoSigCtx.moveTo(p.x,p.y); }
+  function move(evt){ if(!ceoSigDrawing) return; evt.preventDefault(); const p = pos(evt); ceoSigCtx.lineTo(p.x,p.y); ceoSigCtx.stroke(); ceoSigHasContent = true; ceoSigRemoved = false; }
+  function end(evt){ ceoSigDrawing = false; }
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end);
+}
+function clearCeoSignature(){
+  const canvas = document.getElementById('ceoSigCanvas');
+  if(!canvas || !ceoSigCtx) return;
+  ceoSigCtx.clearRect(0,0,canvas.width,canvas.height);
+  ceoSigHasContent = false;
+  ceoSigRemoved = true;
 }
 
 async function saveSettings(e){
@@ -2813,11 +2974,18 @@ async function saveSettings(e){
     accountName: document.getElementById('setAccountName').value.trim(),
     accountNumber: document.getElementById('setAccountNumber').value.trim(),
     paymentNote: document.getElementById('setPaymentNote').value.trim(),
-    installmentInterestRate: Number(document.getElementById('setInstallmentRate').value)||0
+    installmentInterestRate: Number(document.getElementById('setInstallmentRate').value)||0,
+    ceoName: document.getElementById('setCeoName').value.trim()
   };
+  if(ceoSigHasContent){
+    data.ceoSignatureUrl = document.getElementById('ceoSigCanvas').toDataURL('image/png');
+  } else if(ceoSigRemoved){
+    data.ceoSignatureUrl = '';
+  }
   try{
     await db.collection('settings').doc('main').set(data, {merge:true});
     siteSettings = Object.assign(siteSettings, data);
+    ceoSigRemoved = false;
     applySettingsToUI();
     document.getElementById('settingsMsg').innerHTML = '<div class="ok-msg">Settings saved successfully.</div>';
     toast('Settings updated');
@@ -2839,6 +3007,8 @@ function fillSettingsForm(){
   document.getElementById('setAccountNumber').value = siteSettings.accountNumber||'';
   document.getElementById('setPaymentNote').value = siteSettings.paymentNote||'';
   document.getElementById('setInstallmentRate').value = (siteSettings.installmentInterestRate!==undefined && siteSettings.installmentInterestRate!==null) ? siteSettings.installmentInterestRate : '';
+  document.getElementById('setCeoName').value = siteSettings.ceoName||'';
+  initCeoSignaturePad();
 }
 
 /* ================= AUTH ================= */
@@ -3109,7 +3279,7 @@ function propCardHtml(p, withCompare){
       <div class="prop-agent-avatar">${initials}</div>
       <div>
         <div class="fname">${companyName}</div>
-        <div class="fsub">${p.pid ? 'PID: '+p.pid : 'Verified Listing'}</div>
+        <div class="fsub">Verified Listing</div>
       </div>
     </div>
   </div>`;
@@ -3498,14 +3668,21 @@ function openInvestModal(propId){
   document.getElementById('investOccupation').value = '';
   investPassportDataUrl = null;
   document.getElementById('investPassportPreviewGrid').innerHTML = '';
+  investKinPhotoDataUrl = null;
+  document.getElementById('investKinPhotoPreviewGrid').innerHTML = '';
   document.getElementById('investIdType').value = '';
   document.getElementById('investIdNumber').value = '';
   investIdDataUrl = null;
   document.getElementById('investIdPreviewGrid').innerHTML = '';
   document.getElementById('investPackage').value = p.name || '';
-  document.getElementById('investDurationDisplay').value = (Number(p.duration)||0) + ' months';
-  document.getElementById('investReturnPlan').value = 'Fixed ' + (Number(p.roi)||0) + '%/month for ' + (Number(p.duration)||0) + ' months';
+  const minDur = Math.max(36, Number(p.duration)||36);
+  const durInput = document.getElementById('investDuration');
+  durInput.min = minDur;
+  durInput.value = minDur;
+  document.getElementById('investDurationHint').textContent = 'Minimum for this property: ' + minDur + ' months (3 years). You may choose a longer duration — there is no maximum.';
+  document.getElementById('investReturnPlan').value = 'Fixed ' + (Number(p.roi)||0) + '%/month for ' + minDur + ' months';
   document.getElementById('investPaymentMethod').value = '';
+  onInvestPaymentMethodChange();
   document.getElementById('investDate').value = new Date().toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
   document.getElementById('investPayoutAccountName').value = '';
   document.getElementById('investPayoutBankName').value = '';
@@ -3520,8 +3697,18 @@ function openInvestModal(propId){
   openModalEl('investModalBg');
 }
 
+function onInvestPaymentMethodChange(){
+  const isCash = document.getElementById('investPaymentMethod').value === 'Cash Deposit';
+  const field = document.getElementById('investReceiptField');
+  const note = document.getElementById('investCashDepositNote');
+  if(field) field.style.display = isCash ? 'none' : '';
+  if(note) note.style.display = isCash ? '' : 'none';
+  if(isCash){ receiptDataUrl = null; document.getElementById('receiptPreviewGrid').innerHTML = ''; }
+}
+
 let receiptDataUrl = null;
 let investPassportDataUrl = null;
+let investKinPhotoDataUrl = null;
 let investIdDataUrl = null;
 let investSignatureDataUrl = null;
 let investSigCtx = null, investSigDrawing = false, investSigHasStroke = false;
@@ -3562,6 +3749,25 @@ async function handleInvestPassportUpload(e){
 function removeInvestPassportImg(){
   investPassportDataUrl = null;
   document.getElementById('investPassportPreviewGrid').innerHTML = '';
+}
+
+async function handleInvestKinPhotoUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const grid = document.getElementById('investKinPhotoPreviewGrid');
+  grid.innerHTML = '<span class="small-muted">Compressing photo...</span>';
+  try{
+    investKinPhotoDataUrl = await compressImage(file, 1000, 0.7);
+    grid.innerHTML = `<div class="img-thumb"><img src="${investKinPhotoDataUrl}"><button type="button" onclick="removeInvestKinPhotoImg()">&times;</button></div>`;
+  }catch(err){
+    grid.innerHTML = '';
+    toast('Could not process that photo.');
+  }
+}
+function removeInvestKinPhotoImg(){
+  investKinPhotoDataUrl = null;
+  document.getElementById('investKinPhotoPreviewGrid').innerHTML = '';
 }
 
 async function handleInvestIdUpload(e){
@@ -3626,9 +3832,11 @@ function updateInvestPreview(){
   const p = currentDetailProperty;
   const amount = Number(document.getElementById('investAmount').value)||0;
   const box = document.getElementById('investPreviewBox');
-  if(!p || amount<=0){ box.style.display='none'; return; }
+  const minDur = Math.max(36, Number(p && p.duration)||36);
+  const duration = Number(document.getElementById('investDuration').value)||0; // investor-chosen, months
+  document.getElementById('investReturnPlan').value = p ? ('Fixed ' + (Number(p.roi)||0) + '%/month for ' + (duration||minDur) + ' months') : '';
+  if(!p || amount<=0 || duration < minDur){ box.style.display='none'; return; }
   const roi = Number(p.roi)||0;         // monthly ROI %
-  const duration = Number(p.duration)||0; // months
   const profit = amount * (roi/100) * duration; // interest accrues every month across the full term
   const total = amount + profit;
   const maturity = new Date();
@@ -3649,6 +3857,12 @@ async function submitInvestment(){
   if(!p){ return; }
   if(amount < (Number(p.minInvestment)||0)){
     msgEl.innerHTML = '<div class="err-msg">Amount must be at least '+fmtNaira(p.minInvestment)+'.</div>';
+    return;
+  }
+  const minDur = Math.max(36, Number(p.duration)||36);
+  const chosenDuration = Number(document.getElementById('investDuration').value)||0;
+  if(chosenDuration < minDur){
+    msgEl.innerHTML = '<div class="err-msg">Investment duration must be at least '+minDur+' months (3 years) for this property. Longer durations are welcome.</div>';
     return;
   }
 
@@ -3693,7 +3907,11 @@ async function submitInvestment(){
     msgEl.innerHTML = '<div class="err-msg">Please fill in all next of kin details.</div>';
     return;
   }
-  if(!receiptDataUrl){
+  if(!investKinPhotoDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please upload a passport photograph of your next of kin.</div>';
+    return;
+  }
+  if(!receiptDataUrl && paymentMethod !== 'Cash Deposit'){
     msgEl.innerHTML = '<div class="err-msg">Please upload your proof of payment before confirming.</div>';
     return;
   }
@@ -3707,7 +3925,7 @@ async function submitInvestment(){
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...';
 
   const roi = Number(p.roi)||0;          // monthly ROI %
-  const duration = Number(p.duration)||0; // months
+  const duration = chosenDuration;        // months, chosen by the investor (>= property minimum)
   const profit = amount * (roi/100) * duration; // interest accrues every month across the full term
   const total = amount + profit;
   const maturity = new Date();
@@ -3748,6 +3966,7 @@ async function submitInvestment(){
     payoutAccountName, payoutBankName, payoutAccountNumber,
     // Next of kin
     kinName, kinPhone, kinAddress, kinRelationship,
+    kinPhotoUrl: investKinPhotoDataUrl,
     // Supporting documents
     signatureUrl: investSignatureDataUrl,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -3793,6 +4012,7 @@ async function submitInvestment(){
 let currentBuyProperty = null;
 let buyReceiptDataUrl = null;
 let buyPassportDataUrl = null;
+let buyKinPhotoDataUrl = null;
 let buyIdDataUrl = null;
 let buySignatureDataUrl = null;
 let buySigCtx = null, buySigDrawing = false, buySigHasStroke = false;
@@ -3819,12 +4039,16 @@ function openBuyModal(propId){
   document.getElementById('bbNote').textContent = siteSettings.paymentNote || '';
   buyReceiptDataUrl = null;
   document.getElementById('buyReceiptPreviewGrid').innerHTML = '';
+  document.getElementById('buyPaymentMethod').value = '';
+  onBuyPaymentMethodChange();
 
   document.getElementById('buyFullName').value = currentUserDoc.name || currentUser.displayName || '';
   document.getElementById('buyPhone').value = currentUserDoc.phone || '';
   document.getElementById('buyEmail').value = currentUserDoc.email || currentUser.email || '';
   document.getElementById('buyAddress').value = '';
   document.getElementById('buyOccupation').value = '';
+  document.getElementById('buyOfficeAddress').value = '';
+  document.getElementById('buyStateOfOrigin').value = '';
   buyPassportDataUrl = null;
   document.getElementById('buyPassportPreviewGrid').innerHTML = '';
   document.getElementById('buyIdType').value = '';
@@ -3835,6 +4059,8 @@ function openBuyModal(propId){
   document.getElementById('buyKinPhone').value = '';
   document.getElementById('buyKinAddress').value = '';
   document.getElementById('buyKinRelationship').value = '';
+  buyKinPhotoDataUrl = null;
+  document.getElementById('buyKinPhotoPreviewGrid').innerHTML = '';
   document.getElementById('buyUnitNumber').value = '';
   document.getElementById('buyAgreedPrice').value = Number(p.price)||0;
   document.getElementById('buyPurchaseDate').value = new Date().toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
@@ -3850,6 +4076,15 @@ function onBuyPlanChange(){
   const plan = document.getElementById('buyPlan').value;
   document.getElementById('buyMonthsField').classList.toggle('hidden', plan!=='installment');
   updateBuyPreview();
+}
+
+function onBuyPaymentMethodChange(){
+  const isCash = document.getElementById('buyPaymentMethod').value === 'Cash Deposit';
+  const field = document.getElementById('buyReceiptField');
+  const note = document.getElementById('buyCashDepositNote');
+  if(field) field.style.display = isCash ? 'none' : '';
+  if(note) note.style.display = isCash ? '' : 'none';
+  if(isCash){ buyReceiptDataUrl = null; document.getElementById('buyReceiptPreviewGrid').innerHTML = ''; }
 }
 
 // Installment purchases: buyer pays the property's admin-set deposit upfront; interest applies
@@ -3929,6 +4164,25 @@ function removeBuyPassportImg(){
   document.getElementById('buyPassportPreviewGrid').innerHTML = '';
 }
 
+async function handleBuyKinPhotoUpload(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const grid = document.getElementById('buyKinPhotoPreviewGrid');
+  grid.innerHTML = '<span class="small-muted">Compressing photo...</span>';
+  try{
+    buyKinPhotoDataUrl = await compressImage(file, 1000, 0.7);
+    grid.innerHTML = `<div class="img-thumb"><img src="${buyKinPhotoDataUrl}"><button type="button" onclick="removeBuyKinPhotoImg()">&times;</button></div>`;
+  }catch(err){
+    grid.innerHTML = '';
+    toast('Could not process that photo.');
+  }
+}
+function removeBuyKinPhotoImg(){
+  buyKinPhotoDataUrl = null;
+  document.getElementById('buyKinPhotoPreviewGrid').innerHTML = '';
+}
+
 async function handleBuyIdUpload(e){
   const file = e.target.files && e.target.files[0];
   e.target.value = '';
@@ -4006,6 +4260,8 @@ async function submitPurchase(){
   const email = document.getElementById('buyEmail').value.trim();
   const address = document.getElementById('buyAddress').value.trim();
   const occupation = document.getElementById('buyOccupation').value.trim();
+  const officeAddress = document.getElementById('buyOfficeAddress').value.trim();
+  const stateOfOrigin = document.getElementById('buyStateOfOrigin').value.trim();
   const idType = document.getElementById('buyIdType').value;
   const idNumber = document.getElementById('buyIdNumber').value.trim();
   const kinName = document.getElementById('buyKinName').value.trim();
@@ -4014,11 +4270,12 @@ async function submitPurchase(){
   const kinRelationship = document.getElementById('buyKinRelationship').value.trim();
   const unitNumber = document.getElementById('buyUnitNumber').value.trim();
   const agreedPrice = Number(document.getElementById('buyAgreedPrice').value) || 0;
+  const paymentMethod = document.getElementById('buyPaymentMethod').value;
   const purchaseDateText = document.getElementById('buyPurchaseDate').value;
   const emergencyName = document.getElementById('buyEmergencyName').value.trim();
   const emergencyPhone = document.getElementById('buyEmergencyPhone').value.trim();
 
-  if(!fullName || !phone || !email || !address || !occupation){
+  if(!fullName || !phone || !email || !address || !occupation || !officeAddress || !stateOfOrigin){
     msgEl.innerHTML = '<div class="err-msg">Please fill in all your buyer details.</div>';
     return;
   }
@@ -4034,15 +4291,23 @@ async function submitPurchase(){
     msgEl.innerHTML = '<div class="err-msg">Please fill in all next of kin details.</div>';
     return;
   }
+  if(!buyKinPhotoDataUrl){
+    msgEl.innerHTML = '<div class="err-msg">Please upload a passport photograph of your next of kin.</div>';
+    return;
+  }
   if(!unitNumber || agreedPrice<=0){
     msgEl.innerHTML = '<div class="err-msg">Please provide the property address/unit number and agreed purchase price.</div>';
+    return;
+  }
+  if(!paymentMethod){
+    msgEl.innerHTML = '<div class="err-msg">Please select a payment method.</div>';
     return;
   }
   if(!buySigHasStroke){
     msgEl.innerHTML = '<div class="err-msg">Please sign in the signature box before confirming.</div>';
     return;
   }
-  if(!buyReceiptDataUrl){
+  if(!buyReceiptDataUrl && paymentMethod !== 'Cash Deposit'){
     msgEl.innerHTML = '<div class="err-msg">Please upload your payment receipt before confirming.</div>';
     return;
   }
@@ -4080,14 +4345,18 @@ async function submitPurchase(){
     buyerEmail: email,
     buyerAddress: address,
     buyerOccupation: occupation,
+    buyerOfficeAddress: officeAddress,
+    buyerStateOfOrigin: stateOfOrigin,
     passportPhotoUrl: buyPassportDataUrl,
     // Identification
     idType, idNumber, idDocumentUrl: buyIdDataUrl,
     // Next of kin
     kinName, kinPhone, kinAddress, kinRelationship,
+    kinPhotoUrl: buyKinPhotoDataUrl,
     // Property purchase details
     unitNumber,
     agreedPurchasePrice: agreedPrice,
+    paymentMethod,
     // Documentation
     signatureUrl: buySignatureDataUrl,
     purchaseDateText,
@@ -4357,8 +4626,9 @@ function renderUserDashboard(){
 
   document.getElementById('uRecentTable').innerHTML = allInvestments.slice(0,5).map(i=>`
     <tr><td>${i.investmentId}</td><td>${i.propertyName}</td><td>${fmtNaira(i.amount)}</td><td>${i.roi}%/mo</td>
-    <td><span class="badge badge-${i.status}">${i.status}</span></td><td>${fmtDate(i.maturityDate)}</td></tr>
-  `).join('') || '<tr><td colspan="6" class="small-muted" style="padding:20px;">No investments yet.</td></tr>';
+    <td><span class="badge badge-${i.status}">${i.status}</span></td><td>${fmtDate(i.maturityDate)}</td>
+    <td>${['approved','withdrawal_requested','completed','withdrawn'].includes(i.status) ? `<button class="btn btn-ghost btn-sm" onclick="downloadInvestmentCertificate('${i.id}')">🎓 Certificate</button>` : '<span class="small-muted">—</span>'}</td></tr>
+  `).join('') || '<tr><td colspan="7" class="small-muted" style="padding:20px;">No investments yet.</td></tr>';
 
   document.getElementById('uActiveTable').innerHTML = active.map(i=>{
     const matured = isInvestmentMatured(i);
@@ -4388,8 +4658,9 @@ function renderUserDashboard(){
 
   document.getElementById('uHistoryTable').innerHTML = allInvestments.map(i=>`
     <tr><td>${i.investmentId}</td><td>${i.propertyName}</td><td>${fmtNaira(i.amount)}</td>
-    <td><span class="badge badge-${i.status}">${i.status}</span></td><td>${i.createdAt?fmtDate(i.createdAt):'—'}</td></tr>
-  `).join('') || '<tr><td colspan="5" class="small-muted" style="padding:20px;">No history yet.</td></tr>';
+    <td><span class="badge badge-${i.status}">${i.status}</span></td><td>${i.createdAt?fmtDate(i.createdAt):'—'}</td>
+    <td>${['approved','withdrawal_requested','completed','withdrawn'].includes(i.status) ? `<button class="btn btn-ghost btn-sm" onclick="downloadInvestmentCertificate('${i.id}')">🎓 Certificate</button>` : '<span class="small-muted">—</span>'}</td></tr>
+  `).join('') || '<tr><td colspan="6" class="small-muted" style="padding:20px;">No history yet.</td></tr>';
 }
 
 /* ================= CONTACT FORM ================= */
@@ -5014,8 +5285,8 @@ async function saveProperty(e){
     const images = [...existingImageUrls, ...pendingImageFiles.map(p=>p.url)];
 
     const durationVal = Number(document.getElementById('propDuration').value)||0;
-    if(durationVal < 1 || durationVal > 36){
-      msgEl.innerHTML = '<div class="err-msg">Investment duration must be between 1 and 36 months (3 years maximum lock-in).</div>';
+    if(durationVal < 36){
+      msgEl.innerHTML = '<div class="err-msg">Investment duration must be at least 36 months (3 years minimum lock-in). Longer durations are allowed.</div>';
       btn.disabled = false; btn.textContent = 'Save Property';
       return;
     }
@@ -5109,9 +5380,12 @@ function renderAdminInvestments(){
 function viewInvestmentDetail(id){
   const i = allInvestments.find(x=>x.id===id);
   if(!i) return;
-  const imgRow = (url, label) => url
-    ? `<div style="margin-bottom:14px;"><p class="small-muted" style="margin-bottom:6px;">${label}</p><a href="${url}" target="_blank"><img src="${url}" style="width:100%; max-height:300px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a></div>`
-    : `<p class="err-msg" style="margin-bottom:14px;">${label}: not provided.</p>`;
+  resetDocDownloadRegistry();
+  const imgRow = (url, label, filename) => {
+    if(!url) return `<p class="err-msg" style="margin-bottom:14px;">${label}: not provided.</p>`;
+    const idx = registerDocDownload(url, filename || ((i.investmentId||'investment') + '-' + label));
+    return `<div style="margin-bottom:14px;"><p class="small-muted" style="margin-bottom:6px;">${label}</p><img src="${url}" style="width:100%; max-height:300px; object-fit:contain; border:1px solid var(--line); background:var(--cream); cursor:zoom-in;" onclick="viewDocImage(${idx})"><button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px;" onclick="downloadDocFromRegistry(${idx})">⬇️ Download</button></div>`;
+  };
   document.getElementById('invDetailBody').innerHTML = `
     <div class="summary-box">
       <div class="summary-row"><span>Investment ID</span><b>${i.investmentId}</b></div>
@@ -5165,6 +5439,7 @@ function viewInvestmentDetail(id){
       <div class="summary-row"><span>Address</span><b>${i.kinAddress || '—'}</b></div>
       <div class="summary-row"><span>Relationship</span><b>${i.kinRelationship || '—'}</b></div>
     </div>
+    ${imgRow(i.kinPhotoUrl, 'Next of Kin Passport Photograph')}
 
     <div class="section-title-sm">Supporting Documents</div>
     ${imgRow(i.receiptUrl, 'Proof of Payment')}
@@ -5180,7 +5455,7 @@ function viewInvestmentDetail(id){
   } else if(i.status==='withdrawal_requested'){
     actions = `<button class="btn btn-sm" onclick="updateInvestmentStatus('${i.id}','withdrawn')">Mark Withdrawn (Paid)</button>`;
   }
-  document.getElementById('invDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('invDetailBody','Investment Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('invDetailBody','Investment Details','investment-details')">⬇️ PDF</button>${(i.status==='approved'||i.status==='withdrawal_requested'||i.status==='completed'||i.status==='withdrawn') ? `<button class="btn btn-ghost btn-sm" onclick="downloadInvestmentCertificate('${i.id}')">🎓 Certificate</button>` : ''}` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('invDetailModalBg')">Close</button>`;
+  document.getElementById('invDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('invDetailBody','Investment Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('invDetailBody','Investment Details','investment-details')">⬇️ PDF</button>${docDownloadRegistry.length ? `<button class="btn btn-ghost btn-sm" onclick="downloadAllRegisteredDocuments()">📎 Download All Documents</button>` : ''}${(i.status==='approved'||i.status==='withdrawal_requested'||i.status==='completed'||i.status==='withdrawn') ? `<button class="btn btn-ghost btn-sm" onclick="downloadInvestmentCertificate('${i.id}')">🎓 Certificate</button>` : ''}` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('invDetailModalBg')">Close</button>`;
   openModalEl('invDetailModalBg');
 }
 
@@ -5219,10 +5494,13 @@ function renderAdminPurchases(){
 function viewPurchaseDetail(id){
   const pu = allPurchases.find(x=>x.id===id);
   if(!pu) return;
+  resetDocDownloadRegistry();
   const planText = pu.paymentPlan==='full' ? 'Full Payment — No Interest' : `Installment — ${pu.months} months at ${pu.interestRate}%/month`;
-  const imgRow = (url, label) => url
-    ? `<div style="margin-bottom:14px;"><p class="small-muted" style="margin-bottom:6px;">${label}</p><a href="${url}" target="_blank"><img src="${url}" style="width:100%; max-height:300px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a></div>`
-    : `<p class="err-msg" style="margin-bottom:14px;">${label}: not provided.</p>`;
+  const imgRow = (url, label, filename) => {
+    if(!url) return `<p class="err-msg" style="margin-bottom:14px;">${label}: not provided.</p>`;
+    const idx = registerDocDownload(url, filename || ((pu.purchaseId||'purchase') + '-' + label));
+    return `<div style="margin-bottom:14px;"><p class="small-muted" style="margin-bottom:6px;">${label}</p><img src="${url}" style="width:100%; max-height:300px; object-fit:contain; border:1px solid var(--line); background:var(--cream); cursor:zoom-in;" onclick="viewDocImage(${idx})"><button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px;" onclick="downloadDocFromRegistry(${idx})">⬇️ Download</button></div>`;
+  };
   document.getElementById('purchaseDetailBody').innerHTML = `
     <div class="summary-box">
       <div class="summary-row"><span>Purchase ID</span><b>${pu.purchaseId}</b></div>
@@ -5245,6 +5523,8 @@ function viewPurchaseDetail(id){
       <div class="summary-row"><span>Email Address</span><b>${pu.buyerEmail || pu.userEmail || '—'}</b></div>
       <div class="summary-row"><span>Residential Address</span><b>${pu.buyerAddress || '—'}</b></div>
       <div class="summary-row"><span>Occupation</span><b>${pu.buyerOccupation || '—'}</b></div>
+      <div class="summary-row"><span>Office Address</span><b>${pu.buyerOfficeAddress || '—'}</b></div>
+      <div class="summary-row"><span>State of Origin</span><b>${pu.buyerStateOfOrigin || '—'}</b></div>
     </div>
     ${imgRow(pu.passportPhotoUrl, 'Passport Photograph')}
 
@@ -5262,12 +5542,14 @@ function viewPurchaseDetail(id){
       <div class="summary-row"><span>Address</span><b>${pu.kinAddress || '—'}</b></div>
       <div class="summary-row"><span>Relationship to Buyer</span><b>${pu.kinRelationship || '—'}</b></div>
     </div>
+    ${imgRow(pu.kinPhotoUrl, 'Next of Kin Passport Photograph')}
 
     <div class="section-title-sm">Property Purchase Details</div>
     <div class="summary-box">
       <div class="summary-row"><span>Property Address / Unit Number</span><b>${pu.unitNumber || '—'}</b></div>
       <div class="summary-row"><span>Agreed Purchase Price</span><b>${pu.agreedPurchasePrice ? fmtNaira(pu.agreedPurchasePrice) : '—'}</b></div>
-      <div class="summary-row"><span>Payment Method</span><b>${pu.paymentPlan==='full' ? 'Outright' : 'Installment'}</b></div>
+      <div class="summary-row"><span>Purchase Plan</span><b>${pu.paymentPlan==='full' ? 'Outright' : 'Installment'}</b></div>
+      <div class="summary-row"><span>Payment Method</span><b>${pu.paymentMethod || '—'}</b></div>
       ${pu.paymentPlan==='installment' ? `<div class="summary-row"><span>Payment Schedule</span><b>${pu.months} months at ${fmtNaira(pu.monthlyInstallment)}/month</b></div>` : ''}
     </div>
 
@@ -5286,6 +5568,7 @@ function viewPurchaseDetail(id){
     <div class="section-title-sm">Payment Receipt (deposit / full payment)</div>
     ${pu.receiptUrl
       ? `<a href="${pu.receiptUrl}" target="_blank"><img src="${pu.receiptUrl}" style="width:100%; max-height:360px; object-fit:contain; border:1px solid var(--line); background:var(--cream);"></a>
+         <button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px;" onclick="downloadDocFromRegistry(${registerDocDownload(pu.receiptUrl, (pu.purchaseId||'purchase') + '-Payment Receipt')})">⬇️ Download</button>
          <p class="small-muted" style="margin-top:6px;">Tap the image to view it full size before approving.</p>`
       : `<p class="err-msg">No receipt was uploaded for this purchase.</p>`}
     ${pu.paymentPlan==='installment' ? `<div class="section-title-sm">Monthly Installment Payments</div>
@@ -5298,7 +5581,7 @@ function viewPurchaseDetail(id){
   } else if(pu.status==='approved'){
     actions = `<button class="btn btn-sm" onclick="updatePurchaseStatus('${pu.id}','completed')">Mark Completed</button>`;
   }
-  document.getElementById('purchaseDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('purchaseDetailBody','Purchase Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('purchaseDetailBody','Purchase Details','purchase-details')">⬇️ PDF</button>${(pu.status==='approved'||pu.status==='completed') ? `<button class="btn btn-ghost btn-sm" onclick="downloadPurchaseCertificate('${pu.id}')">🎓 Certificate</button>` : ''}` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('purchaseDetailModalBg')">Close</button>`;
+  document.getElementById('purchaseDetailFoot').innerHTML = `<button class="btn btn-ghost btn-sm" onclick="printElementContent('purchaseDetailBody','Purchase Details')">🖨️ Print</button><button class="btn btn-ghost btn-sm" onclick="downloadElementPdf('purchaseDetailBody','Purchase Details','purchase-details')">⬇️ PDF</button>${docDownloadRegistry.length ? `<button class="btn btn-ghost btn-sm" onclick="downloadAllRegisteredDocuments()">📎 Download All Documents</button>` : ''}${(pu.status==='approved'||pu.status==='completed') ? `<button class="btn btn-ghost btn-sm" onclick="downloadPurchaseCertificate('${pu.id}')">🎓 Certificate</button>` : ''}` + actions + `<button class="btn btn-ghost btn-sm" onclick="closeModal('purchaseDetailModalBg')">Close</button>`;
   openModalEl('purchaseDetailModalBg');
   if(pu.paymentPlan==='installment') loadInstallmentPaymentsForAdmin(pu.id);
 }
