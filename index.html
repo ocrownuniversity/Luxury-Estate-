@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Royal Luxury Mini Estate | Real Estate Investment</title>
 <meta name="description" content="Royal Luxury Mini Estate — premium property investment in Abeokuta, Ogun State, Nigeria.">
 <meta name="keywords" content="real estate investment Nigeria, property investment Abeokuta, land for sale Ogun State, Royal Luxury Mini Estate, buy property Nigeria, real estate ROI, property purchase Abeokuta">
@@ -18,6 +18,8 @@
 <meta property="og:title" content="Royal Luxury Mini Estate | Real Estate Investment">
 <meta property="og:description" content="Premium property investment and purchase opportunities in Abeokuta, Ogun State, Nigeria — transparent terms, verified titles, fixed returns.">
 <meta property="og:image" content="https://royalluxuryminiestate.com/logo.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="Royal Luxury Mini Estate — premium property investment in Abeokuta, Ogun State">
 <meta property="og:url" content="https://royalluxuryminiestate.com/">
 <meta property="og:locale" content="en_NG">
 
@@ -26,13 +28,30 @@
 <meta name="twitter:title" content="Royal Luxury Mini Estate | Real Estate Investment">
 <meta name="twitter:description" content="Premium property investment and purchase opportunities in Abeokuta, Ogun State, Nigeria.">
 <meta name="twitter:image" content="https://royalluxuryminiestate.com/logo.jpg">
+<meta name="twitter:image:alt" content="Royal Luxury Mini Estate — premium property investment in Abeokuta, Ogun State">
 
-<link rel="icon" href="logo.jpg">
-<link rel="apple-touch-icon" href="logo.jpg">
+<!-- Mobile "Add to Home Screen" polish -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Royal Luxury">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Royal Luxury">
+<meta name="msapplication-TileColor" content="#14110d">
+<meta name="msapplication-TileImage" content="icon-144.png">
+
+<!-- Favicons, app icons & PWA manifest (all files live next to index.html) -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="icon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icon-167.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Structured data for search engines -->
 <script type="application/ld+json">
@@ -143,8 +162,8 @@ input,select,textarea{font-family:inherit; font-size:15px;}
 .nav-cta{display:flex; align-items:center; gap:10px;}
 #navToggle{display:none; background:none; border:none; color:var(--cream); font-size:24px;}
 @media(max-width:960px){
-  .nav-links{position:fixed; top:67px; left:0; right:0; background:var(--ink); flex-direction:column; align-items:stretch; padding:8px 20px 20px; border-bottom:1px solid var(--line); transform:translateY(-140%); transition:transform .3s ease; max-height:80vh; overflow:auto;}
-  .nav-links.open{transform:translateY(0);}
+  .nav-links{position:absolute; top:100%; left:0; right:0; visibility:hidden; background:var(--ink); flex-direction:column; align-items:stretch; padding:8px 20px 20px; border-bottom:1px solid var(--line); transform:translateY(-140%); transition:transform .3s ease; max-height:80vh; overflow:auto;}
+  .nav-links.open{transform:translateY(0); visibility:visible;}
   .nav-link{padding:14px 6px; border-bottom:1px solid rgba(255,255,255,.06);}
   #navToggle{display:block;}
 }
@@ -494,6 +513,30 @@ tr:hover td{background:rgba(184,134,60,.05);}
 .modal-foot{padding:18px 26px; border-top:1px solid var(--line); display:flex; justify-content:flex-end; gap:10px;}
 .modal.wide{max-width:820px;}
 
+/* multi-step form */
+.form-step{display:none;}
+.form-step.active{display:block;}
+.step-progress{margin:0 0 20px;}
+.step-progress-track{display:flex; align-items:center; gap:4px; margin-bottom:10px;}
+.step-progress-track .step-seg{flex:1; height:4px; background:var(--line); border-radius:2px; overflow:hidden;}
+.step-progress-track .step-seg i{display:block; height:100%; width:0; background:var(--gold); transition:width .25s ease;}
+.step-progress-track .step-seg.done i{width:100%;}
+.step-progress-track .step-seg.active i{width:100%;}
+.step-progress-label{font-size:12px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:var(--gold);}
+.step-progress-title{font-size:13.5px; color:var(--muted-dark); margin-top:2px;}
+.modal-foot .step-nav-spacer{flex:1;}
+
+/* offline banner */
+.offline-banner{
+  display:none; position:fixed; top:0; left:0; right:0; z-index:9999;
+  background:var(--bad); color:#fff; text-align:center; font-size:12.5px; font-weight:600;
+  padding:10px 16px; box-shadow:0 4px 14px rgba(0,0,0,.25);
+}
+.offline-banner.show{display:block;}
+body.offline-active{padding-top:38px;}
+body.offline-active #nav{top:38px;}
+
+
 /* invest summary */
 .summary-box{border:1px solid var(--gold-dim); background:var(--cream);}
 .summary-row{display:flex; justify-content:space-between; padding:13px 20px; border-bottom:1px solid var(--line); font-size:13.5px;}
@@ -713,15 +756,42 @@ body:has(#page-home.active) footer a{cursor:pointer;}
   #page-home .calc-form .field-row{flex-direction:column; gap:0;}
   #page-home .faq-a p{padding-right:0;}
 }
+
+/* ============ PWA: install bar, iOS help, update bar ============ */
+.install-bar{display:none; align-items:center; gap:12px; padding:10px 14px; background:linear-gradient(90deg,#1f1b15,#14110d); border-bottom:1px solid var(--gold-dim); color:var(--cream);}
+body.on-home .install-bar.show{display:flex;}
+.install-bar .ib-icon{width:42px; height:42px; border-radius:10px; flex:none; box-shadow:0 0 0 1px var(--gold-dim);}
+.install-bar .ib-text{flex:1; min-width:0; line-height:1.25;}
+.install-bar .ib-text b{display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:14px; font-weight:600; color:var(--gold-light);}
+.install-bar .ib-text span{display:block; font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.install-bar .ib-btn{padding:9px 18px; font-size:13px; flex:none;}
+.install-bar .ib-close{background:none; border:none; color:var(--muted); font-size:24px; line-height:1; padding:4px 6px; flex:none;}
+.install-bar .ib-close:hover{color:var(--cream);}
+.install-steps{list-style:none; counter-reset:st; display:grid; gap:12px; margin:6px 0 4px;}
+.install-steps li{counter-increment:st; position:relative; padding-left:38px; font-size:14.5px; line-height:1.5;}
+.install-steps li::before{content:counter(st); position:absolute; left:0; top:0; width:26px; height:26px; border-radius:50%; background:var(--gold); color:var(--ink); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center;}
+.update-bar{position:fixed; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom,0px)); z-index:950; display:none; align-items:center; gap:12px; justify-content:space-between; max-width:460px; margin:0 auto; background:var(--ink); color:var(--cream); border:1px solid var(--gold-dim); border-radius:var(--radius); padding:12px 14px; font-size:13.5px; box-shadow:var(--shadow);}
+.update-bar.show{display:flex;}
+.update-bar button{background:var(--gold); color:var(--ink); border:none; border-radius:var(--radius); padding:8px 14px; font-weight:600; font-size:13px;}
 </style>
 </head>
 <body>
+
+<div id="offlineBanner" class="offline-banner">📡 You're offline — changes will be saved locally and can be resubmitted once you're back online.</div>
+
+<!-- ============ PWA INSTALL BAR (homepage only, hidden once installed) ============ -->
+<div id="installBar" class="install-bar" role="region" aria-label="Install app">
+  <img class="ib-icon" src="icon-96.png" alt="" width="42" height="42">
+  <div class="ib-text"><b>Install our app</b><span>Faster access to properties &amp; offers</span></div>
+  <button class="btn ib-btn" id="installBtn" type="button">Install</button>
+  <button class="ib-close" id="installClose" type="button" aria-label="Dismiss">&times;</button>
+</div>
 
 <!-- ============ NAV ============ -->
 <nav id="nav">
   <div class="nav-inner">
     <div class="brand" onclick="go('home')">
-      <img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('span'),{className:'crest',textContent:'R'}))">
+      <img class="crest" src="icon-192.png" alt="Royal Luxury Mini Estate logo" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('span'),{className:'crest',textContent:'R'}))">
       <div class="brand-name">Royal Luxury <b>Mini Estate</b></div>
     </div>
     <div class="nav-links" id="navLinks">
@@ -733,6 +803,7 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <a class="nav-link" data-page="posts" onclick="go('posts')">Updates</a>
       <a class="nav-link hidden" id="navDashboard" data-page="dashboard" onclick="go('dashboard')">My Dashboard</a>
       <a class="nav-link hidden" id="navAdmin" data-page="admin" onclick="go('admin')">Admin Panel</a>
+      <a class="nav-link hidden" id="navInstall" onclick="pwaInstall()">📲 Install App</a>
       <a class="nav-link" id="navAuth" data-page="auth" onclick="go('auth')">Login / Register</a>
       <a class="nav-link hidden" id="navLogout" onclick="logoutUser()">Logout</a>
     </div>
@@ -1536,7 +1607,7 @@ body:has(#page-home.active) footer a{cursor:pointer;}
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <div class="brand" style="margin-bottom:14px;"><img class="crest" src="logo.jpg" alt="Royal Luxury Mini Estate logo" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('span'),{className:'crest',textContent:'R'}))"><div class="brand-name">Royal Luxury <b>Mini Estate</b></div></div>
+        <div class="brand" style="margin-bottom:14px;"><img class="crest" src="icon-192.png" alt="Royal Luxury Mini Estate logo" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('span'),{className:'crest',textContent:'R'}))"><div class="brand-name">Royal Luxury <b>Mini Estate</b></div></div>
         <p style="font-size:13.5px; max-width:320px;">Premium real estate investment opportunities in Abeokuta, Ogun State, Nigeria — built on transparency and trust.</p>
       </div>
       <div>
@@ -1586,6 +1657,51 @@ body:has(#page-home.active) footer a{cursor:pointer;}
 <!-- MODALS -->
 <!-- ============================================================= -->
 
+<!-- Onboarding Walkthrough Modal -->
+<div class="modal-bg" id="onboardingModalBg">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-body" style="text-align:center; padding-top:36px;">
+      <div class="step-progress">
+        <div class="step-progress-track" id="onboardingModalBgStepTrack">
+          <div class="step-seg" data-step="1"><i></i></div>
+          <div class="step-seg" data-step="2"><i></i></div>
+          <div class="step-seg" data-step="3"><i></i></div>
+          <div class="step-seg" data-step="4"><i></i></div>
+        </div>
+      </div>
+
+      <div class="form-step" data-step="1">
+        <div style="font-size:48px; margin-bottom:14px;">🏛️</div>
+        <h3 style="font-family:var(--serif); font-size:22px; margin-bottom:10px;">Welcome to Royal Luxury Mini Estate</h3>
+        <p class="small-muted">Discover verified properties, invest with confidence, and manage everything in one place.</p>
+      </div>
+      <div class="form-step" data-step="2">
+        <div style="font-size:48px; margin-bottom:14px;">🔍</div>
+        <h3 style="font-family:var(--serif); font-size:22px; margin-bottom:10px;">Browse & Compare Properties</h3>
+        <p class="small-muted">Explore listings by location, price and expected returns, and compare your favorites side by side.</p>
+      </div>
+      <div class="form-step" data-step="3">
+        <div style="font-size:48px; margin-bottom:14px;">🔒</div>
+        <h3 style="font-family:var(--serif); font-size:22px; margin-bottom:10px;">Invest or Buy Securely</h3>
+        <p class="small-muted">Every investment and purchase is verified step-by-step, with your documents and payment kept safe.</p>
+      </div>
+      <div class="form-step" data-step="4">
+        <div style="font-size:48px; margin-bottom:14px;">📊</div>
+        <h3 style="font-family:var(--serif); font-size:22px; margin-bottom:10px;">Track Everything in Your Dashboard</h3>
+        <p class="small-muted">Monitor your investments, purchases, payments and messages all from one dashboard.</p>
+      </div>
+    </div>
+    <div class="modal-foot" style="justify-content:space-between;">
+      <button class="btn btn-ghost" onclick="closeModal('onboardingModalBg')">Skip</button>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost" id="onboardingModalBgBackBtn" onclick="formStepBack('onboardingModalBg')" style="display:none;">← Back</button>
+        <button class="btn" id="onboardingModalBgNextBtn" onclick="formStepNext('onboardingModalBg')">Next →</button>
+        <button class="btn" id="onboardingGetStartedBtn" onclick="closeModal('onboardingModalBg')" style="display:none;">Get Started</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Invest Modal -->
 <div class="modal-bg" id="investModalBg">
   <div class="modal">
@@ -1594,6 +1710,20 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <div id="investMsg"></div>
       <p class="small-muted" style="margin-bottom:16px;" id="investPropName"></p>
 
+      <div class="step-progress">
+        <div class="step-progress-track" id="investModalBgStepTrack">
+          <div class="step-seg" data-step="1"><i></i></div>
+          <div class="step-seg" data-step="2"><i></i></div>
+          <div class="step-seg" data-step="3"><i></i></div>
+          <div class="step-seg" data-step="4"><i></i></div>
+          <div class="step-seg" data-step="5"><i></i></div>
+          <div class="step-seg" data-step="6"><i></i></div>
+        </div>
+        <div class="step-progress-label" id="investModalBgStepLabel">Step 1 of 6</div>
+        <div class="step-progress-title" id="investModalBgStepTitle">Personal Information</div>
+      </div>
+
+      <div class="form-step" data-step="1">
       <div class="section-title-sm" style="margin-top:0;">Personal Information</div>
       <div class="field"><label>Full Name <span style="color:var(--bad)">*</span></label><input type="text" id="investFullName" placeholder="Your full legal name"></div>
       <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="investPhone" placeholder="e.g. 08012345678"></div>
@@ -1606,9 +1736,10 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <input type="file" id="investPassportInput" accept="image/*" class="hidden" onchange="handleInvestPassportUpload(event)">
         <div class="img-upload-grid" id="investPassportPreviewGrid"></div>
       </div>
+      </div>
 
-      <div class="divider"></div>
-      <div class="section-title-sm">Identification</div>
+      <div class="form-step" data-step="2">
+      <div class="section-title-sm" style="margin-top:0;">Identification</div>
       <div class="field">
         <label>Identification Type <span style="color:var(--bad)">*</span></label>
         <select id="investIdType">
@@ -1626,9 +1757,10 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <input type="file" id="investIdInput" accept="image/*" class="hidden" onchange="handleInvestIdUpload(event)">
         <div class="img-upload-grid" id="investIdPreviewGrid"></div>
       </div>
+      </div>
 
-      <div class="divider"></div>
-      <div class="section-title-sm">Investment Information</div>
+      <div class="form-step" data-step="3">
+      <div class="section-title-sm" style="margin-top:0;">Investment Information</div>
       <div class="field"><label>Investment Package / Plan</label><input type="text" id="investPackage" readonly></div>
       <div class="field"><label>Investment Amount (₦) <span style="color:var(--bad)">*</span></label><input type="number" id="investAmount" oninput="updateInvestPreview()"></div>
       <p class="hint" id="investMinHint"></p>
@@ -1656,8 +1788,9 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <div class="summary-total"><span>Total Expected Return</span><b id="pvTotal">—</b></div>
       </div>
       <p class="hint" id="pvLockHint" style="margin-top:8px;">Your investment value grows every month, but funds are locked until the maturity date shown above — every investment runs for a minimum of 3 years, and withdrawals open once that date is reached.</p>
+      </div>
 
-      <div class="divider"></div>
+      <div class="form-step" data-step="4">
       <div class="section-title-sm" style="margin-top:0;">Bank Details for Payment</div>
       <div class="summary-box" id="investBankBox">
         <div class="summary-row"><span>Bank Name</span><b id="ibBank">—</b></div>
@@ -1672,9 +1805,10 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <div class="field"><label>Account Name <span style="color:var(--bad)">*</span></label><input type="text" id="investPayoutAccountName" placeholder="Account name"></div>
       <div class="field"><label>Bank Name <span style="color:var(--bad)">*</span></label><input type="text" id="investPayoutBankName" placeholder="Bank name"></div>
       <div class="field"><label>Account Number <span style="color:var(--bad)">*</span></label><input type="text" id="investPayoutAccountNumber" placeholder="Account number"></div>
+      </div>
 
-      <div class="divider"></div>
-      <div class="section-title-sm">Next of Kin</div>
+      <div class="form-step" data-step="5">
+      <div class="section-title-sm" style="margin-top:0;">Next of Kin</div>
       <div class="field"><label>Full Name <span style="color:var(--bad)">*</span></label><input type="text" id="investKinName" placeholder="Next of kin full name"></div>
       <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="investKinPhone" placeholder="Next of kin phone number"></div>
       <div class="field"><label>Address <span style="color:var(--bad)">*</span></label><textarea id="investKinAddress" placeholder="Next of kin address"></textarea></div>
@@ -1685,9 +1819,10 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <input type="file" id="investKinPhotoInput" accept="image/*" class="hidden" onchange="handleInvestKinPhotoUpload(event)">
         <div class="img-upload-grid" id="investKinPhotoPreviewGrid"></div>
       </div>
+      </div>
 
-      <div class="divider"></div>
-      <div class="section-title-sm">Supporting Documents</div>
+      <div class="form-step" data-step="6">
+      <div class="section-title-sm" style="margin-top:0;">Supporting Documents</div>
       <div class="field" id="investReceiptField">
         <label>Proof of Payment <span style="color:var(--bad)">*</span></label>
         <div class="upload-drop" onclick="document.getElementById('receiptInput').click()">Click to upload your proof of payment (image)</div>
@@ -1701,13 +1836,18 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <canvas id="investSignatureCanvas" width="600" height="180" style="width:100%; height:150px; border:1px solid var(--line); background:#fff; touch-action:none; border-radius:3px; display:block;"></canvas>
         <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="clearInvestSignature()">Clear Signature</button>
       </div>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeModal('investModalBg')">Cancel</button>
-      <button class="btn" id="submitInvestBtn" onclick="submitInvestment()">Confirm Investment</button>
+      <span class="step-nav-spacer"></span>
+      <button class="btn btn-ghost" id="investModalBgBackBtn" onclick="formStepBack('investModalBg')" style="display:none;">← Back</button>
+      <button class="btn" id="investModalBgNextBtn" onclick="formStepNext('investModalBg')">Next →</button>
+      <button class="btn" id="submitInvestBtn" onclick="submitInvestment()" style="display:none;">Confirm Investment</button>
     </div>
   </div>
 </div>
+
 
 <!-- Investment Summary Modal -->
 <div class="modal-bg" id="summaryModalBg">
@@ -1742,6 +1882,20 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       <div id="buyMsg"></div>
       <p class="small-muted" style="margin-bottom:16px;" id="buyPropName"></p>
 
+      <div class="step-progress">
+        <div class="step-progress-track" id="buyModalBgStepTrack">
+          <div class="step-seg" data-step="1"><i></i></div>
+          <div class="step-seg" data-step="2"><i></i></div>
+          <div class="step-seg" data-step="3"><i></i></div>
+          <div class="step-seg" data-step="4"><i></i></div>
+          <div class="step-seg" data-step="5"><i></i></div>
+          <div class="step-seg" data-step="6"><i></i></div>
+        </div>
+        <div class="step-progress-label" id="buyModalBgStepLabel">Step 1 of 6</div>
+        <div class="step-progress-title" id="buyModalBgStepTitle">Buyer Details</div>
+      </div>
+
+      <div class="form-step" data-step="1">
       <div class="section-title-sm" style="margin-top:0;">Buyer Details</div>
       <div class="field"><label>Full Name <span style="color:var(--bad)">*</span></label><input type="text" id="buyFullName" placeholder="Your full legal name"></div>
       <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="buyPhone" placeholder="e.g. 08012345678"></div>
@@ -1756,9 +1910,10 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <input type="file" id="buyPassportInput" accept="image/*" class="hidden" onchange="handleBuyPassportUpload(event)">
         <div class="img-upload-grid" id="buyPassportPreviewGrid"></div>
       </div>
+      </div>
 
-      <div class="divider"></div>
-      <div class="section-title-sm">Identification</div>
+      <div class="form-step" data-step="2">
+      <div class="section-title-sm" style="margin-top:0;">Identification</div>
       <div class="field">
         <label>Identification Type <span style="color:var(--bad)">*</span></label>
         <select id="buyIdType">
@@ -1776,9 +1931,10 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <input type="file" id="buyIdInput" accept="image/*" class="hidden" onchange="handleBuyIdUpload(event)">
         <div class="img-upload-grid" id="buyIdPreviewGrid"></div>
       </div>
+      </div>
 
-      <div class="divider"></div>
-      <div class="section-title-sm">Next of Kin Details</div>
+      <div class="form-step" data-step="3">
+      <div class="section-title-sm" style="margin-top:0;">Next of Kin Details</div>
       <div class="field"><label>Full Name <span style="color:var(--bad)">*</span></label><input type="text" id="buyKinName" placeholder="Next of kin full name"></div>
       <div class="field"><label>Phone Number <span style="color:var(--bad)">*</span></label><input type="tel" id="buyKinPhone" placeholder="Next of kin phone number"></div>
       <div class="field"><label>Address <span style="color:var(--bad)">*</span></label><textarea id="buyKinAddress" placeholder="Next of kin address"></textarea></div>
@@ -1789,9 +1945,10 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <input type="file" id="buyKinPhotoInput" accept="image/*" class="hidden" onchange="handleBuyKinPhotoUpload(event)">
         <div class="img-upload-grid" id="buyKinPhotoPreviewGrid"></div>
       </div>
+      </div>
 
-      <div class="divider"></div>
-      <div class="section-title-sm">Property Purchase Details</div>
+      <div class="form-step" data-step="4">
+      <div class="section-title-sm" style="margin-top:0;">Property Purchase Details</div>
       <div class="field"><label>Property Address / Unit Number <span style="color:var(--bad)">*</span></label><input type="text" id="buyUnitNumber" placeholder="e.g. Block A, Plot 12"></div>
       <div class="field"><label>Agreed Purchase Price (₦) <span style="color:var(--bad)">*</span></label><input type="number" id="buyAgreedPrice" min="0"><p class="hint">Defaults to the listed price. Only change this if you and admin agreed a different price — the totals below are still calculated from the official listed price.</p></div>
       <div class="field">
@@ -1817,8 +1974,9 @@ body:has(#page-home.active) footer a{cursor:pointer;}
           <option>Other</option>
         </select>
       </div>
+      </div>
 
-      <div class="divider"></div>
+      <div class="form-step" data-step="5">
       <div class="summary-box" id="buyPreviewBox" style="display:none;">
         <div class="summary-row"><span>Property Price</span><b id="bvPrice">—</b></div>
         <div class="summary-row" id="bvPlanRow"><span>Payment Plan</span><b id="bvPlan">—</b></div>
@@ -1839,9 +1997,10 @@ body:has(#page-home.active) footer a{cursor:pointer;}
       </div>
       <p class="hint" id="bbNote"></p>
       <p class="small-muted" style="margin-top:10px;">For full payment, pay the total price. For installment, pay the initial deposit shown above first, then upload your receipt below. Your purchase will be verified and approved once the admin confirms the receipt.</p>
+      </div>
 
-      <div class="divider"></div>
-      <div class="section-title-sm">Documentation</div>
+      <div class="form-step" data-step="6">
+      <div class="section-title-sm" style="margin-top:0;">Documentation</div>
       <div class="field">
         <label>Signature <span style="color:var(--bad)">*</span></label>
         <p class="hint" style="margin-top:0; margin-bottom:8px;">Sign inside the box below with your finger or mouse.</p>
@@ -1865,13 +2024,18 @@ body:has(#page-home.active) footer a{cursor:pointer;}
         <div class="img-upload-grid" id="buyReceiptPreviewGrid"></div>
       </div>
       <p class="hint" id="buyCashDepositNote" style="display:none;">No receipt needed — your cash deposit will be confirmed by our team directly.</p>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeModal('buyModalBg')">Cancel</button>
-      <button class="btn" id="submitBuyBtn" onclick="submitPurchase()">Confirm Purchase</button>
+      <span class="step-nav-spacer"></span>
+      <button class="btn btn-ghost" id="buyModalBgBackBtn" onclick="formStepBack('buyModalBg')" style="display:none;">← Back</button>
+      <button class="btn" id="buyModalBgNextBtn" onclick="formStepNext('buyModalBg')">Next →</button>
+      <button class="btn" id="submitBuyBtn" onclick="submitPurchase()" style="display:none;">Confirm Purchase</button>
     </div>
   </div>
 </div>
+
 
 <!-- Buy Purchase Summary Modal -->
 <div class="modal-bg" id="buySummaryModalBg">
@@ -2231,6 +2395,126 @@ function toast(msg){
 
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 function openModalEl(id){ document.getElementById(id).classList.add('open'); }
+
+/* ---- Generic multi-step form engine (used by Invest & Buy forms) ---- */
+const formStepConfig = {};
+function formStepInit(containerId, titles, submitBtnId){
+  formStepConfig[containerId] = { current:1, total:titles.length, titles, submitBtnId };
+  formStepShow(containerId, 1);
+}
+function formStepShow(containerId, step){
+  const cfg = formStepConfig[containerId];
+  if(!cfg) return;
+  cfg.current = step;
+  const root = document.getElementById(containerId);
+  root.querySelectorAll('.form-step').forEach(el=>{
+    el.classList.toggle('active', Number(el.dataset.step)===step);
+  });
+  const track = document.getElementById(containerId+'StepTrack');
+  if(track){
+    track.querySelectorAll('.step-seg').forEach(seg=>{
+      const n = Number(seg.dataset.step);
+      seg.classList.toggle('done', n<step);
+      seg.classList.toggle('active', n<=step);
+    });
+  }
+  const label = document.getElementById(containerId+'StepLabel');
+  if(label) label.textContent = 'Step ' + step + ' of ' + cfg.total;
+  const title = document.getElementById(containerId+'StepTitle');
+  if(title) title.textContent = cfg.titles[step-1] || '';
+  const backBtn = document.getElementById(containerId+'BackBtn');
+  const nextBtn = document.getElementById(containerId+'NextBtn');
+  const submitBtn = cfg.submitBtnId ? document.getElementById(cfg.submitBtnId) : null;
+  if(backBtn) backBtn.style.display = step>1 ? '' : 'none';
+  if(nextBtn) nextBtn.style.display = step<cfg.total ? '' : 'none';
+  if(submitBtn) submitBtn.style.display = step===cfg.total ? '' : 'none';
+  const body = root.querySelector('.modal-body');
+  if(body) body.scrollTop = 0;
+}
+function formStepNext(containerId){
+  const cfg = formStepConfig[containerId];
+  if(cfg && cfg.current < cfg.total) formStepShow(containerId, cfg.current+1);
+}
+function formStepBack(containerId){
+  const cfg = formStepConfig[containerId];
+  if(cfg && cfg.current > 1) formStepShow(containerId, cfg.current-1);
+}
+function showOnboardingWalkthrough(){
+  formStepInit('onboardingModalBg', ['Welcome','Browse Properties','Invest & Buy','Track Progress'], 'onboardingGetStartedBtn');
+  openModalEl('onboardingModalBg');
+}
+
+/* ---------------------------------------------------------------
+   RELIABILITY: offline detection banner
+--------------------------------------------------------------- */
+function updateOnlineStatus(){
+  const isOffline = !navigator.onLine;
+  document.getElementById('offlineBanner').classList.toggle('show', isOffline);
+  document.body.classList.toggle('offline-active', isOffline);
+}
+window.addEventListener('online', ()=>{ updateOnlineStatus(); toast('Back online — you\'re all set.'); });
+window.addEventListener('offline', ()=>{ updateOnlineStatus(); toast('You are offline. Some actions may not go through until you reconnect.'); });
+updateOnlineStatus();
+
+/* ---------------------------------------------------------------
+   RELIABILITY: auto-save drafts of the long Invest/Purchase forms
+   to localStorage (text fields only — not photos/ID/receipt/signature,
+   which stay too large for localStorage and must be re-uploaded).
+   This protects against lost work if the browser closes or crashes
+   mid-form; the draft is cleared automatically once submitted.
+--------------------------------------------------------------- */
+const AUTOSAVE_FIELDS = {
+  investModalBg: ['investFullName','investPhone','investEmail','investAddress','investOccupation','investIdType','investIdNumber','investAmount','investDuration','investPaymentMethod','investPayoutAccountName','investPayoutBankName','investPayoutAccountNumber','investKinName','investKinPhone','investKinAddress','investKinRelationship'],
+  buyModalBg: ['buyFullName','buyPhone','buyEmail','buyAddress','buyOccupation','buyOfficeAddress','buyStateOfOrigin','buyIdType','buyIdNumber','buyKinName','buyKinPhone','buyKinAddress','buyKinRelationship','buyUnitNumber','buyAgreedPrice','buyPlan','buyMonths','buyPaymentMethod','buyEmergencyName','buyEmergencyPhone']
+};
+const autosaveKeys = { investModalBg:null, buyModalBg:null };
+let autosaveTimer = null;
+
+function startFormAutosave(containerId, propId){
+  autosaveKeys[containerId] = 'rle_draft_' + containerId + '_' + propId;
+}
+function saveFormDraft(containerId){
+  const key = autosaveKeys[containerId];
+  if(!key) return;
+  const data = {};
+  (AUTOSAVE_FIELDS[containerId]||[]).forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) data[id] = el.value;
+  });
+  try{ localStorage.setItem(key, JSON.stringify(data)); }catch(e){}
+}
+function restoreFormDraft(containerId){
+  const key = autosaveKeys[containerId];
+  if(!key) return false;
+  let raw, data;
+  try{ raw = localStorage.getItem(key); }catch(e){ return false; }
+  if(!raw) return false;
+  try{ data = JSON.parse(raw); }catch(e){ return false; }
+  let restoredAny = false;
+  Object.keys(data).forEach(id=>{
+    const el = document.getElementById(id);
+    if(el && data[id]){ el.value = data[id]; restoredAny = true; }
+  });
+  return restoredAny;
+}
+function clearFormDraft(containerId){
+  const key = autosaveKeys[containerId];
+  if(key){ try{ localStorage.removeItem(key); }catch(e){} }
+  autosaveKeys[containerId] = null;
+}
+function autosaveHandler(e){
+  const el = e.target;
+  if(!el || !el.id) return;
+  Object.keys(AUTOSAVE_FIELDS).forEach(containerId=>{
+    if(AUTOSAVE_FIELDS[containerId].includes(el.id)){
+      clearTimeout(autosaveTimer);
+      autosaveTimer = setTimeout(()=> saveFormDraft(containerId), 400);
+    }
+  });
+}
+document.addEventListener('input', autosaveHandler);
+document.addEventListener('change', autosaveHandler);
+
 
 function fmtNaira(n){
   n = Number(n)||0;
@@ -3035,6 +3319,7 @@ async function registerUser(e){
     });
     toast('Account created. Welcome, '+name+'!');
     go('dashboard');
+    showOnboardingWalkthrough();
   }catch(err){
     document.getElementById('registerMsg').innerHTML = '<div class="err-msg">'+err.message+'</div>';
   }finally{
@@ -3691,9 +3976,13 @@ function openInvestModal(propId){
   document.getElementById('investKinPhone').value = '';
   document.getElementById('investKinAddress').value = '';
   document.getElementById('investKinRelationship').value = '';
+  startFormAutosave('investModalBg', p.id);
+  if(restoreFormDraft('investModalBg')) toast('Draft restored from your last visit');
+  onInvestPaymentMethodChange();
   initInvestSignaturePad();
 
   updateInvestPreview();
+  formStepInit('investModalBg', ['Personal Information','Identification','Investment Details','Payment & Payouts','Next of Kin','Documents & Signature'], 'submitInvestBtn');
   openModalEl('investModalBg');
 }
 
@@ -3996,6 +4285,7 @@ async function submitInvestment(){
 
     closeModal('investModalBg');
     openModalEl('summaryModalBg');
+    clearFormDraft('investModalBg');
 
     // Immediate redirect to WhatsApp
     window.open(waLink, '_blank');
@@ -4066,9 +4356,14 @@ function openBuyModal(propId){
   document.getElementById('buyPurchaseDate').value = new Date().toLocaleDateString('en-NG', {year:'numeric', month:'long', day:'numeric'});
   document.getElementById('buyEmergencyName').value = '';
   document.getElementById('buyEmergencyPhone').value = '';
+  startFormAutosave('buyModalBg', p.id);
+  if(restoreFormDraft('buyModalBg')) toast('Draft restored from your last visit');
+  onBuyPlanChange();
+  onBuyPaymentMethodChange();
   initBuySignaturePad();
 
   updateBuyPreview();
+  formStepInit('buyModalBg', ['Buyer Details','Identification','Next of Kin','Purchase Details','Payment','Documentation'], 'submitBuyBtn');
   openModalEl('buyModalBg');
 }
 
@@ -4392,6 +4687,7 @@ async function submitPurchase(){
 
     closeModal('buyModalBg');
     openModalEl('buySummaryModalBg');
+    clearFormDraft('buyModalBg');
     window.open(waLink, '_blank');
 
     loadUserPurchases();
@@ -6101,6 +6397,149 @@ function testimonialCardHtml(r){
   await loadPosts();
   loadTestimonials();
   loadBanners();
+})();
+</script>
+<!-- ============ PWA: install help modal + update bar ============ -->
+<div class="modal-bg" id="installHelpModalBg" onclick="if(event.target===this)closeModal('installHelpModalBg')">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-head"><h3>Install Royal Luxury</h3><button class="modal-close" onclick="closeModal('installHelpModalBg')">&times;</button></div>
+    <div class="modal-body">
+      <ol class="install-steps" id="installSteps"></ol>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeModal('installHelpModalBg')">Got it</button></div>
+  </div>
+</div>
+<div class="update-bar" id="updateBar"><span>A new version is available.</span><button type="button" id="updateBtn">Refresh</button></div>
+
+<script>
+/* ================= PWA: install prompt + service worker ================= */
+(function(){
+  var deferredPrompt = null;
+  var DISMISS_KEY = 'rlme_install_dismissed_at';
+  var DISMISS_DAYS = 3;
+  var bar = document.getElementById('installBar');
+  var navInstall = document.getElementById('navInstall');
+
+  var isStandalone = function(){
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  };
+  var ua = navigator.userAgent || '';
+  var isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAndroid = /android/i.test(ua);
+
+  function recentlyDismissed(){
+    try{
+      var t = Number(localStorage.getItem(DISMISS_KEY) || 0);
+      return t && (Date.now() - t) < DISMISS_DAYS*24*60*60*1000;
+    }catch(e){ return false; }
+  }
+  function refreshUi(){
+    var installed = isStandalone();
+    if(bar) bar.classList.toggle('show', !installed && !recentlyDismissed());
+    if(navInstall) navInstall.classList.toggle('hidden', installed);
+  }
+
+  // Android / desktop Chrome & Edge: capture the native install prompt
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    deferredPrompt = e;
+    refreshUi();
+  });
+  window.addEventListener('appinstalled', function(){
+    deferredPrompt = null;
+    try{ localStorage.removeItem(DISMISS_KEY); }catch(e){}
+    refreshUi();
+    if(typeof toast === 'function') toast('App installed — find it on your home screen.');
+  });
+
+  function showHelp(){
+    var steps;
+    if(isIOS){
+      steps = [
+        'Open this site in <b>Safari</b> (if you are in another browser).',
+        'Tap the <b>Share</b> button <span style="font-size:17px">&#x2B06;&#xFE0F;</span> at the bottom of the screen.',
+        'Scroll down and tap <b>Add to Home Screen</b>.',
+        'Tap <b>Add</b> — the Royal Luxury icon will appear on your home screen.'
+      ];
+    }else if(isAndroid){
+      steps = [
+        'Open this site in <b>Chrome</b>.',
+        'Tap the <b>&#8942; menu</b> at the top-right.',
+        'Tap <b>Install app</b> (or <b>Add to Home screen</b>).',
+        'Confirm by tapping <b>Install</b>.'
+      ];
+    }else{
+      steps = [
+        'Use <b>Chrome</b> or <b>Edge</b> on your computer.',
+        'Click the <b>install icon</b> at the right end of the address bar (or open the browser menu).',
+        'Choose <b>Install Royal Luxury</b>.'
+      ];
+    }
+    document.getElementById('installSteps').innerHTML = steps.map(function(t){ return '<li>'+t+'</li>'; }).join('');
+    if(typeof openModalEl === 'function') openModalEl('installHelpModalBg');
+  }
+
+  window.pwaInstall = function(){
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(choice){
+        deferredPrompt = null;
+        if(choice && choice.outcome !== 'accepted') dismiss();
+      });
+    }else{
+      showHelp();   // iOS Safari and browsers without a native prompt
+    }
+  };
+  function dismiss(){
+    try{ localStorage.setItem(DISMISS_KEY, String(Date.now())); }catch(e){}
+    refreshUi();
+  }
+  document.getElementById('installBtn').addEventListener('click', window.pwaInstall);
+  document.getElementById('installClose').addEventListener('click', dismiss);
+
+  // Show the bar only on the Home page (go() is the site's page router)
+  var originalGo = window.go;
+  document.body.classList.add('on-home');
+  if(typeof originalGo === 'function'){
+    window.go = function(pageId){
+      document.body.classList.toggle('on-home', pageId === 'home');
+      return originalGo.apply(this, arguments);
+    };
+  }
+  refreshUi();
+
+  // Home-screen shortcuts: index.html?page=properties
+  try{
+    var p = new URLSearchParams(location.search).get('page');
+    if(p && ['properties','contact','posts','about'].indexOf(p) > -1 && typeof window.go === 'function') window.go(p);
+  }catch(e){}
+
+  /* ---------- Service worker ---------- */
+  if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
+    var reloading = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function(){
+      if(reloading) return; reloading = true; location.reload();
+    });
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('sw.js').then(function(reg){
+        function offerUpdate(worker){
+          var ub = document.getElementById('updateBar');
+          ub.classList.add('show');
+          document.getElementById('updateBtn').onclick = function(){ worker.postMessage('SKIP_WAITING'); };
+        }
+        if(reg.waiting && navigator.serviceWorker.controller) offerUpdate(reg.waiting);
+        reg.addEventListener('updatefound', function(){
+          var nw = reg.installing;
+          if(!nw) return;
+          nw.addEventListener('statechange', function(){
+            if(nw.state === 'installed' && navigator.serviceWorker.controller) offerUpdate(nw);
+          });
+        });
+        document.addEventListener('visibilitychange', function(){ if(!document.hidden) reg.update().catch(function(){}); });
+        setInterval(function(){ reg.update().catch(function(){}); }, 60*60*1000);
+      }).catch(function(err){ console.warn('Service worker registration failed', err); });
+    });
+  }
 })();
 </script>
 </body>
